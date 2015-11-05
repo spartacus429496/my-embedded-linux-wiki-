@@ -1,0 +1,404 @@
+
+
+		    LINUX embended system develop (2.6+ version)
+
+	     Maintained by Victor Chen <gymbunnyrabit@gmail.com>
+
+		      Last revised: Thu Nov  5 17:01:49 CST 2015   :   history  6th April 2009
+
+This list is the Linux Device List, the official registry of allocated
+device numbers and /dev directory nodes for the Linux operating
+system.
+
+
+
+	  **** DEVICE DRIVERS AUTHORS PLEASE READ THIS ****
+
+
+I do, however, make a few requests about the nature of your report.
+
+
+
+	Sockets and pipes
+
+Non-transient sockets and named pipes may exist in /dev.  Common entries are:
+
+/dev/printer	socket		lpd local socket
+/dev/log	socket		syslog local socket
+/dev/gpmdata	socket		gpm mouse multiplexer
+
+	Mount points
+
+1.base on linux x86 64bit
+	1.0 make ld 
+	1.1 cross compiler to target arm cortex a9
+		1.1.0 source
+			gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12.tar.bz2
+		1.1.1 arm linux gcc gnu eabi
+		1.1.2 arm linux gdb gnu eabi
+		1.1.3 path PATH CROSS_COMPILE enviroment veriant 
+			echo "export ARCH=arm" > ~/my-i.mx6/my-imx6-3035.conf
+			cd ~/my-i.mx6/03_tools/gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12/fsl-linaro-toolchain/bin/
+			$ sed -i "\$a IMX6_TC_PATH=$PWD" ~/my-i.mx6/my-imx6-3035.conf
+			$ sed -i "\$a export CROSS_COMPILE=\$IMX6_TC_PATH/arm-none-linux-gnueabi-" ~/my-i.mx6/my-imx6-3035.conf
+			1.1.3.1 souce 
+				source ~/MY-I.MX6/my-imx6-3035.conf
+			1.1.3.2 view 
+				export    :  could see ARCH 和 CROSS_COMPILE 
+	
+	1.3 patch 
+		patch -p1 < ../xxx.patch
+	1.4 tools
+		安装 aptitude 包管理工具
+		$ sudo apt-get –y install aptitude
+		使用 aptitude 安装 ia32-libs
+		sudo aptitude –y install ia32-libs
+		sudo apt-get -y install uboot-mkimage
+		make menuconfig 对其具有依赖性质
+
+		$ sudo aptitude -y install ncurses-dev
+	1.5 downloads
+		1.5.1 from tftp nfs
+		1.5.2 from usb  
+
+
+2.target system
+	2.1 bootloader
+		2.1.1 source 
+			uboot-imx-imx_v2009.08_3.0.35_4.1.0.tar.bz2   patch
+		2.1.2 make
+			make distclean 
+			make mx6q_sabresd_config
+			make -j4
+			ls
+
+
+	2.2 kernel  
+		2.2.1 source 
+			linux-2.6-imx-imx_3.0.35_4.1.0.tar.bz2 and patch
+		
+		2.2.2 make 
+			cd ~/my-i.mx6/02_source/linux-2.6-imx-imx_3.0.35_4.1.0/
+			source ~/my-i.mx6/my-imx6-3035.conf
+		  	export 
+			make distclean
+			make imx6_defconfig
+			make -j4 uImage (or make uImage LOADADDR 0x10008000)
+			$ ls arch/arm/boot/uImage –la
+			make -j4 (make modules)
+			find ./ -name "*.ko
+	2.3 filesystem 
+		2.3.1 source 
+			busybox 
+		2.3.2 make
+			config
+			make menuconfig
+			make
+		2.3.2 add 
+
+			$ mkdir ~/my-i.mx6/04_rootfs/ -p
+			
+			$ cd ~/my-i.mx6/04_rootfs/
+			cp ~/my-i.mx6/myzr_hello app_test/
+			sudo tar cjf ../rootfs.tar.bz2 *
+			insmod xxx.ko
+			
+
+
+note:
+
+1.
+cat ~/my-i.mx6/my-imx6-3035.conf 
+export ARCH=arm
+IMX6_TC_PATH=/home/spirit/myrz/gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12/fsl-linaro-toolchain/bin
+export CROSS_COMPILE=$IMX6_TC_PATH/arm-none-linux-gnueabi-
+
+
+
+use yocto
+1.base on linux x86 64bit
+	1.0 make ld 
+	1.1 cross compiler to target arm cortex a9
+		1.1.0 source
+			poky-eglibc-x86_64-meta-toolchain-cortexa9hf-vfp-neon-toolchain-1.5.1.sh
+
+		1.1.0 install  
+			sh ~/my-imx6/03_tools/poky-eglibc-x86_64-meta-toolchain-cortexa9hf-vfp-neon-toolchain-1.5.1.sh
+			Enter target directory for SDK (default: /opt/poky/1.5.1):
+			You are about to install the SDK to "/opt/poky/1.5.1". Proceed[Y/n]?
+			enter for default 
+			check 
+			$ /opt/poky/1.5.1/sysroots/x86_64-pokysdk-linux/usr/bin/arm-poky-linux-gnueabi/arm-poky-linux-gnueabi-gcc -v	
+
+		1.1.1 arm linux gcc gnu eabi
+		1.1.2 arm linux gdb gnu eabi
+		1.1.3 path PATH CROSS_COMPILE enviroment veriant 
+			$ echo "export ARCH=arm" > ~/my-imx6/myimx6_31017_build_env
+			$ cd /opt/poky/1.5.1/sysroots/x86_64-pokysdk-linux/usr/bin/arm-poky-li nux-gnueabi/ 
+			将交叉编译工具链目录写入配置文件
+			$ sed -i "\$a MYIMX6_31017_TC=$PWD" ~/my-imx6/myimx6_31017_build_env
+			将交叉编译工链链写入配置文件
+			$ sed -i "\$a export CROSS_COMPILE=\$MYIMX6_31017_TC/arm-poky-linux-gnueabi-" ~/my-imx6/myimx6_31017_build_env
+			$ cat ~/my-imx6/myimx6_31017_build_env
+
+			1.1.3.1 souce 
+				source ~/MY-I.MX6/my-imx6-3035.conf
+			1.1.3.2 view 
+				export    :  could see ARCH 和 CROSS_COMPILE 
+	
+	1.3 patch 
+		patch -p1 < ../xxx.patch
+	1.4 tools
+		安装 aptitude 包管理工具
+		$ sudo apt-get –y install aptitude
+		使用 aptitude 安装 ia32-libs
+		sudo aptitude –y install ia32-libs
+		sudo apt-get -y install uboot-mkimage
+		make menuconfig 对其具有依赖性质
+
+		$ sudo aptitude -y install ncurses-dev
+	1.5 downloads
+		1.5.1 from tftp nfs
+			1.5.1.1 tftp 服务器。tftp 服务安装
+			1.5.1.2 source file
+				准备下述文件并复制到 tftp 服务器的工作目录
+				
+				1.3.1 RAMDISK 文件
+				
+				网络烧录需要 RAMDISK 系统。
+				ramdisk uImage 文件: uImage.ramdisk
+				
+				ramdisk rootfs 文件: rootfs.ramdisk
+				
+				1.3.2 目标系统文件
+				
+				uImage 文件：uImage
+				rootfs 文件：rootfs.tar.bz2
+				提示：uImage 和 rootfs 文件可以是自己编译或制作的。
+			1.5.1.2 setting u-boot 
+				需要设置 u-boot 的 ethaddr，serverip，ipaddr 变量，示例如下：
+				
+				setenv ethaddr 00:00:00:00:00:03
+				
+				setenv serverip 192.168.18.18
+				
+				setenv ipaddr 192.168.18.19
+				
+				其中 192.168.18.18 为 TFTP 服务器地址，192.168.18.19 是为评估板配置的 IP 地址
+			1.5.1.3 下载目标文件到内存
+				
+				tftpboot 0x10800000 uImage.ramdisk
+				
+				tftpboot 0x10c00000 rootfs.ramdisk
+			1.5.1.4 启动 RAMDISK
+
+				setenv bootargs 'console=ttymxc0,115200 rdinit=/etc/inittab enable_wait_mode=off'
+				
+				bootm 0x10800000 0x10c00000
+			1.5.1.4 RAMDISK 系统
+
+				系统启动完成后，在串口终端输入 root 登录系统。
+				
+				eMMC 分区
+				m
+				fdisk /dev/mmcblk0
+				u
+				d
+				
+				n
+				
+				p
+				
+				1
+				
+				16384
+				
+				[create a new partition]
+				
+				[create a primary partition]
+				
+				[the first partition]
+				
+				[starting at offset sector #16384, i.e. 8MB, which leaves enough space for the kernel, the boot loader and its configuration data]
+				
+				<enter>
+				
+				[using the default value will create a partition that spans to the last sector of the medium]
+				
+				w
+				
+				[ this writes the partition table to the medium and fdisk exit s]
+			1.5.1.4 创建 eMMC 的文件系统类型
+
+				mkfs.ext3 /dev/mmcblk0p1
+				
+			1.5.1.4 通过 tftp 下载目标文件
+				
+				ifconfig eth0 192.168.18.19
+				
+				tftp 192.168.18.18 -g -r uImage
+				
+				tftp 192.168.18.18 -g -r rootfs.tar.bz2
+				
+				ls
+			1.5.1.4 写入 uImage 到 eMMC
+				dd if=uImage of=/dev/mmcblk0 bs=1M seek=1 conv=fsync
+				
+			1.5.1.4 写入文件系统到 eMMC
+				
+				mkdir mountpoint
+				
+				mount /dev/mmcblk0p1 mountpoint
+				
+				tar jxf rootfs.tar.bz2 -C mountpoint
+				
+				umount mountpoint
+				
+				
+			1.5.1.4 reboot
+				
+
+
+		1.5.2 from usb  
+
+
+2.target system
+	2.1 bootloader
+		2.1.1 source 
+			uboot-imx-imx_v2013.04_3.10.17_1.0.0_ga.tar.bz2
+		2.1.2 make
+			$ source ~/my-imx6/myimx6_31017_build_env
+			$ echo $ARCH
+			
+			$ echo $CROSS_COMPILE
+			make distclean 
+			#make mx6q_sabresd_config
+			make mx6qmyzrek200_config
+			make -j4
+			ls
+
+
+	2.2 kernel  
+		2.2.1 source 
+			linux-2.6-imx-imx_3.10.17_1.0.0_ga.tar.bz2
+		
+		2.2.2 make 
+			cd ~/my-i.mx6/02_source/linux-2.6-imx-imx_3.0.35_4.1.0/
+			source ~/my-i.mx6/my-imx6-3035.conf
+		  	export 
+			make distclean
+			#make imx6_defconfig
+			make myimx6_ek200_defconfig
+			#make -j4 uImage (or make uImage LOADADDR 0x10008000)
+			make uImage LOADADDR=0x10008000
+			$ ls arch/arm/boot/uImage –la
+		2.2.3 make modules 
+			make -j4 (make modules)
+			find ./ -name "*.ko
+			2.2.3.1 wifi RT8188EUS 
+				
+				$ unzip RTL8188EUS_RTL8189ES_linux_v4.1.7_9024.20130916.zip
+				$ cd RTL8188EUS_RTL8189ES_linux_v4.1.7_9024.20130916/driver/
+				$ tar zxvf rtl8188EUS_rtl8189ES_linux_v4.1.7_9024.20130916.tar.gz
+				$ cd rtl8188EUS_rtl8189ES_linux_v4.1.7_9024.20130916/
+				$ ./make_drv
+
+				$ gedit Makefile
+				修改
+				CONFIG_PLATFORM_I386_PC = n
+				CONFIG_PLATFORM_NEW = y
+				增加
+				ifeq ($(CONFIG_PLATFORM_NEW), y)
+				EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+				ARCH := arm
+				CROSS_COMPILE := /opt/freescale/usr/local/gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12/fsl-linaro-toolchain/bin/arm-none-linux-gnueabi-
+				KSRC := /home/myzr/imx6/L3.0.35_4.1.0_130816_source/source/ltib/rpm/BUILD/linux-3.0.35
+				or change KSRC
+				MODULE_NAME := wlan
+				Endif
+				$ make
+				这就编译出 wlan.ko 模块。
+		2.2.4 make device tree
+			make imx6q-myzrek200-ldo.dtb
+			ls arch/arm/boot/dts/*-myzrek200-ldo.dtb
+*/
+	2.3 filesystem 
+		2.3.1 source 
+			busybox 
+		2.3.2 make
+			config
+			make menuconfig
+			make
+		2.3.2 add 
+
+			$ mkdir ~/my-i.mx6/04_rootfs/ -p
+			
+			$ cd ~/my-i.mx6/04_rootfs/
+			cp ~/my-i.mx6/myzr_hello app_test/
+			sudo tar cjf ../rootfs.tar.bz2 *
+			insmod xxx.ko
+			2.3.2.1 add wifi module
+				在文件系统文件夹做以下修改：(假设为 rootfs)
+				$ cd rootfs
+				$ mkdir etc/wpa_supplicant
+				$ mkdir var/run/wpa_supplicant
+				$ gedit /etc/wpa_supplicant/wpa_supplicant.conf
+				增加：
+				ctrl_interface=/var/run/wpa_supplicant
+				network={
+				
+				ssid="MYZR2012"
+				psk="myzr2012"
+				#你的 AP 名
+				#密码
+				
+				}
+				保存并退出。
+				最后打包文件系统。
+				联网测试命令：
+				# insmod wlan.ko
+				# wpa_supplicant -B -c/etc/wpa_supplicant/wpa_supplicant.conf -iwlan0
+				# udhcpc -i wlan0
+			2.3.2.2 add wifi module or !!
+				1）加载 WIFI 模块驱动
+				
+				示例命令如下：
+				
+				$ insmod /lib/modules/wifi/wlan.ko
+				
+				2）生成 WIFI 的 config 文件
+				参考命令如下：
+				
+				$ wpa_passphrase MYZR_TP-LINK myzrd2302 > /etc/wpa_supplicant.conf
+				
+				这条命令指定的 WIFI 名称是和密码是“MYZR_TP-LINK myzrd2302”，需要替换成自己可
+				连接的 WIFI 名称和密码。
+				3）连接 WIFI 网络
+				
+				示例命令如下：
+				
+				$ wpa_supplicant -B -c/etc/wpa_supplicant.conf -iwlan0
+				
+				4）自动获取 IP
+				示例命令如下：
+				
+				$ udhcpc -i wlan0
+				
+				注意：这里需要确认所在的 WIFI 网络已启用 DHCP 功能。
+				
+				5）测试 WIFI 网络连接
+				示例命令如下：
+				
+				$ ping -I wlan0 www.baidu.com -c 2
+				
+				6）测试结果
+				
+				执行步骤 5 能 ping 通则表示 WIFI 模块工作正常。
+		
+	
+note:
+:! cat ~/my-imx6/myimx6_31017_build_env
+[No write since last change]
+export ARCH=arm
+MYIMX6_31017_TC=/opt/poky/1.5.1/sysroots/x86_64-pokysdk-linux/usr/bin/arm-poky-linux-gnueabi
+export CROSS_COMPILE=$MYIMX6_31017_TC/arm-poky-linux-gnueabi-
