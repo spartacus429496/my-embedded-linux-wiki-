@@ -1,0 +1,16 @@
+
+
+           Regular expression useage
+           --------------------------------------------------
+
+(c) 2015 Fri Nov  6 10:54:27 CST 2015 Daniel Kelly  <benh at kernel.crashing.org>,
+    IBM Corp.l 
+
+1.
+	1.1find 
+		ls -d */
+		explaination: */ is a pattern that matches all of the subdirectories in the current directory (* would match all files and subdirectories; the / restricts it to directories).
+
+		ls -d **/   //in zsh show only directory in recusive
+		ls -al | grep "^d"
+ 

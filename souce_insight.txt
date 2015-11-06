@@ -1,0 +1,32 @@
+           Source insight useage
+           --------------------------------------------------
+
+(c) 2015 Fri Nov  6 10:54:27 CST 2015 Daniel Kelly  <benh at kernel.crashing.org>,
+    IBM Corp.
+
+
+
+Source Insight看代码时比较方便，而且它的代码自动完成功能比vim+ctags+cscope好用的多，可是我认为写代码时，Source Insight的功能却比不上vim。
+我的设定是：在Source Insight中按F12调用gvim，打开对应文件，跳转到对应的行。
+以下是实现步骤：
+1.Source Insight中,Options->Custom Commands...->Add...,New Command name 随便
+写,我的是"Edit with Vim"
+2.Run中写入: "C:\Program Files\Vim\vim63\gvim.exe" --remote-silent +%l %f
+意思是在当前已经打开的gvim窗口里面打开当前的文件,并且跳转到指定行
+%l为当前的行号,%f为文件名
+使用 --remote-silent 的作用是,如果已经打开了对应文件,就不会打开第二次,而是在
+已经打开的文件里跳转到对应行
+3.还是同一个对话框里面,选择Keys->Assign New Key...->按F12,如果你已经将F12设置
+给其他命令,选择其他的按键就行了
+4.设置完毕
+虽然现在source insight用的越来越少了,但是和同事交流时还是少不了它,毕竟不是人
+人都在用vim.
+今天又发掘了一下,实现了在vim中调用source insight打开对应的文件:
+nnoremap :!start "C:\Program Files\Source Insight
+3\Insight3.exe" -i +=expand(line(".")) %
+1.一定要加上start,否则调用source insight时弹出讨厌的dos窗口
+2.-i表示在已经打开的souce insight中打开
+3.+后面的部分是指定行号
+
+	4.1 source insight 
+		shortcut  shift +f8 ,shift+f9 ctl+/ alt+, alt+. 

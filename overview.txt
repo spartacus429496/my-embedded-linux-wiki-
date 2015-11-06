@@ -1,0 +1,385 @@
+           Overview of the Computer System  
+           --------------------------------------------------
+
+(c) 2005 Benjamin Herrenschmidt <benh at kernel.crashing.org>,
+    IBM Corp.
+(c) 2005 Becky Bruce <becky.bruce at freescale.com>,
+    Freescale Semiconductor, FSL SOC and 32-bit additions
+(c) 2006 MontaVista Software, Inc.
+    Flash chip node definition
+
+(c) 2006 MontaVista Software, Inc.
+    Flash chip node definition
+
+Table of Contents
+=================
+
+  I - Introduction
+    1) Entry point for arch/arm
+    2) Entry point for arch/powerpc
+    3) Entry point for arch/x86
+
+  II - The DT block format
+    1) Header
+    2) Device tree generalities
+    3) Device tree "structure" block
+    4) Device tree "strings" block
+
+  III - Required content of the device tree
+    1) Note about cells and address representation
+    2) Note about "compatible" properties
+    3) Note about "name" properties
+    4) Note about node and property names and character set
+    5) Required nodes and properties
+      a) The root node
+      b) The /cpus node
+      c) The /cpus/* nodes
+      d) the /memory node(s)
+      e) The /chosen node
+      f) the /soc<SOCname> node
+
+  IV - "dtc", the device tree compiler
+
+  V - Recommendations for a bootloader
+
+  VI - System-on-a-chip devices and nodes
+    1) Defining child nodes of an SOC
+    2) Representing devices without a current OF specification
+
+  VII - Specifying interrupt information for devices
+    1) interrupts property
+    2) interrupt-parent property
+    3) OpenPIC Interrupt Controllers
+    4) ISA Interrupt Controllers
+
+  VIII - Specifying device power management information (sleep property)
+
+  Appendix A - Sample SOC node for MPC8540
+
+
+Revision Information
+====================
+
+   May 18, 2005: Rev 0.1 - Initial draft, no chapter III yet.
+
+   May 19, 2005: Rev 0.2 - Add chapter III and bits & pieces here or
+                           clarifies the fact that a lot of things are
+                           optional, the kernel only requires a very
+                           small device tree, though it is encouraged
+                           to provide an as complete one as possible.
+
+   May 24, 2005: Rev 0.3 - Precise that DT block has to be in RAM
+			 - Misc fixes
+			 - Define version 3 and new format version 16
+			   for the DT block (version 16 needs kernel
+			   patches, will be fwd separately).
+			   String block now has a size, and full path
+			   is replaced by unit name for more
+			   compactness.
+			   linux,phandle is made optional, only nodes
+			   that are referenced by other nodes need it.
+			   "name" property is now automatically
+			   deduced from the unit name
+
+   June 1, 2005: Rev 0.4 - Correct confusion between OF_DT_END and
+                           OF_DT_END_NODE in structure definition.
+                         - Change version 16 format to always align
+                           property data to 4 bytes. Since tokens are
+                           already aligned, that means no specific
+                           required alignment between property size
+                           and property data. The old style variable
+                           alignment would make it impossible to do
+                           "simple" insertion of properties using
+                           memmove (thanks Milton for
+                           noticing). Updated kernel patch as well
+			 - Correct a few more alignment constraints
+			 - Add a chapter about the device-tree
+                           compiler and the textural representation of
+                           the tree that can be "compiled" by dtc.
+
+   November 21, 2005: Rev 0.5
+			 - Additions/generalizations for 32-bit
+			 - Changed to reflect the new arch/powerpc
+			   structure
+			 - Added chapter VI
+
+
+ ToDo:
+	- Add some definitions of interrupt tree (simple/complex)
+	- Add some definitions for PCI host bridges
+	- Add some common address format examples
+	- Add definitions for standard properties and "compatible"
+	  names for cells that are not already defined by the existing
+	  OF spec.
+	- Compare FSL SOC use of PCI to standard and make sure no new
+	  node definition required.
+	- Add more information about node definitions for SOC devices
+  	  that currently have no standard, like the FSL CPM.
+
+
+I - Introduction
+================
+
+
+An Overview of the computing system. It includes components which from the lowest bottom layers to  the top applications layers.
+Such as digital current , loggic gate module 
+infinite state machine 
+vhdl
+arm chip instruction sets
+memory maps
+app
+edit , search, version control , 
+develop : shell command, compiler(c c++ java ,ma), make, ld, interpreter
+
+
+
+
+1) Hardware  
+---------------------------
+
+   T see arm reference mannul todo;
+
+        a) alu acc 
+
+
+        b) bus
+
+2) Board sch current 
+-------------------------------
+
+   T notice
+
+        a) See protell 99se 
+
+        b) see pdf 
+
+3) Entry point for arch/x86
+-------------------------------
+
+  There is one single 32bit entry point to the kernel at code32_start,
+
+II - The  os kernel principle
+========================
+
+
+LDD3 ULK , startup code , bootstap 
+
+
+1) Startup code  
+---------
+
+   The  see [u-boot.txt ] for more info mation :http:// and the anylisys of it in web .
+
+2) OS management 
+---------------------------
+
+3) TCP/IP stack  , PHY MAC router vlan wireless
+
+
+4) Device dirvers
+
+
+
+III - Applications tools
+=========================================
+
+WARNING: All "linux,*" properties defined in this document apply only
+to a flattened device-tree. If your platform uses a real
+
+0) Terminal 
+	0.1 gnome terminal setting
+		see docs
+
+1) shell 
+----------------------------------------------
+
+The 
+	1.0 zsh
+		zsh setting 
+	1.1 shell grammar
+		expr , xagrs exec | 
+
+2) editer : vim 
+-------------------------------------
+	see more in vim.txt
+	2.2 vim short cut 
+		1.search move cursor to the word then shift+#
+		2.serach whole word /\<xxx\>
+
+
+
+3) Regular expression 
+-------------------------------
+	3.1 see more in regular expression.txt
+	3.2 find 
+	3.3 grep 
+	3.4 awk sed 
+4) Project miltiwindows viewer 
+-------------------------------
+	4.1 source insight 
+		shortcut  shift +f8 ,shift+f9 ctl+/ alt+, alt+. 
+	4.2 find 
+
+5) Python and lua  php
+-------------------------------------------------------
+6) make and Makefile 
+-------------------------------------------------------
+	5.1 make arguments
+	5.2 makefile grammer
+		5.2.1 
+			target dependences dependences; 
+				commands;
+
+6) Compiler and ld linker 
+-------------------------------------------------------
+	6.1 gcc arguments cross compiler
+	6.2 ld grammer
+		5.2.1 
+
+6) Compiler and ld linker 
+-------------------------------------------------------
+	6.1 gcc arguments cross compiler
+	6.2 ld grammer
+		5.2.1 
+
+7) version control git and git hub 
+-------------------------------------------------------
+	7.1 git 
+		see git_usage.txt
+	7.2 git hub 
+8) read the docs Read the fuck document 
+-------------------------------------------------------
+	8.1 
+		see rtfd.txt 
+
+5) Required nodes and properties
+--------------------------------
+  These are all that are currently required. However, it is strongly
+
+  a) The root node
+
+ comma.
+
+  b) The /cpus node
+
+ below
+
+  c) The /cpus/* nodes
+
+  So under /cpus, you are supposed to create a node for every CPU on
+
+  d) the /memory node(s)
+
+  e) The /chosen node
+
+  f) the /soc<SOCname> node
+
+
+
+
+IV - "dtc", the device tree compiler
+====================================
+
+
+dtc source code can be found at
+<http://git.jdl.com/gitweb/?p=dtc.git>
+
+WARNING: This version is still in early development stage; the
+resulting device-tree "blobs" have not yet been validated with the
+etc...
+
+
+V - Recommendations for a bootloader
+====================================
+
+
+Here are some various ideas/recommendations that have been proposed
+
+
+VI - System-on-a-chip devices and nodes
+=======================================
+
+Many companies are now starting to develop system-on-a-chip
+
+1) Defining child nodes of an SOC
+---------------------------------
+
+Each device that is part of an SOC may have its own node entry inside
+
+See appendix A for an example partial SOC node definition for the
+MPC8540.
+
+
+2) Representing devices without a current OF specification
+----------------------------------------------------------
+
+Currently, there are many devices on SoCs that do not have a standard
+
+VII - Specifying interrupt information for devices
+===================================================
+
+The device tree represents the buses and devices of a hardware
+Mapping Version 0.9".  The document is available at:
+<http://playground.sun.com/1275/practice>.
+
+1) interrupts property
+----------------------
+
+Devices that generate interrupts to a single interrupt controller
+hich interrupt pin (INTA,INTB,INTC,INTD) is used.
+
+2) interrupt-parent property
+----------------------------
+
+The interrupt-parent property is specified to define an explicit
+3) OpenPIC Interrupt Controllers
+--------------------------------
+
+OpenPIC interrupt controllers require 2 cells to encode
+4) ISA Interrupt Controllers
+----------------------------
+
+ISA PIC interrupt controllers require 2 cells to encode
+
+VIII - Specifying Device Power Management Information (sleep property)
+===================================================================
+
+Devices on SOCs often have mechanisms for placing devices into low-power
+similar to an interrupt nexus, except that defining a standardized
+sleep-map should wait until its necessity is demonstrated).
+
+Appendix A - Sample SOC node for MPC8540
+========================================
+
+	soc@e0000000 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "fsl,mpc8540-ccsr", "simple-bus";
+		device_type = "soc";
+		ranges = <0x00000000 0xe0000000 0x00100000>
+		bus-frequency = <0>;
+		interrupt-parent = <&pic>;
+
+		ethernet@24000 {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			device_type = "network";
+			model = "TSEC";
+			compatible = "gianfar", "simple-bus";
+			reg = <0x24000 0x1000>;
+			local-mac-address = [ 00 E0 0C 00 73 00 ];
+			interrupts = <29 2 30 2 34 2>;
+			phy-handle = <&phy0>;
+			sleep = <&pmc 00000080>;
+			ranges;
+
+			mdio@24520 {
+				reg = <0x24520 0x20>;
+				compatible = "fsl,gianfar-mdio";
+
+				phy0: ethernet-phy@0 {
+		pmc: power@e0070 {
+			compatible = "fsl,mpc8540-pmc", "fsl,mpc8548-pmc";
+			reg = <0xe0070 0x20>;
+		};
+	};

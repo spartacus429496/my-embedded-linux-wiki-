@@ -1,0 +1,72 @@
+
+           vi useage
+           --------------------------------------------------
+
+(c) 2015 Fri Nov  6 10:54:27 CST 2015 Daniel Kelly  <benh at kernel.crashing.org>,
+    IBM Corp.
+
+
+includes vi vim ,gvim vim-gnome
+1.basic 
+	1.1 move 
+		jk h l 
+		ctl +f ctl+b
+		gg shift+g
+		0 $
+	1.1 insert 
+		i a
+	1.3 copy parst
+		yw y5 p
+		y
+	1.4 insert 
+		word : s
+		block : ctl +v j I xxx esc 
+
+	1.4 delete
+		dd dw 5d d+G
+2. :command
+	2.1 save 
+		:w :wq q! wq!
+	2.2 find 
+		/\<xxx\>
+		move to word shift+#
+	2.3 replace 
+		:%s/xx/yy/g
+	2.4 multi windows
+		
+		:vs filename
+		ctl +w  h l 
+	2.5 check file name and path
+		:f 
+		1 ctl +g
+	2.3 exec commad
+		:! tree ~/.vim/
+3.combinnation
+	3.1
+		gg v G
+
+
+4 ctags tlist cscope
+	ctags + R
+	:Tlist
+	ctl+n
+
+5.vimrc env setting 
+	~/.vimrc 
+	set 
+
+	"colorscheme desert
+	set autochdir
+	set tags=tags;
+	set cursorline
+	set cursorcolumn
+	syntax enable
+	set background=dark
+	"set background=light
+	"let g:solarized_italic=0
+	let g:solarized_termcolors=256
+	colorscheme solarized
+	set number
+	set hlsearch
+	set clipboard=unnamedplus
+	
