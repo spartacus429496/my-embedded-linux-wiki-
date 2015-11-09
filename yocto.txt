@@ -1,0 +1,154 @@
+Currently 1 running tasks (3879 of 4027):
+0: linux-imx-3.10.17-r0 do_compile (pid 38154)
+
+
+➜  imx-3.10.17-1.0.0_ga  source setup-environment build-fb 
+Configuring for imx6qsabresd
+
+Welcome to Freescale Community BSP
+
+The Yocto Project has extensive documentation about OE including a
+reference manual which can be found at:
+    http://yoctoproject.org/documentation
+
+For more information about OpenEmbedded see their website:
+    http://www.openembedded.org/
+
+You can now run 'bitbake <target>'
+
+Common targets are:
+    core-image-minimal
+    meta-toolchain
+    meta-toolchain-sdk
+    adt-installer
+    meta-ide-support
+
+Your configuration files at build-fb has not been touched.
+➜  build-fb  bitbake fsl-image-fb
+WARNING: Host distribution "Ubuntu-14.04" has not been validated with this version of the build system; you may possibly experience unexpected failures. It is recommended that you use a tested distribution.
+WARNING: Unable to get checksum for linux-boundary SRC_URI entry defconfig: file could not be found#########################################   | ETA:  00:00:00
+Parsing recipes: 100% |########################################################################################################################| Time: 00:00:41
+Parsing of 1605 .bb files complete (0 cached, 1605 parsed). 2004 targets, 160 skipped, 0 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+NOTE: multiple providers are available for runtime libgl-mesa-dev (mesa, mesa-gl)
+NOTE: consider defining a PREFERRED_PROVIDER entry to match libgl-mesa-dev
+NOTE: multiple providers are available for jpeg (jpeg, libjpeg-turbo)
+NOTE: consider defining a PREFERRED_PROVIDER entry to match jpeg
+
+Build Configuration:
+BB_VERSION        = "1.20.0"
+BUILD_SYS         = "x86_64-linux"
+NATIVELSBSTRING   = "Ubuntu-14.04"
+TARGET_SYS        = "arm-poky-linux-gnueabi"
+MACHINE           = "imx6qsabresd"
+DISTRO            = "poky"
+DISTRO_VERSION    = "1.5.1"
+TUNE_FEATURES     = "armv7a vfp neon callconvention-hard cortexa9"
+TARGET_FPU        = "vfp-neon"
+meta              
+meta-yocto        = "(nobranch):bee7e3756adf70edaeabe9d43166707aab84f581"
+meta-oe           = "(nobranch):eb4563b83be0a57ede4269ab19688af6baa62cd2"
+meta-fsl-arm      = "(nobranch):af392c22bf6b563525ede4a81b6755ff1dd2c1c6"
+meta-fsl-arm-extra = "(nobranch):07ad83db0fb67c5023bd627a61efb7f474c52622"
+meta-fsl-demos    = "(nobranch):5a12677ad000a926d23c444266722a778ea228a7"
+meta-fsl-arm      
+meta-fsl-demos    = "(nobranch):fd639897114c09d5146ea1399c16308edfd0108b"
+meta-browser      = "(nobranch):fc3969f63bda343c38c40a23f746c560c4735f3e"
+meta-gnome        
+meta-networking   = "(nobranch):eb4563b83be0a57ede4269ab19688af6baa62cd2"
+
+NOTE: Preparing runqueue
+NOTE: Executing SetScene Tasks
+NOTE: Executing RunQueue Tasks
+Currently 1 running tasks (3879 of 4027):
+0: linux-imx-3.10.17-r0 do_compile (pid 38154)
+0: linux-imx-3.10.17-r0 do_compile_kernelmodules (pid 61708)
+0: linux-imx-3.10.17-r0 do_install (pid 1606);
+
+0: linux-imx-3.10.17-r0 do_populate_sysroot (pid 26476)
+1: linux-imx-3.10.17-r0 do_package (pid 26477)
+WARNING: lttng-modules: no modules were created; this may be due to CONFIG_TRACEPOINTS not being enabled in your kernel.
+Currently 1 running tasks (4003 of 4027):
+0: linux-imx-3.10.17-r0 do_package_write_rpm (pid 63555)
+
+0: fsl-image-fb-1.0-r0 do_rootfs (pid 3217)
+
+
+
+success:::
+
+
+➜  build-fb  bitbake fsl-image-fb
+WARNING: Host distribution "Ubuntu-14.04" has not been validated with this version of the build system; you may possibly experience unexpected failures. It is recommended that you use a tested distribution.
+WARNING: Unable to get checksum for linux-boundary SRC_URI entry defconfig: file could not be found#########################################   | ETA:  00:00:00
+Parsing recipes: 100% |########################################################################################################################| Time: 00:00:41
+Parsing of 1605 .bb files complete (0 cached, 1605 parsed). 2004 targets, 160 skipped, 0 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
+NOTE: multiple providers are available for runtime libgl-mesa-dev (mesa, mesa-gl)
+NOTE: consider defining a PREFERRED_PROVIDER entry to match libgl-mesa-dev
+NOTE: multiple providers are available for jpeg (jpeg, libjpeg-turbo)
+NOTE: consider defining a PREFERRED_PROVIDER entry to match jpeg
+
+Build Configuration:
+BB_VERSION        = "1.20.0"
+BUILD_SYS         = "x86_64-linux"
+NATIVELSBSTRING   = "Ubuntu-14.04"
+TARGET_SYS        = "arm-poky-linux-gnueabi"
+MACHINE           = "imx6qsabresd"
+DISTRO            = "poky"
+DISTRO_VERSION    = "1.5.1"
+TUNE_FEATURES     = "armv7a vfp neon callconvention-hard cortexa9"
+TARGET_FPU        = "vfp-neon"
+meta              
+meta-yocto        = "(nobranch):bee7e3756adf70edaeabe9d43166707aab84f581"
+meta-oe           = "(nobranch):eb4563b83be0a57ede4269ab19688af6baa62cd2"
+meta-fsl-arm      = "(nobranch):af392c22bf6b563525ede4a81b6755ff1dd2c1c6"
+meta-fsl-arm-extra = "(nobranch):07ad83db0fb67c5023bd627a61efb7f474c52622"
+meta-fsl-demos    = "(nobranch):5a12677ad000a926d23c444266722a778ea228a7"
+meta-fsl-arm      
+meta-fsl-demos    = "(nobranch):fd639897114c09d5146ea1399c16308edfd0108b"
+meta-browser      = "(nobranch):fc3969f63bda343c38c40a23f746c560c4735f3e"
+meta-gnome        
+meta-networking   = "(nobranch):eb4563b83be0a57ede4269ab19688af6baa62cd2"
+
+NOTE: Preparing runqueue
+NOTE: Executing SetScene Tasks
+NOTE: Executing RunQueue Tasks
+WARNING: lttng-modules: no modules were created; this may be due to CONFIG_TRACEPOINTS not being enabled in your kernel.
+NOTE: Tasks Summary: Attempted 4027 tasks of which 3795 didn't need to be rerun and all succeeded.
+
+Summary: There were 3 WARNING messages shown.
+➜  build-fb  
+
+success
+
+
+
+WEB:   http://freescale.github.io/#download
+
+
+
+Get the BSP
+
+The FSL Community BSP follow the same release schedule used in Yocto Project. The releases are done every 6 months, in April and October
+
+The pre built images can be found here. This service is generously provided by O.S. Systems.
+
+To get the BSP source code you need to have repo installed.
+
+Install the repo utility:
+
+mkdir ~/bin
+curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+chmod a+x ~/bin/repo
+
+Download the BSP source code
+
+PATH=${PATH}:~/bin
+mkdir fsl-community-bsp
+cd fsl-community-bsp
+repo init -u https://github.com/Freescale/fsl-community-bsp-platform -b fido
+repo sync
+
+
+

@@ -1,0 +1,14 @@
+
+Mon Nov  9 17:27:35 CST 2015
+
+1.use yocto to build the whole system .  uboot (patched ) kernel*(patched make uImage LOADADDR=0x10008000)
+	filesystem (yocto build )  add helloworld.out (tar + file and  tar )
+
+2. u-boot patch make ????
+3. kernel patch make ??
+	3.1 dtb ???
+4. rootfs make ??? (not use yocto)
+5. yocto build up uboot and kernel and rootfs for myzr-imx6q boards ???
+
+6. freescal github branch usage ? (for u-boot manage)  
+

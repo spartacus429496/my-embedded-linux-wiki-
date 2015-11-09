@@ -260,6 +260,53 @@ use yocto
 
 
 		1.5.2 from usb  
+			1.5.2.1 tools 
+				E:\明远智睿\MY-IMX6评估板烧录\01_MFG Tools方式\MY-I.MX6Q-MFG-TOOL-V2.5\MY-I.MX6Q-MFG-TOOL-V2.5
+				config 
+				cfg.ini  name = MY-I.MX6Q-31017-Linux_QT
+				file list:
+
+
+				Microsoft Windows [版本 6.1.7601]
+				版权所有 (c) 2009 Microsoft Corporation。保留所有权利。
+				
+				C:\Users\Administrator>dir E:\明远智睿\MY-IMX6评估板烧录\01_MFG Tools方式\MY-I.M
+				X6Q-MFG-TOOL-V2.5\MY-I.MX6Q-MFG-TOOL-V2.5\Profiles\MX6Q Linux Update\OS Firmware
+				\image_31017
+				系统找不到指定的路径。
+				
+				C:\Users\Administrator>e:
+				
+				E:\>dir E:\明远智睿\MY-IMX6评估板烧录\01_MFG Tools方式\MY-I.MX6Q-MFG-TOOL-V2.5\M
+				Y-I.MX6Q-MFG-TOOL-V2.5\Profiles\MX6Q Linux Update\OS Firmware\image_31017
+				系统找不到指定的路径。
+				
+				E:\>cd 明远智睿\MY-IMX6评估板烧录\01_MFG Tools方式\MY-I.MX6Q-MFG-TOOL-V2.5\MY-I.
+				MX6Q-MFG-TOOL-V2.5\Profiles\MX6Q Linux Update\OS Firmware\image_31017
+				
+				E:\明远智睿\MY-IMX6评估板烧录\01_MFG Tools方式\MY-I.MX6Q-MFG-TOOL-V2.5\MY-I.MX6Q
+				-MFG-TOOL-V2.5\Profiles\MX6Q Linux Update\OS Firmware\image_31017>dir
+				 驱动器 E 中的卷是 文档
+				 卷的序列号是 0003-DCC5
+				
+				 E:\明远智睿\MY-IMX6评估板烧录\01_MFG Tools方式\MY-I.MX6Q-MFG-TOOL-V2.5\MY-I.MX6
+				Q-MFG-TOOL-V2.5\Profiles\MX6Q Linux Update\OS Firmware\image_31017 的目录
+				
+				2015/11/09  11:43    <DIR>          .
+				2015/11/09  11:43    <DIR>          ..
+				2015/11/09  11:42            46,427 imx6q-ldo.dtb
+				2015/11/09  10:56        99,851,466 rtfs_qt.tar.bz2
+				2015/11/09  11:42           354,888 u-boot.bin
+				2015/11/09  11:42           375,368 uboot-6q.imx
+				2015/11/09  11:39         5,466,472 uImage
+				               5 个文件    106,094,621 字节
+				               2 个目录 33,939,279,872 可用字节
+				
+				E:\明远智睿\MY-IMX6评估板烧录\01_MFG Tools方式\MY-I.MX6Q-MFG-TOOL-V2.5\MY-I.MX6Q
+				-MFG-TOOL-V2.5\Profiles\MX6Q Linux Update\OS Firmware\image_31017>
+
+
+
 
 
 2.target system
@@ -284,7 +331,8 @@ use yocto
 		
 		2.2.2 make 
 			cd ~/my-i.mx6/02_source/linux-2.6-imx-imx_3.0.35_4.1.0/
-			source ~/my-i.mx6/my-imx6-3035.conf
+			#source ~/my-i.mx6/my-imx6-3035.conf
+			$ source ~/my-imx6/myimx6_31017_build_env
 		  	export 
 			make distclean
 			#make imx6_defconfig
