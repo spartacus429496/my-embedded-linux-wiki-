@@ -1,0 +1,23 @@
+ABI/EABI简介及其相关
+
+
+EABI(Application Binary Interface)或EABI（Extend ABI）通常是处理器体系结构的一部分，它与平台是紧密相连的。 
+我们可以把ABI理解为一套规则，这套规则一般包括定义了以下内容： 
+
+1、应用程序如何发出系统调用来trap到内核态。 
+2、如何使用机器的寄存器。比如，RISC处理器的ABI就要规定用那个通用寄存器来作stack pointer和frame pointer。 
+3、规定如何进行procedure call。 
+
+2, 3是最重要的。而且特定于那个平台的编译器和链接器实现都要遵循这些约定。
+以上原自：http://blog.chinaunix.net/u/17218/showart_98050.html
+
+
+关于EABI 
+什么是EABI? 
+Embedded application binary interface, 即嵌入式应用二进制接口，是描述可连接目标代码，库目标代码，可执行文件影像，如何连接，执行和调试，以及目标代码生成过程，和c, c++语言接口的规范，是编译连接工具的基础规范，也是研究它们工作原理的基础，可惜arm的EABI迄今为止没有完全订好。作为EABI的组成部分有过 程调用规范，可执行文件格式规范，c/c++ ABI规范和调试格式规范
+
+
+
+arm-none-linux-gnueabi交叉工具链与arm-linux-gcc 有区别吗？
+
+eabi标准的要好些，可能arm-linux-gcc就是arm-none-linux-gnueabi的一个链接

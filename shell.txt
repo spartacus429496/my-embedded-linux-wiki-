@@ -1,5 +1,4 @@
 
-
            zsh useage
            --------------------------------------------------
 
@@ -40,3 +39,22 @@ cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 		cat /proc/net/dev
 	3.2 cat 
 		cat /sys/class/net/eth0/statistics/rx_bytes
+	3.3 find the line started  with the specified word
+		cat /proc/net/dev | grep "^  eth0"
+	3.4 grep some word in finded files
+		nux中find命令查找到文件后通过-exec参数执行shell命令，案例如下：
+		#-exec   command   {} \;   将查到的文件执行command操作,{} 和 \;之间有空格
+		find / -name filename -exec rm -rf {} \;
+		#查找名字为filename的文件，然后执行rm删除命令
+		Linux中grep命令查找到文件后通过|(管道符)传递给后面命令执行，案例如下：
+		ls -l|grep filename|rm -rf
+		#查找名字为filename的文件，然后执行rm删除命令
+
+
+		find -name "" | xargs grep imx
+	3.5 locate everything 
+		/home/spirit/tmp/python_everything/found
+
+
+
+

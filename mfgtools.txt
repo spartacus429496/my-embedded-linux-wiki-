@@ -1,0 +1,71 @@
+飞思卡尔 mfgtools烧写原理
+
+首先因为它usb驱动写成HID设备 故pc机无需另装驱动。简单原理就是
+1.BootStrap阶段：mfgtools先将mfgtools版uboot kernel加载到开发板内存并运行然后板子ram会虚拟出一块sd card
+
+对应的ucl2.xml脚本
+
+ <CMD state="BootStrap" type="boot" body="BootStrap" file ="u-boot-mx6q-sabresd.bin" >Loading U-boot</CMD> 
+
+    <CMD state="BootStrap" type="load" file="uImage" address="0x10800000" 
+
+        loadSection="OTH" setSection="OTH" HasFlashHeader="FALSE" >Loading Kernel.</CMD> 
+
+    <CMD state="BootStrap" type="load" file="initramfs.cpio.gz.uboot" address="0x10C00000" 
+
+        loadSection="OTH" setSection="OTH" HasFlashHeader="FALSE" >Loading Initramfs.</CMD> 
+
+    <CMD state="BootStrap" type="jump" > Jumping to OS image. </CMD> 
+
+     
+
+
+2.Updater阶段:即用标准的linux命令分区（mksdcard.sh ）及挂载（mount）和将镜像写入emmc(dd)；
+
+对应ucl2.xml脚本
+
+<CMD state="Updater" type="push" body="$ ls /dev/*"/> 
+
+<CMD state="Updater" type="push" body="$ dd if=/dev/zero of=/dev/mmcblk0 bs=512 seek=1536 count=16">clean up u-boot parameter</CMD> 
+
+<CMD state="Updater" type="push" body="send" file="files/uImage--3.10.45-mel-fsl-iimx6q-sabresd-1-r0.2-imx6q-sabresd-20140829022620-uart0.dtb">Sending U-Boot</CMD> 
+<CMD state="Updater" type="push" body="$ dd if=$FILE of=/dev/mmcblk0 bs=512 seek=2">write U-Boot to sd card</CMD> 
+
+<CMD state="Updater" type="push" body="send" file="files/uImage--3.10.45-mel-fsl-imx6q-1-r0.2-mx6q-20140829022620-uart0.bin">Sending kernel uImage</CMD> 
+<CMD state="Updater" type="push" body="$ dd if=$FILE of=/dev/mmcblk0 bs=512 seek=2048 conv=fsync">write kernel image to sd card</CMD> 
+
+<CMD state="Updater" type="push" body="send" file="files/uImage--3.10.45-mel-fsl-iimx6q-sabresd-1-r0.2-imx6q-sabresd-20140829022620-uart0.dtb">Sending kernel uImage</CMD> 
+<CMD state="Updater" type="push" body="$ dd if=$FILE of=/dev/mmcblk0 bs=512 seek=1536 conv=fsync">write kernel image to sd card</CMD> 
+
+<!-- 
+<CMD state="Updater" type="push" body="send" file="files/uImage-ycoto">Sending kernel uImage</CMD> 
+<CMD state="Updater" type="push" body="$ dd if=$FILE of=/dev/mmcblk0 bs=512 seek=2560 conv=fsync">write kernel image to sd card</CMD> 
+-->
+
+<CMD state="Updater" type="push" body="send" file="mksdcard.sh.tar">Sending partition shell</CMD> 
+<CMD state="Updater" type="push" body="$ tar xf $FILE "> Partitioning...</CMD> 
+<CMD state="Updater" type="push" body="$ sh mksdcard.sh /dev/mmcblk0"> Partitioning...</CMD> 
+
+<CMD state="Updater" type="push" body="$ mkfs.ext3 -j /dev/mmcblk0p1">Formatting rootfs partition</CMD> 
+<CMD state="Updater" type="push" body="$ mkdir -p /mnt/mmcblk0p1"/> 
+<CMD state="Updater" type="push" body="$ mount -t ext3 /dev/mmcblk0p1 /mnt/mmcblk0p1"/> 
+<CMD state="Updater" type="push" body="pipe tar -jxv -C /mnt/mmcblk0p1" file="files/ivi-image-mx6q-20140829022620.rootfs.tar.bz2">Sending and writting rootfs</CMD> 
+<CMD state="Updater" type="push" body="frf">Finishing rootfs write</CMD> 
+<CMD state="Updater" type="push" body="$ umount /mnt/mmcblk0p1">Unmounting rootfs partition</CMD> 
+<CMD state="Updater" type="push" body="$ echo Update Complete!">Done</CMD>
+
+软件mfgtools可以自己配置并行烧写的板子数目，及配置烧录自己设计板子各镜像profile。
+For example, “<LIST name="Sabre-SD" desc="Choose SD as media">” indicates this operation will burn image to SD on Freescale Sabre-SD reference board.
+
+“<LIST name="ubuntu-SabreSD-eMMC" desc="Choose eMMC as media">” indicates this operation will burn image to eMMC on Freescale Sabre-SD reference board.
+
+
+
+How to Burn Your Own Image with Manufacturing Tool
+
+The processes above are limited to the reference design boards provided by Freescale. All the U-Boot images and kernel images are used to support Freescale reference design boards. If you want to utilize the tool to burn your own image on your own board, all you need to do is the following:
+
+Generate a special U-Boot image and kernel image for MFG tool
+Generate a normal U-Boot image and kernel image, maybe customizing rootfs which can be used by the end user.
+Refer to the ucl2.xml to create your own operation list. Usually, only changing the original image (U-Boot and kernel) is enough.
+The detailed information about how to generate Manufacturing firmware, refer to the Document “Manufacturing Tool v2 Linux or Android Firmware Development Guide.”

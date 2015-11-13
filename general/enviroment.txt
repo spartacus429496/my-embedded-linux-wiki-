@@ -1,0 +1,12 @@
+
+
+
+export PATH=/usr/local/arm-2008q3/bin:${PATH}
+
+
+or
+set in ~/.zshrc or ~/.bashrc
+	export CROSS_COMPILE=/usr/local/arm-2008q3/bin/arm-none-linux-gnueabi-
+
+source ~/.zhsrc
+

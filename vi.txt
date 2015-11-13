@@ -41,6 +41,9 @@ includes vi vim ,gvim vim-gnome
 		1 ctl +g
 	2.3 exec commad
 		:! tree ~/.vim/
+	2.4 chose word then highlight
+		在单词上输入字母   gd  就可以了
+	2.5 
 3.combinnation
 	3.1
 		gg v G

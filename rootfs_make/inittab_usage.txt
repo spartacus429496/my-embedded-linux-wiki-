@@ -1,0 +1,53 @@
+for inittab usegage
+
+
+嵌入式系统下的linux启动配置文件，不同与普通的PC linux启动配置，启动相关文件与文件的内容也要少得多。嵌入式系统下的linux启动过程一般是：
+    1 在bootloader中制定各种要求传给linux内核的参数，制作ramdisk或ramfs文件系统，并在开机后首先mount上，该文件系统主要负责包含启动运行的配置文件，嵌入式系统主要是/etc/inittab和/etc/rc文件；
+    2 在init进程启动后，进程首先执行/etc/inittab文件，该文件语法下面介绍，一般包括三项内容就可以启动。其中主要的一项内容就是::sysinit:/etc/rc，目的是制定初始化要执行的脚本配置文件，在/etc/rc中则主要是配置系统；另一项内容是::respawn:-/usr/sbin/xxx，xxx一般为shell，最后一个重要的项是::shutdown:/bin/umount -a -r
+    接下来的部分为转载http://blog.csdn.net/kernel_32/archive/2009/02/03/3860756.aspx
+首先介绍点背景知识，关于inittab的：
+init进程是系统中所有进程的父进程，init进程繁衍出完成通常操作所需的子进程，这些操作包括:设置机器名、检查和安装磁盘及文件系统、启动系统日志、配置网络接口并启动网络和邮件服务，启动打印服务等。Solaris中init进程的主要任务是按照inittab文件所提供的信息创建进程，由于进行系统初始化的那些进程都由init创建，所以init进程也称为系统初始化进程。
+       下面具体说明inittab文件的格式。
+　　inittab文件中每一记录都从新的一行开始，每个记录项最多可有512个字符，每一项的格式通常如下:id:rstate:action:process，下面分别解释。
+　　1.id字段是最多4个字符的字符串，用来唯一标志表项。
+　　2.rstate(run state)字段定义该记录项被调用时的运行级别，rstate可以由一个或多个运行级别构成，也可以是空，空则代表运行级别0～6。当请求init改变运行级别时，那些rstate字段中不包括新运行级别的进程将收到SIGTERM警告信号，并且最后被杀死;只有a、b、c启动的命令外(a、b、c不是真正的运行级别)
+　　3.action字段告诉init执行的动作，即如何处理process字段指定的进程，action字段允许的值及对应的动作分别为:
+　　       1)respawn:如果process字段指定的进程不存在，则启动该进程，init不等待处理结束，而是继续扫描inittab文件中的后续进程，当这样的进程终止时，init会重新启动它，如果这样的进程已存在，则什么也不做。
+　　       2)wait:启动process字段指定的进程，并等到处理结束才去处理inittab中的下一记录项。
+　　       3)once:启动process字段指定的进程，不等待处理结束就去处理下一记录项。当这样的进程终止时，也不再重新启动它，在进入新的运行级别时，如果这样的进程仍在运行，init也不重新启动它。
+　　       4)boot:只有在系统启动时，init才处理这样的记录项，启动相应进程，并不等待处理结束就去处理下一个记录项。当这样的进程终止时，系统也不重启它。
+　　       5)bootwait:系统启动后，当第一次从单用户模式进入多用户模式时处理这样的记录项，init启动这样的进程，并且等待它的处理结束，然后再进行下一个记录项的处理，当这样的进程终止时，系统也不重启它。
+　　       6)powerfail:当init接到断电的信号(SIGPWR)时，处理指定的进程。
+　　       7)powerwait:当init接到断电的信号(SIGPWR)时，处理指定的进程，并且等到处理结束才去检查其他的记录项。
+　　       8)off:如果指定的进程正在运行，init就给它发SIGTERM警告信号，在向它发出信号SIGKILL强制其结束之前等待5秒，如果这样的进程不存在，则忽略这一项。
+　　       9)ondemand:功能通respawn，不同的是，与具体的运行级别无关，只用于rstate字段是a、b、c的那些记录项。
+　           10)sysinit:指定的进程在访问控制台之前执行，这样的记录项仅用于对某些设备的初始化，目的是为了使init在这样的设备上向用户提问有关运行级别的问题，init需要等待进程运行结束后才继续。
+　　       11)initdefault:指定一个默认的运行级别，只有当init一开始被调用时才扫描这一项，如果rstate字段指定了多个运行级别，其中最大的数字是默认的运行级别，如果rstate字段是空的，init认为字段是0123456，于是进入级别6，这样便陷入了一个循环，如果 inittab文件中没有包含initdefault的记录项，则在系统启动时请求用户为它指定一个初始运行级别
+　　4.Process字段中进程可以是任意的守候进程、可执行脚本或程序。
+　　另外:在任何时候，可以在文件inittab中添加新的记录项，级别Q/q不改变当前的运行级别，重新检查inittab文件，可以通过命令init Q或init q使init进程立即重新读取并处理文件inittab
+以上这些都是介绍的标准的linux System V的标准，所以对嵌入式来讲有些东西并不见得有用！这里介绍点针对嵌入式的，也就是针对busybox init的
+
+busybox的inittab文件与通常的inittab不同，它没有runlevel的概念，语句功能上也有限制。inittab语句的标准格式是
+
+<id>:<runlevels>:<action>:<process> 
+各字段的含义如下
+
+<id>:
+
+id字段与通常的inittab中的含义不同，它代表的是这个语句中process执行所在的tty设备，内容就是/dev目录中tty设备的文件名。由于是运行process的tty设备的文件名，所以也不能象通常的inittab那样要求每条语句id的值唯一。
+
+<runlevels>:
+
+busybox不支持runlevel，所以此字段完全被忽略。
+
+<action>:
+
+为下列这些值之一：
+
+sysinit, respawn, askfirst, wait,once, restart, ctrlaltdel, shutdown
+
+其 含义与通常的inittab的定义相同。特别提一下askfirst，它的含义与respawn相同，只是在运行process前，会打出一句话 “please press Enter to active this console”，然后等用户在终端上敲入回车键后才运行process。
+
+<process>：
+
+指定要运行的process的命令行。

@@ -1,0 +1,198 @@
+
+
+           uboot useage
+           --------------------------------------------------
+
+(c) 2015 Fri Nov  6 10:54:27 CST 2015 Daniel Kelly  <benh at kernel.crashing.org>,
+    IBM Corp.
+
+
+1.useage
+	source ... //set env
+	make distclean
+	make mx6qmyzrek200_config
+	make -j4
+2.make analysis
+	2.1 在编译u-boot的过程,就是make xxx_config和make两步
+
+	>>>>>>>>Makefile
+		
+	%是个通配符,make xxx_config都是这个目标.目标的依赖是unconfig,unconfig的命令是删除一些文件,而这些文件正是从make xxx_config过程中产生的.unconfig就是清理配置的.
+	        我们来看@$(MKCONFIG) -A $(@:_config=)
+	        其实执行的是mkconfig -A smdk2410
+	        我们可以在该行上面添加一行：echo $@
+	        则会输出smdk2410_config,因为$@就是指目标
+	        $(@:_config=)是变量的替换引用
+	        格式为“$(VAR:A=B)”(或者“${VAR:A=B}”),意思是:替换变量“VAR”中所有“A”字符结尾的字为“B”结尾的字。
+	所以smdk2410_config末尾的_config去除了.
+	        下面就是执行mkconfig脚本了,mkconfig -A smdk2410	
+	
+	
+	
+	这个地方看看原理：   这个地方由两个知识点凑起来的。
+	1）变量的高级用法，变量替换引用
+	$（VAR：PATTERN=REPLACEMENT）也就是说，把变量VAR中(以空格分开的各个字符串中)的 PATTERN 变为REPLACEMENT
+	举个普遍的应用：
+	我们有一个变量objects = foo.o bar.o baz.o，那么我们想获得所有.o文件对用的.c源文件，我们这么做
+	$(object:.o=.c)
+	这个地方其实是一个简化版的patsubst函数。 至于makefile中的函数，我们这里没法展开，遇到什么看什么把。
+	2）$@这里是一个自动化变量。
+	自动化变量是makefile中模式规则的一部分内容。这个地方记住下面几个就可以：
+	$@ 目标文件名，他表示当前规则的目标文件。
+	$<当前规则的所有依赖文件列表，使用空格分开。如果依赖列表中文件有重复，它只记录一次。
+	$^规则的依赖文件列表中的第一个文件名。
+	
+	3）总结看来，就是 $@--> $(@)-->$(@:__config=)
+	
+	
+	那么首先来看一下make smdk2410_config做了些什么事情：
+	因为根目录下的makefile并没有smdk2410_config目标（在老版本中可以找到），取而代之的是%_config这个目标，%代表着任意字符。%_config附近的代码如下：
+	%_config:: unconfig
+	@$(MKCONFIG) -A $(@:_config=)
+	这里可以看到%_config目标后面是双冒号
+	
+
+
+
+	>>>>>>>mkconfig
+	
+	#####################################  
+	#我们执行脚本的命令是mkconfig -A smdk2410,$#表示的是参数的个数，$1表示的是第一个参数  
+	#line 就是在boards.cfg文件中smdk2410的那行，而-i表示忽略大小写  
+	#在boards.cfg文件中，有  
+	#Target                     ARCH        CPU         Board name          Vendor          SoC         Options  
+	#smdk2410                     arm         arm920t     -                   samsung        s3c24x0  
+	#  set ${line}  
+	#  set也可用于在脚本内部给出其运行参数,所以这个时候参数就变为"smdk2410 arm arm920t - samsung s3c24x0"  
+	#这个时候参数个数就变成6个了  
+	###################################### 
+	mx6qmyzrek200                arm         armv7       mx6qmyzrek200       freescale      mx6             mx6qmyzrek200:IMX_CONFIG=board/freescale/imx/ddr/mx6q_4x_mt41j128.cfg,MACH_MX6MYZREK200,MX6Q,DEFAULT_FDT_FILE="imx6q-myzrek200.dtb",DDR_MB=1024
+	
+	
+	make xxx_config后,主要的变化是多了几个文件:
+	        1.include/asm    -->     arch/arm/include/arm
+	        2.include/asm/arch  -->  arch-s3c24x0
+	        3.include/asm/proc  -->  proc-armv
+	        4.在include目录下新建了config.mk文件,文件内容是ARCH CPU BOARD VENDOR SOC的定义
+	        5.在include目录下新建了config.h文件
+	
+	
+	顶层目录的config.mk文件 
+	
+	5.1
+	
+	view u-boot.lds makefile u-boot.map
+	
+	跟着我们查看Makefile中的LDFLAGS变量，发现一条指令
+	
+	LDFLAGS += -Ttext $(TEXT_BASE)  其中TEXT_BASE 是在u-boot根目录的board文件夹的对应的开发板名字的子目录下的config.mk文件中定义的 //or in other files 
+	
+	TEXT_BASE = 0x30100000
+	
+	看到这里我们应该明白为什么_start，也就是.text的首地址总是等于0x30100000了，在连接的时候ld命令会把参数-Ttext指定的地址赋给.text,所以.text在u-boot.lds中的默认地址(当前地址)不起作用了
+	
+	
+	总结uboot的编译流程：
+	
+	1、   首先编译cpu/$(CPU)start.S
+	
+	2、   然后，对于平台相关的每个目录，每个通用的目录都使用他们各自得Makefile生成相应得库
+	
+	3、   将1、2步骤生成的.0.a文件按照board/$(BOARDDIR)/config.mk文件中指定的代码段起始地址、board/$(BOARDDIR)/u-boot.lds链接脚本进行连接。
+	
+	4、   第3步得到的是ELF格式的uboot，后面的Makefile还会将它转换为二进制格式（bin格式）、s-record格式。
+	
+	
+	
+	整个makefile剩下的内容全部是各种不同的开发板的*_config:目标的定义了。
+	
+	概括起来，工程的编译流程也就是通过执行执行一个make *_config传入ARCH，CPU，BOARD，SOC参数，mkconfig根据参数将include头文件夹相应的头文件夹连接好，生成config.h。然后执行make分别调用各子目录的makefile 生成所有的obj文件和obj库文件*.a.  最后连接所有目标文件，生成镜像。不同格式的镜像都是调用相应工具由elf镜像直接或者间接生成的。
+	
+	剩下的工作就是分析U-Boot源代码了。
+
+3. 
+
+
+
+uboot with
+ CONFIG_DEFAULT_FDT_FILE "\0" \
+./include/configs/mx6qmyzr_common.h:    "fdt_file=" CONFIG_DEFAULT_FDT_FILE
+
+
+3.hardware
+
+	1.1 cpu
+
+
+		ARM9	ARM11	Cortex A5	Cortex A7	Cortex A8	Cortex A9	Cortex A15
+		DMIPS/MHz	1,1	1,25	1,58	1,9	2,07	2,5	3,5
+		Classical Frequencies	125 - 480MHz	500 - 1000MHz	300 - 800MHz	800 - 1500MHz	600 - 1000MHz	1 - 1,5GHz	1 - 2GHz
+		Architecture	ARMv5TJ	ARMv6	ARMv7A
+
+		
+		目前采用ARM V7指令集的处理器除了高通QSD8X50系列以外，常见的还有：三星的S5PC100（IP 3GS使用）、S5PC110（魅族M9使用）、S5PC111（三星I9000使用）、三星给apple代工的apple A4（IP4使用），德州仪器（TI）的OMAP34X0系列（里程碑和palm pre用的OMAP3430，ME511用的OMAP3410）、OMAP36X0系列（Droid 2和Droid X用的OMAP3630），德州仪器的OMAP4xx0系列是多核心的ARM Cortex-A9架构，高通除了QSD8X50系列之外，新款MSM7230（HTC Desire Z和华为U8800使用）、MSM8255（Desire HD使用）、QSD8X50A（目前没有已经上市的产品使用）都是改进版ARM V7指令集。还有其他很多厂商的产品（NXP、意法半导体等），在此不一一列举。
+		另外，高通采用ARM V7指令集的处理器和TI、三星等厂商的区别比较大，我猜测高通可能是买了ARM V7指令集的授权或者ARM Cortex-A8架构的授权后进行了比较多的开发和改进。比如说同时代的三星S5PC100以及TI OMAP3430，正常工作频率都只有600MHz左右，高通的QSD8X50却是1GHz。
+		
+		　　为了降低功耗，CPU的频率是会一直变的，最低的时候可能只有100MHZ，只有在你玩游戏或者软件测试的时候才能看到最高频率。
+
+4. startup　
+
+	4.1 samsung system boot startup code
+		三星公司在生产S3C6410芯片时，在地址为0x8000_0000的IROM 区域固化了一段大小为32KB的代码，称作BL0。处理器上电后，PC指向运行0x8000_0000，运行BL0，这种启动方式称作IROM启动。启动的大体流程如下：
+		1)        运行BL0进行一些初始化工作，如关闭看门狗，初始化TCM、系统时钟、堆栈等
+		2)        然后根据GPN[15:13]管脚的电平状态，判断选定的存储设备的类型，初始化存储设备和它对应的控制器。从存储设备(SD/MMC/OneNand/Nand)的特定区域读取8KB的程序到SteppingStone中运行，被拷贝的这段代码称Bootloader1(BL1)。
+		3)        BL1是用户自行编写的代码，必须简短精悍，运行与位置无关。BL1一般简单地重新初始化系统，开辟更广阔的内存空间，并将更加完善的Bootloader2(BL2)拷贝
+		
+	4.2 imx6 system boot
+
+		有人说是先读4K至片上RAM，然后根据flash_header 中的IVT(image vector table)结构体确定Uboot大小，初始化外设，再把Uboot Copy到DDR执行。
+		
+		
+		还是想请教大神，IMX6到底是怎么加载的Uboot？最关键的是DDR初始化在哪里执行的？
+		
+		answeer:
+		关于IMX6的启动流程，你理解的前半部分没错，CPU一上电首先执行rom中固化程序，从配置选择中确定Uboot的获取设备，即确定启动设备，然后从启动设备（比如SD卡）中读取头几K程序(长度不同的设备不同）到片上RAM,然后从这几K程序的IVT中获取uBoot的程序信息（程序入口点、程序长度等）,而确定这些信息后，CPU就会自动将uBoot复制到你自己定义的地址位置，注意，是你自己定义的地址位置，这要根据你程序设定，如果要将程序放在SDRAM运行，则将程序的运行地址定义在SDRAM的地址范围内。
+		
+		
+		　　另外，高通采用ARM V7指令集的处理器和TI、三星等厂商的区别比较大，我猜测高通可能是买了ARM V7指令集的授权或者ARM Cortex-A8架构的授权后进行了比较多的开发和改进。比如说同时代的三星S5PC100以及TI OMAP3430，正常工作频率都只有600MHz左右，高通的QSD8X50却是1GHz。
+		
+		　　为了降低功耗，CPU的频率是会一直变的，最低的时候可能只有100MHZ，只有在你玩游戏或者软件测试的时候才能看到最高频率。
+
+
+
+	4.2  imx6 system boot
+		IMx53上电后，进入的是其内部的Memory，从iMx53RM.pdf  Chapter 2中可以查看到System Memory Map图如下：
+		
+		 Memory Map
+		
+		从片内地址的0x0000_0000至0x0000_FFFF这64K是Boot Rom的空间，其固化有Boot Code。IMx53在硬件复位后会强制Arm内核从Boot Rom启动，运行Boot Code。
+		
+		       Boot Code会根据BOOT_MODE[1:0]的寄存器值、eFUSEs状态和GPIO Setting来完成从不同的boot devices启动，Serial Downloader from UART or USB、Device Configuration Data、Digital signature based High Assurance Boot。Boot Devices包括包括NOR FLASH、NAND FLASH、OneNAND FLASH、SD/MMC、Parmllel ATA/Serial ATA HDD、Serial ROM devices(EEPROM等)。
+		
+		       BOOT_MODE[1:0]对应PIN脚为C18、B20，BOOT_MODE的值会在RESET复位的上升沿进行一次采样(仅此一次)，并保存在BOOT_MODE寄存器中，之后不论PIN脚电平的变化，均不会改变BOOT_MODE寄存器的值。
+		
+		Uboot是是运行完固化的Boot Code后，Boot Code会跳转到选定设备的指定地址去运行，以EMMC为例，见下图
+		
+		
+		
+		起始的前0x200即512B为MBR，接着的是预留的Second Image Table，Boot Image( uboot)应该放在0x400(1024)的地址，即烧写uboot的时候，就应该烧写在emmc主分区的1024位置，这也和烧录uboot的脚本“sudo dd if=./u-boot.bin of=./u-boot-no-padding.bin bs=1024 skip=1; sync”相对应。
+		
+		4.1.2 download freecsal mfgtools config
+
+
+
+5.uboot code analysis
+
+	在BootLoader概述中，我们已经知道BootLoader的实现依赖于处理器的体系结构，为了移植的方便，大多数BootLoader可以分为两个阶段stage1和stage2。依赖于处理器体系结构的代码，比如 CPU 初始化，一般都放在 stage1阶段，通常多用汇编语言来实现，stage1必须是位置无关码。stage2通常用C 语言来实现，这样可以实现给复杂的功能，而且代码会具有更好的可读性和可移植性。U-Boot也不例外，第一阶段主要使用汇编语言编写，程序的入口在start.s中。stage1在运行时，有可能不在其运行地址，这时不能使用静态变量，必须利用位置无关码进行编程a
+	
+	5.1
+	
+	view u-boot.lds makefile u-boot.map
+	
+	跟着我们查看Makefile中的LDFLAGS变量，发现一条指令
+	
+	LDFLAGS += -Ttext $(TEXT_BASE)  其中TEXT_BASE 是在u-boot根目录的board文件夹的对应的开发板名字的子目录下的config.mk文件中定义的 //or in other files 
+	
+	TEXT_BASE = 0x30100000
+	
+	看到这里我们应该明白为什么_start，也就是.text的首地址总是等于0x30100000了，在连接的时候ld命令会把参数-Ttext指定的地址赋给.text,所以.text在u-boot.lds中的默认地址(当前地址)不起作用了
