@@ -19,3 +19,4 @@ Mon Nov  9 17:27:35 CST 2015
 Awesome
 使用Ubuntu 11.10不习惯默认搭载的Unity,Gnome 3也不尽人如意,也使用xfce/openbox,但使用都不是很好,没有Windows的体验好,然后接触了Awesome,Awesome是一款平铺式窗体管理器,Awesome会去除窗口的标题栏等.会使窗口尽量小的占用桌面空间,而且大部分窗口操作都可以通过键盘来进行操作,免除了各位身为键盘高手的码农们频繁拿鼠标的烦恼.
 
+/home/spirit/tmp/hisi_linux/hisi-linux/x86-arm/arm-hisiv200-linux/bin/arm-hisiv200-linux-gnueabi-gcc uart_2.c -o  uart_hisi.out
