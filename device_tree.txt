@@ -1,0 +1,42 @@
+
+
+           device tree useage
+           --------------------------------------------------
+
+(c) 2015 Fri Nov  6 10:54:27 CST 2015 Daniel Kelly  <benh at kernel.crashing.org>,
+    IBM Corp.
+Thu Nov 19 12:54:20 CST 2015
+
+1.hardware
+	1.1 hardware basic, could not detectd
+		cpu bus memory usbhost controler
+		pci controler iic controller interrupt  controller
+		platform
+		pci bridge 
+	1.2 could detected and probe in dynamic(not include in dtb) 
+		usb client 
+2.device tree 
+	2.1 it is a data structure 
+		nodes 
+		2.1.0 ornizations
+			2.1.0.1 arm vender
+				skeleton.dtsi
+			2.1.0.2 samsung soc  general
+				s3c24xx.dtsi
+			2.1.0.3 samsung soc 
+				s3c2416.dtsi
+			2.1.0.4 board 
+				borad_snail.dtsi
+
+		2.1.1 source file format 
+			[label:] node-name[@unit-address] { 
+			   [properties definitions] 
+			   [child nodes] 
+			}
+			see for detail: https://events.linuxfoundation.org/sites/events/files/slides/petazzoni-device-tree-dummies.pdf
+	2.2 compile 
+	2.3 binary formart
+
+3. relations
+	3.1 picture 
+		between uboot ram(store dtb) tagpointers r1 r2 reg kernel

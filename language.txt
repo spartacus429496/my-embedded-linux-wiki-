@@ -1,0 +1,13 @@
+
+
+           device tree useage
+           --------------------------------------------------
+
+(c) 2015 Fri Nov  6 10:54:27 CST 2015 Daniel Kelly  <benh at kernel.crashing.org>,
+    IBM Corp.
+Thu Nov 19 12:54:20 CST 2015
+
+会写字和能写出一个好的剧本是两回事。
+Could know words and write is one thing, and could write a good theme is another thing.
+
+c c++ java python shell makefile device tree

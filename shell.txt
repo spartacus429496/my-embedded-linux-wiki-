@@ -56,5 +56,21 @@ cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 		/home/spirit/tmp/python_everything/found
 
 
+4.find and grep 
+	xargs结合grep：
+	find . -name '*.txt' -type f -print0 |xargs -0 grep -n 'aaa'    #“-n”输出行号	
+
+	find . -name '*imx6*' -type f -print0 |xargs -0 grep -in '95' --color
+
+
+Why not simply use this:
+
+find -name "*.xls" -o -name "*.csv"
+You don't need regex for this.
+
+If you absolutely want to use regex simply use
+
+find -regex ".*\.\(xls\|csv\)"
+find -regex ".*\.\(cpp\|h\)"
 
 
