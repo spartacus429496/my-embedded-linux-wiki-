@@ -1,0 +1,17 @@
+
+
+
+build cross tools compiles 
+http://blog.csdn.net/keminlau/article/details/4945951
+1
+	1.1 use buildroot
+构建交叉编译工具链
+部分摘自《Building Embedded Linux Systems 》作者: Karim Yaghmour
+刘建文略译并整理（http://blog.csdn.net/keminlau ）
+KEY: 交叉编译 嵌入式 Linux C库 glibc
+
+Buildroot自动构建交叉编译工具链
+在过去很长的一段时间里，构建一套交叉编译工具链对于嵌入式开发者来说简直是一场恶梦，因为他们得手动跟踪各种源码包（及其更新包）之间的依赖关系。buildroot，和有名的微型C库——uclibc一起发布的小工具改变这一事实。
+
+http://buildroot.org/downloads/manual/manual.html
+	1.2 build yourself

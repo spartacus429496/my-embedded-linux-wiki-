@@ -1,0 +1,11 @@
+
+
+1.
+	1.1 openjtag usage 
+		openocd install 
+			openocd -f /opt/interface -f /opt //
+		telnet localhost:4444
+		oflash 
+			oflash file
+		arm-linux-gdb leds_elf
+			remote localhost:3333	

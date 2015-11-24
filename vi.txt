@@ -7,6 +7,15 @@
 
 
 includes vi vim ,gvim vim-gnome
+0.install 
+	0.1 get source www.vim.org
+		git clone https://github.com/vim/vim.git
+	0.2 configure
+		configure --help //check
+		configure --enable-multibyte //include multityte editing support
+		make distclean #if you build vim before
+		make
+		sudo make install
 1.basic 
 	1.1 move 
 		jk h l 
@@ -72,4 +81,28 @@ includes vi vim ,gvim vim-gnome
 	set number
 	set hlsearch
 	set clipboard=unnamedplus
+	 编辑~/.vimrc文件，加上如下几行：
+
+   set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+   set termencoding=utf-8
+   set encoding=utf-8
+因为在windows下默认是gb编码，而我的vim默认是utf-8（gedit默认也是utf-8），所以打开会成乱码。改动了一下配置文件，使vi支持gb编码就好了。
+$vi ~/.vimrc
+let &termencoding=&encoding
+set fileencodings=utf-8,gbk
+$:wq
+再次打开vi，显示就正常了。
+vim中编辑不同编码的文件时须要注意的一些地方
+此文解说的是vim编辑多字节编码文档（中文）所要了解的一些基础知识，注意其沒有涉及gvim，纯指字符终端下的vim。
+vim编码方面的基础知识：
+1，存在3个变量：
+encoding—-该选项使用于缓冲的文本(你正在编辑的文件)，寄存器，Vim 脚本文件等等。你能够把 ‘encoding’ 选项当作是对 Vim 内部执行机制的设定。
+fileencoding—-该选项是vim写入文件时採用的编码类型。
+termencoding—-该选项代表输出到客户终端（Term）採用的编码类型。
+2，此3个变量的默认值：
+encoding—-与系统当前locale同样，所以编辑文件的时候要考虑当前locale，否则要设置的东西就比較多了。
+fileencoding—-vim打开文件时自己主动辨认其编码，fileencoding就为辨认的值。为空则保存文件时採用encoding的编码，假设沒有改动encoding，那值就是系统当前locale了。
+termencoding—-默认空值，也就是输出到终端不进行编码转换。
+由此可见，编辑不同编码文件须要注意的地方不不过这3个变量，还有系统当前locale和、文件本身编码以及自己主动编码识别、客户执行vim的终端所使用的编码类型3个关键点，这3个关键点影响着3个变量的设定。
+
 	
