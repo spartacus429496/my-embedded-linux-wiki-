@@ -85,3 +85,8 @@ export $PATH="$PATH:路径1:路径2:...:路径n” （或“PATH=$PATH:路径1:�
 
 　　注意，与DOS/Window不同，UNIX类系统环境变量中路径名用冒号分隔，不是分号。另外，软件越装越多，环境变量越添越多，为了避免造成混乱，建议所有语句都添加在文件结尾，按软件的安装顺序添加。
 
+	6. locate
+		6.1  finding files on mounted disk with locate		
+			/etc/updatedb.conf contains settings for what paths and file systems to prune (not index). Indeed I found my mount point among those paths, and upon removing it everything worked fine.
+			Look at your /etc/updatedb.conf. It contains the PRUNEFS and PRUNEPATHS which might exclude your IDE drive. If it does, change that file so that it doesn't exclude your drive. And then run updatedb. If this doesn't work or you don't know what to change in that file, please include the line from mount that has your IDE drive, and the contents of /etc/updatedb.conf
+			locate r  .*starter.*swf$
