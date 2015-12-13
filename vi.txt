@@ -62,6 +62,18 @@ includes vi vim ,gvim vim-gnome
 	ctags + R
 	:Tlist
 	ctl+n
+	4.1 ctags
+		/usr/bin/ctags
+		/usr/bin/ctags-exuberant
+		/usr/share/doc/exuberant-ctags
+		
+	4.2 tlist
+		.
+		├── doc
+		│   └── taglist.txt
+		└── plugin
+		    └── taglist.vim
+
 
 5.vimrc env setting 
 	~/.vimrc 

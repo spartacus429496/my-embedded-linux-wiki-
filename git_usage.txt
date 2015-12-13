@@ -38,3 +38,18 @@ git push -u origin master
 2. web help
 	see more in git svm docs
 
+3. git branch
+	3.1 git commit log 
+		git status
+		git show-branch
+		git branch
+		git branch -v
+		git log --graph --oneline --all
+		git log
+		git log --all
+		git log --oneline
+		git log --oneline
+		git checkout -b victor_first e907d00
+		git branch 
+		git status
+		git checkout master

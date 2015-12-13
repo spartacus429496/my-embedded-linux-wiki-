@@ -1,0 +1,189 @@
+bash grammar
+           --------------------------------------------------
+
+2015年 12月 05日 星期六 21:08:16 CST
+(c) 2015 Fri Nov  6 10:54:27 CST 2015 Daniel Kelly  <benh at kernel.crashing.org>,
+    IBM Corp.
+
+1.history shell struct 
+	1.1 script explaitation
+	
+	1.2 check
+		ps | grep $$
+		which bash
+		which bash >hello.sh
+		chmod +x hello.sh
+		./hello.sh
+		bash +x hello.sh
+2.Variable
+	include enviroment, position var, predefine var, userdefine var;
+	2.1 enviroment
+		PATH HOME TERM PS1 SHELL LOGNAME UID ARCH
+	2.2 position
+	    ex7 a b c d e f
+	    $0 $1 $2 $3 
+	2.3 pre define
+	    $0 
+		$# : var number
+		$* : strings
+		$!
+		$?
+		$$
+	2.4 user define
+		2.4.1 name rule
+			start with alphabeta or '_', add number 		
+		2.4.2 create
+			declare typeset
+			var=value //no ' 'with = ,bash treated as commads
+		2.4.2 destroy
+			unset name
+		2.4.3 assign value to variable
+			read , direct assign, cmdline variable, cmd output result,
+			read from file
+	
+			2.4.3.1 read command
+				read var1 var2 
+			2.4.3.2 direct assign
+				name=daniel
+				gender=man
+			2.4.3.3 cmdline vari
+				cmd 1 2 3 
+				var=$1
+			2.4.4.4 cmd output
+				currentdir=`pwd` 
+			
+			2.4.4.5 read from file
+				while read LINE
+				do
+				...
+				done<filename
+3.output
+	3.1echo 
+	3.2printf
+		var=$(prinf"%s" $i)
+4.array
+	sorce(1 2 3 3 45)
+	score[$i]
+5.algrithom
+	5.1 expr
+	5.2 let
+		let "j=5*i+9"  ==  ((j=5*i+9))
+6.control flow
+	6.1 if 
+		 if 测试条件
+    then 命令1
+    else 命令2
+    fi
+    其中，if、then、else和fi是关键字。
+	6.2 test
+		6.2.1 test cmd
+			test -f "$1"   
+		6.2.2 [ cmd 
+			] param 
+			[ -f "$1" ]
+	6.3 case esac 
+case语句
+    case语句允许进行多重条件选择。其一般语法形式是：
+    case 字符串 in
+    模式字符串1） 命令
+     …
+     命令;;
+    模式字符串2） 命令
+     …
+     命令;;
+     …
+    模式字符串n） 命令
+     …
+     命令;;
+    esac
+	6.4 while
+Shell中有三种用于循环的语句，它们是while语句、for语句和until语句。
+    while语句的一般形式是：
+    while 测试条件
+    do
+    命令表
+    done
+ 5．until语句
+    until语句的一般形式是：
+    until 测试条件
+    do
+     命令表
+    done
+    它与while语句很相似，只是测试条件不同：当测试条件为假时，才进入循环体，直至测试条件为真时终止循环。
+    6．for语句
+    for语句是最常用的建立循环结构的语句。其使用格式主要有三种，取决于循环变量的取值方式。格式一：
+    for 变量 in 值表
+    do
+     命令表
+    done
+ 格式二：
+    for 变量 in 文件正则表达式
+    do
+     命令表
+    done
+    其执行过程是，变量的值依次取当前目录下（或给定目录下）与正则表达式相匹配的文件名，每取值一次，就进入循环体执行命令表，直至所有匹配的文件名取完为止，退出for循环。
+    格式三：
+    for i in $* 或者 for i
+    do do
+     命令表 命令表
+    done done
+    这两种形式是等价的。其执行过程是，变量i 依次取位置参数的值，然后执行循环体中的命令表，直至所有位置参数取完为止。
+    7．break命令和continue命令
+    break命令可以使我们从循环体中退出来。其语法格式是：
+    break [ n ]
+    其中，n表示要跳出几层循环。默认值是1，表示只跳出一层循环。
+    continue命令跳过循环体中在它之后的语句，回到本层循环的开头，进行下一次循环。其语法格式是：
+    continue [ n ]
+    其中，n表示从包含continue语句的最内层循环体向外跳到第几层循环。默认值为1。循环层数是由内向外编号。
+	
+
+
+7. function 
+
+函数
+    在Shell脚本中可以定义并使用函数。其定义格式为：
+    [function]函数名( )
+    {
+     命令表
+    }
+    其中，关键字function可以缺省。
+    函数应先定义，后使用。调用函数时，直接利用函数名，如showfile，不必带圆括号，就像一般命令那样使用。Shell脚本与函数间的参数传递可利用位置参数和变量直接传递。变量的值可以由Shell脚本传递给被调用的函数，而函数中所用的位置参数$1、$2，等对应于函数调用语句中的实参，这一点是与普通命令不同的。
+
+	7.1 define
+	7.2 parameter
+	7.3 local scope
+	7.4 return 
+	7.5 load calling export
+	7.6 delete unset -f name 
+
+8. regular expression
+9. * .
+10. sed awk
+11.
+	make ls 
+
+appendix
+1.0 special 
+
+http://blog.useasp.net/archive/2014/06/02/summary-of-the-special-characters-in-shell-on-linux.aspx
+
+1.1 Defensive BASH Programming
+	keep the code tidy and clean
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

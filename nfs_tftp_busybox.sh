@@ -60,6 +60,10 @@ sync：同步写磁盘（async：资料会先暂存于内存当中，而非直�
 		(4) Restart the NFS service
 		$ sudo /etc/init.d/portmap restart
 		$ sudo /etc/init.d/nfs-kernel-server restart
+
+test:
+	mount -t nfs -o nolock 192.168.1.105:/home/bati/weidongshan_rootfs
+
 	other
 	 ask :nfs /etc/exports multiple directories
 

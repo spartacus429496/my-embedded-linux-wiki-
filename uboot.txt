@@ -196,3 +196,14 @@ uboot with
 	TEXT_BASE = 0x30100000
 	
 	看到这里我们应该明白为什么_start，也就是.text的首地址总是等于0x30100000了，在连接的时候ld命令会把参数-Ttext指定的地址赋给.text,所以.text在u-boot.lds中的默认地址(当前地址)不起作用了
+
+weidongshan
+
+set bootargs noinitrd root=/dev/nfs nfsroot=192.168.1.116:/work/nfs_root/first_fs ip=192.168.1.17:192.168.1.116:192.168.1.1:255.255.255.0::eth0:off init=/linuxrc console=ttySAC0
+
+
+set bootargs noinitrd root=/dev/nfs nfsroot=192.168.1.105:/home/bati/weidongshan_rootfs ip=192.168.1.17:192.168.1.105:192.168.1.1:255.255.255.0::eth0:off init=/linuxrc console=ttySAC0
+set bootargs noinitrd root=/dev/nfs nfsroot=192.168.1.101:/home/bati/weidongshan_rootfs ip=192.168.1.17:192.168.1.101:192.168.1.1:255.255.255.0::eth0:off init=/linuxrc console=ttySAC0
+
+bootargs=noinitrd root=/dev/mtdblock3 init=/linuxrc console=ttySAC0,115200
+set bootargs noinitrd root=/dev/mtdblock3 init=/linuxrc console=ttySAC0,115200
