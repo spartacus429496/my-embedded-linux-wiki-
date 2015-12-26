@@ -1,0 +1,146 @@
+
+
+1. vim src
+
+	1.1 vim  
+		/etc/vim/vimrc
+		~/.vim/vimrc ~/.vim/plugin doc
+	1.2 vimrc cscope
+		1. E568: duplicate cscope database not added
+	1.3 vim window 
+		ctrl+w h j k l
+		:close :only
+
+根据提示，cscope数据库重复添加了，我使用的是vim7.2版本，而这个版本在已经支持cscope，并在它的配置文件中开启了cscope功能
+
+$ vi /etc/vimrc 
+
+然后，我们给vim添加了一个插件,cscope_maps.vim, 这个文件主要作用是作一些快捷键映射，免去了输入命令的麻烦，但文件一直没有更新，里面只提及vim7以下的配置方法，在里面有如上所示相同的代码，所以导致了重复添加数据库的冲突
+
+$ vi ~/.vim/plugin/cscope_maps.vim 
+?
+1
+2
+3
+4
+5
+6
+7
+	
+40     " add any cscope database in current directory
+41     if filereadable("cscope.out")
+42         cs add cscope.out 
+43     " else add the database pointed to by environment variable
+44     elseif $CSCOPE_DB != ""
+45         cs add $CSCOPE_DB
+46     endif
+
+解决冲突的方法很简单，注释掉这些行便可以了
+
+	1.3 vimrc ctags
+ 		set autochdir
+		set tags=tags;
+
+2. ctags
+	二、下载源码安装（网上提供的方法）
+
+        1）从http://ctags.sourceforge.net/下载源代码包后，解压缩生成源代码目录，
+read README INSTALL
+
+        2）然后进入源代码根目录执行./configure，
+
+        3）然后执行make，
+
+        4）编译成功后执行make install。
+『基本功能使用方法』
+
+常用命令列表：
+
+        1.  $ ctags –R *      ($ 为Linux系统Shell提示符)
+
+        2.  $ vi –t tag         (请把tag替换为您欲查找的变量或函数名)
+
+        3． ：ts                                (ts 助记字：tags list, “:”开头的命令为VI中命令行模式命令)
+        4． ：tp                                (tp 助记字：tags preview)
+        5． ：tn                                (tn 助记字：tags next)
+        6． Ctrl + ]
+        7． Ctrl + T 
+3. Tlist
+	downlaod src
+	http://vim-taglist.sourceforge.net/index.html
+	add plugin& doc to ~/vim/
+4. cscope 
+	4.1 src
+	
+	4.2 read README INSTALL
+		1. ./configure --with-flex  (注：如果平台是Linux,最好带上 --with-flex选项)
+         2. make  (注：我没有遇到错误)
+         3. make install (注： 直接安装好了)
+
+	4.3 usage
+		4.3.1 
+			http://cscope.sourceforge.net/large_projects.html
+			Using Cscope on large projects (example: the Linux kernel)
+
+			dispare src and cscope database  , use cs_linux_arm.sh //victor self
+		4.3.2 vim tuterl
+			http://cscope.sourceforge.net/cscope_vim_tutorial.html
+			The Vim/Cscope tutorial
+			cscope_maps.vim to ~/.vim/plugin	
+	4.4 connection
+		2. E567: no cscope connections
+
+根据提示表示没有添加数据库(cscope.out）,指定该文件便是了
+
+:cs add $CSCOPE_DB
+
+出现这种问题的原因很简单，就是当前目录下找不到cscope.out这个文件。当一个工程包含子目录的时候，我们一般是在顶层目录使用 cscope -Rb建立数据库的，如果我们没有导入CSCOPE_DB这个环境变量的话，我们在子目录下vim打开一个文件便会出现E567问题，这显然很不方便。所以我们需要添加这个环境变量
+
+$ export CSCOPE_DB=/yourproject/cscope.out
+
+这样就不需要在子目录下还要手动添加数据库文件了 :)
+
+
+	4.4 usecmd
+		2. 在源码根目录下打开任意.c文件，使用如下命令：
+         1. Ctrl+]将跳到光标所在变量或函数的定义处 Ctrl+T返回
+         2. ：cs find s ---- 查找C语言符号，即查找函数名、宏、枚举值等出现的地方
+            ：cs find g ---- 查找函数、宏、枚举等定义的位置，类似ctags所提供的功能
+            ：cs find d ---- 查找本函数调用的函数
+            ：cs find c ---- 查找调用本函数的函数
+            ：cs find t: ---- 查找指定的字符串
+            ：cs find e ---- 查找egrep模式，相当于egrep功能，但查找速度快多了
+            ：cs find f ---- 查找并打开文件，类似vim的find功能
+            ：cs find i ---- 查找包含本文件的文
+         3. 2的所以命令也可以且按銉来实现：
+               1. Ctrl+\\ 再按 s 表示：cs find s命令
+               2. 同理实现cs find + g,d,c,t,e,f,i命令
+
+ 	5.4
+		move on word 	shortcut ctl+@ then fast enter s t c d 
+	front back ctrl + i in o back
+	ctrl +] t
+5.5 result space paging esc num +enter 
+	
+
+
+
+6.color
+	1.solarized
+		.
+├── autoload
+│   └── togglebg.vim
+├── bitmaps
+│   └── togglebg.png
+├── colors
+│   └── solarized.vim
+├── doc
+│   ├── solarized.txt
+│   └── tags
+└── README.mkd
+	6.1.1 vimrc	
+syntax enable
+set background=dark
+colorscheme solarized
+let g:solarized_termcolors=256
+
