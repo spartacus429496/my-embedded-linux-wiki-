@@ -13,6 +13,12 @@ includes vi vim ,gvim vim-gnome
 	0.2 configure
 		configure --help //check
 		configure --enable-multibyte //include multityte editing support
+		0.2.1 configure cscope 
+			vim  --version | grep cscope
+			./configure --help | grep cscope
+			./configure --enable-cscope && make
+			check 
+			./src/vim --version | grep cscope 	
 		make distclean #if you build vim before
 		make
 		sudo make install
@@ -33,6 +39,8 @@ includes vi vim ,gvim vim-gnome
 
 	1.4 delete
 		dd dw 5d d+G
+	1.5 delete $ end of line
+		J
 2. :command
 	2.1 save 
 		:w :wq q! wq!

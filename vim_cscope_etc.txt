@@ -78,16 +78,21 @@ read README INSTALL
          3. make install (注： 直接安装好了)
 
 	4.3 usage
+		gen cscope.files
+
 		4.3.1 
 			http://cscope.sourceforge.net/large_projects.html
 			Using Cscope on large projects (example: the Linux kernel)
 
 			dispare src and cscope database  , use cs_linux_arm.sh //victor self
-		4.3.2 vim tuterl
+			cd /home/jru/cscope     # the directory with 'cscope.files'
+    cscope -b -q -k
+		4.3.2 vim tutorial
 			http://cscope.sourceforge.net/cscope_vim_tutorial.html
 			The Vim/Cscope tutorial
 			cscope_maps.vim to ~/.vim/plugin	
 	4.4 connection
+CSCOPE_DB=/foo/cscope.out; export CSCOPE_DB
 		2. E567: no cscope connections
 
 根据提示表示没有添加数据库(cscope.out）,指定该文件便是了
@@ -144,3 +149,19 @@ set background=dark
 colorscheme solarized
 let g:solarized_termcolors=256
 
+
+
+apendix:
+1. gen cscope.files
+
+
+LNX=/home/jru/linux-2.4.18
+    cd / 	
+    find  $LNX                                                                \
+	-path "$LNX/arch/*" ! -path "$LNX/arch/i386*" -prune -o               \
+	-path "$LNX/include/asm-*" ! -path "$LNX/include/asm-i386*" -prune -o \
+	-path "$LNX/tmp*" -prune -o                                           \
+	-path "$LNX/Documentation*" -prune -o                                 \
+	-path "$LNX/scripts*" -prune -o                                       \
+	-path "$LNX/drivers*" -prune -o                                       \
+        -name "*.[chxsS]" -print >/home/jru/cscope/cscope.files
