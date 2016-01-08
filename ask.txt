@@ -23,3 +23,15 @@ Awesome
 
 
 	9. vim yuanyu
+
+10. dma
+
+最后我们把坑填了吧。这是DUMP ARM9的BIOS的函数：
+[code=c]
+#define BIOS_ADDRESS 0xFFFF0000
+#define BIOS_SIZE 32768
+void dumpARM9BIOS(){
+    void* tmpBuffer=calloc(BIOS_SIZE,1);
+    swiCopy((void*
+
+    10.1 dma和cpu总线的竞争
