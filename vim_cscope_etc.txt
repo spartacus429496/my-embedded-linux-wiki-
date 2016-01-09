@@ -132,6 +132,10 @@ $ export CSCOPE_DB=/yourproject/cscope.out
 
 6.color
 	1.solarized
+
+src  origin	https://github.com/altercation/vim-colors-solarized (fetch)
+
+
 		.
 ├── autoload
 │   └── togglebg.vim
