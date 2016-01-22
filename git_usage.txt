@@ -53,3 +53,33 @@ git push -u origin master
 		git branch 
 		git status
 		git checkout master
+
+
+4.git diff
+1 git branch Fix
+2 git checkout Fix
+3 change , echo 'fix!!'>>a
+4.git diff
+5 git commit -a -m "Fix"
+6 git diff master > patch
+7 git checkout master
+sweetdum@sweetdum-ASUS:~/GitEx$ git branch PATCH
+sweetdum@sweetdum-ASUS:~/GitEx$ git checkout PATCH
+Switched to branch 'PATCH'
+sweetdum@sweetdum-ASUS:~/GitEx$ git apply patch
+sweetdum@sweetdum-ASUS:~/GitEx$ git commit -a -m "Patch Apply"
+[PATCH 9740af8] Patch Apply
+1 files changed, 1 insertions(+), 0 deletions(-)
+
+
+4.1 git diff branch_a branch_b
+
+4.2 TODO more will come . git commit id
+
+5.0 drop
+git如何放弃所有本地修改?
+git checkout . #本地所有修改的。没有的提交的，都返回到原来的状态
+git stash #把所有没有提交的修改暂存到stash里面。可用git stash pop回复。
+git reset --hard HASH #返回到某个节点，不保留修改。
+git reset --soft HASH #返回到某个节点。保留修改
+
