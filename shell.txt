@@ -73,7 +73,12 @@ If you absolutely want to use regex simply use
 find -regex ".*\.\(xls\|csv\)"
 find -regex ".*\.\(cpp\|h\)"
 
-	5 export
+	4.1 prune -o
+		find ./ -path "./test_c" -prune -o -name "xyfz.txt" -print
+	4.2 list .*xxx
+		find ./components/ -type f -name '*.*' | sed 's|.*\.||' | sort -u
+
+5 export
 		5.1 export 
 		Linux export 命令
 
@@ -90,3 +95,19 @@ export $PATH="$PATH:路径1:路径2:...:路径n” （或“PATH=$PATH:路径1:�
 			/etc/updatedb.conf contains settings for what paths and file systems to prune (not index). Indeed I found my mount point among those paths, and upon removing it everything worked fine.
 			Look at your /etc/updatedb.conf. It contains the PRUNEFS and PRUNEPATHS which might exclude your IDE drive. If it does, change that file so that it doesn't exclude your drive. And then run updatedb. If this doesn't work or you don't know what to change in that file, please include the line from mount that has your IDE drive, and the contents of /etc/updatedb.conf
 			locate r  .*starter.*swf$
+
+tail -f /var/log/kern.log
+
+7.xclip
+	7.1
+		cat file | xclip -selection clipboard
+		pwd | xclip
+
+8.ssh
+	8.1
+		ssh-keygen -t rsa
+	8.2
+		ssh -vT git@scmservgit04.sdna.sony.co.jp
+9.sed
+	9.1
+		sed -i 's/xxx/yyy/g' filename
