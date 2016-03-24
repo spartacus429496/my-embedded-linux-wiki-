@@ -1,0 +1,6 @@
+1. in win7 close vm ubuntu
+2. in win7 create share folders , auto mount
+3. in ubuntu
+virtual box add sharebox
+sudo adduser [username] vboxsf
+4. in ubuntu /media/sf_xxx

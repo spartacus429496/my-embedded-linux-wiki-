@@ -136,6 +136,7 @@ git rebase --continue
 git log
 git push origin HEAD:refs/publish/feature/pan/ble  //gerrit https://scmservgit04.sdna.sony.co.jp/#/c/6765/
 
+git fetch ssh://xJie.Chen@scmservgit04.sdna.sony.co.jp:29418/pj/Spritzer/spritzer refs/changes/50/6850/2 && git checkout FETCH_HEAD
 
 
 

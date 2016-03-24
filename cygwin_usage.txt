@@ -1,0 +1,44 @@
+cygwin
+Use HTTP/FTP Proxy
+
+select packages
+default install reinstall uninstall
+
+Base , Devel, Libs, Net, System, Utils  default>> Install
+
+n/a Not Avalibale skip
+
+2.1 [main] make 4472 child_info_fork::abort: C:\cygwin\bin\cygiconv-2.dll:
+Loaded to different address: parent(0x2D0000) != child(0x440000)a
+
+
+ncurses 64bit, but our platform is 32bit
+so search , uninstall
+
+3.set path
+export PATH=/cygdrive/c/Keil_v5/ARM/ARMCC/bin:$PATH
+printenv PATH
+
+gcc-arm-none-eabi-4_9-2015q1-20150306-win32.zip
+export PATH=/cygdrive/E/gcc-arm-none-eabi-4_9-2015q1-20150306-win32/bin
+arm-none-eabi-gcc.exe
+
+
+#install xxx.spk
+#save_file -x CFG
+m0p CFG
+nordic windows develop enviroment
+1. keil mdk
+2. j link ob
+3. example. packages
+
+The role will test and debug Android Media software based on Intel IA platform. The candidates should have >3 years working experiences and should have Linux/Android development experience.
+Major in Computer Engineering, Computer Science, Electronic Engineering or equivalent.
+Familiar with Android media, OpenMAX framework.
+Familiar with video codec especially H.264.
+Experience with Linux platform; familiar with one Linux distribution like SUSE, Ubuntu or CentOS.
+Strong debug and troubleshooting skills.
+Solid programming skills include C/C++, script language (Bash, Perl or Python).
+Familiar with SCM tools include git, bugzilla, etc.
+Team work and collaboration spirit.
+
