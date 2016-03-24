@@ -1,0 +1,14 @@
+
+
+1.usb host
+	1.1 usb device driver //usb-skeleton.c
+		1.1.1 usbmouse.c //+input subsystem
+	1.2 usb core
+	1.3 usb host controller driver
+	1.4 usb hub driver //kthread khubd
+
+2.usb device side
+	2.1 usb bus interface //SIE
+	2.2 usb logical device // a colection of endpoints
+	2.3 function //a collecitons of interfaces
+
