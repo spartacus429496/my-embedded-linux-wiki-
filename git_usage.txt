@@ -83,3 +83,64 @@ git stash #把所有没有提交的修改暂存到stash里面。可用git stash 
 git reset --hard HASH #返回到某个节点，不保留修改。
 git reset --soft HASH #返回到某个节点。保留修改
 
+
+6.gerrit usage
+
+1. clone/创建本地branch
+   git clone ssh://202.238.109.106/training.git
+   git checkout -b csc/training/master remotes/origin/csc/training/master
+2. Commit的时候，自动把 change-Id 加入的配置
+    scp scmservgit03.sdna.sony.co.jp:hooks/commit-msg .git/hooks/ 
+3. 修改，提交
+   vim hello.c
+   git commit
+4. gerrit push
+   git push origin HEAD:refs/for/csc/training/master
+    <csc/training/master是自己的branch名>
+5. 在gerrit reviw page上review设置以及review
+   https://scmservgit03.sdna.sony.co.jp
+
+从下面开始，是当第前一次review失败后，修改了代码，如何在保证使用同一个Change Id 把修改做Gerrit push
+6. 在Gerrit review page上找到你需要修改的patch set, 点击 'checkout', 这是在下面的文本框中会出现类似下面的fetch命令：
+   " git fetch ssh://Chris.Cai@scmservgit03.sdna.sony.co.jp:29418/training refs/changes/87/2687/1 && git checkout FETCH_HEAD " 
+	6.1
+		rebase button
+7. 回到你自己的git 开发分支（通过'git status'检查自己的代码状态） 
+8. 执行上面第6步取得的命令。这是 git会自动在HEAD处创建一个临时的空branch。
+9. 修改代码。
+10. 执行命令，假如commit log。但注意不要手动修改Change Id。 
+     git commit --amend
+nano ctrl + X
+11. 执行gerrit push
+     git push origin HEAD：refs/for/csc/training/master     
+     <csc/training/master是自己的branch名>
+
+     git push origin HEAD：refs/pulish/feature/pan/ble
+
+12....victor
+process conflict in gerrit review  >>> ====
+merge
+1.
+git branch -v
+git fetch
+git branch -v
+git fetch ssh://xJie.Chen@scmservgit04.sdna.sony.co.jp:29418/pj/Spritzer/spritzer refs/changes/65/6765/1 && git checkout FETCH_HEAD
+git branch -v
+git checkout -b feature/pan/ble_6765
+git branch -v
+git rebase origin/feature/pan/ble
+vim pan/ble/nrf51/ble_gap.c///>>>>
+git status
+git add pan/ble/nrf51/ble_gap.c///conflict file
+git rebase --continue
+git log
+git push origin HEAD:refs/publish/feature/pan/ble  //gerrit https://scmservgit04.sdna.sony.co.jp/#/c/6765/
+
+
+
+
+7. stash
+	7.1 git stash , git stash list , git stash apply --2
+
+8. undo the last commit
+	git reset HEAD^

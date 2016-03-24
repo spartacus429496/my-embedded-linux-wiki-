@@ -78,6 +78,9 @@ find -regex ".*\.\(cpp\|h\)"
 	4.2 list .*xxx
 		find ./components/ -type f -name '*.*' | sed 's|.*\.||' | sort -u
 
+	4.3 find big files 
+		find /path/to/search/ -type f -printf '%s %p\n'| sort -nr | head -10
+
 5 export
 		5.1 export 
 		Linux export 命令
@@ -111,3 +114,33 @@ tail -f /var/log/kern.log
 9.sed
 	9.1
 		sed -i 's/xxx/yyy/g' filename
+10.dmesg
+	10.1
+how to monitor dmesg in real time
+I was looking around for a way of monitoring dmesg output in realtime.
+
+Some distros allow you to
+tail -f /var/log/dmesg
+however this file stops being written in Ubuntu after boot, so that's not so useful.
+
+I then found the watch command, which executes a command every 2 seconds (configurable if you like). Just watching dmesg fills my terminal output from the start, which is less than useful, so I use tail to shrink it down a bit. The command:
+watch "dmesg | tail -20"
+does exactly what I was after.
+
+11.sed
+	11.1 delete tabs and the beginning of lines use sed
+sed does not know about escape sequences like \t. So you will have to literally type a tab on your console:
+
+sed 's/^    *$//g' <filename>
+If you are on bash, then you can't type tab on the console. You will have to do ^V and then press tab. (Ctrl-V and then tab) to print a literal tab.
+
+12.awk
+	12.1 show memory usage percentage total of system
+		free | grep Mem | awk '{print $3/$2 * 100.0}'
+13.mv
+	13.1 make mv create the directory to be moved to if it doesn't exist
+	mkdir -p ./some/path/; mv yourfile.txt $_
+
+14. > 
+	14.1 make 2>&1 | tee log.txt
+		2>  &1 0 stdin 1 stdout 2 stderr

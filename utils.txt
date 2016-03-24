@@ -3,7 +3,7 @@
 1.ubuntu utils
 	shortcuts
 	1.1 nautilus ./
-	1.2 ctrl + L url locate ctrl+h hiden 
+	1.2 ctrl + L url locate ctrl+h hiden
 	1.3 alt + space n minimal x max
 	1.4 locat
 	1.5 change inpute method
@@ -11,3 +11,6 @@
 2. chrome
 	2.1 alt +d //select the url
 	2.2 vimium
+
+3. carriage return , line feed
+CR LF (Windows), LF (Unix) and CR (Macintosh) line break types
