@@ -47,6 +47,8 @@ includes vi vim ,gvim vim-gnome
 	2.2 find 
 		/\<xxx\>
 		move to word shift+#
+		
+		/)[a-z]  //like  (DBG_ShellHandler_t)info
 	2.3 replace 
 		:%s/xx/yy/g
 	2.4 multi windows
