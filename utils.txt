@@ -11,6 +11,10 @@
 2. chrome
 	2.1 alt +d //select the url
 	2.2 vimium
+	2.3 kill all chrome
+		ps aux | grep chrome | awk '{print $2}'| xargs kill -9
+		pgrep chrome | xargs kill -9
+		ps aux | awk '/chrome/ {print $2}'|xargs kill -9
 
 3. carriage return , line feed
 CR LF (Windows), LF (Unix) and CR (Macintosh) line break types

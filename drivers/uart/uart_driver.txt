@@ -1,0 +1,50 @@
+
+           uart linux driver useage
+           --------------------------------------------------
+
+(c) 2015 Fri Nov  6 10:54:27 CST 2015 Daniel Kelly  <benh at kernel.crashing.org>,
+(c) 2015 Fri Nov  6 10:54:27 CST 2015 Daniel Kelly  <benh at kernel.crashing.org>,
+    IBM Corp.
+    Maths Corp.
+
+
+0.general
+	0.1 name
+		Universal Asynchronous Receiver Transmitter
+		RS232 MAX232
+	0.2 configure
+		0.2.1 configure cscope
+1.hardware
+	1.1 number
+		3 individual uarts , ports
+	1.1.1 borat rate , clock
+	1.2.1 shifer,
+	1.2 register
+		status
+		每一个UART有7种状态，overrun错误，校验错误，帧错误，断点，接收缓冲区准备好，发送缓冲区为空，发送移位寄存器为空。
+	1.3 frame format
+		start bit data bit , check , stop bit
+	1.4 mode interrupt DMA polling
+
+	1.5 hardware FIFO
+		TX FIFO , RX FIFO
+		每个包含2个64字节FIFO，一个接，一个发。
+		非FIFO模式相当于FIFO模式的一个寄存器缓冲模式。
+	1.6 interrupt
+		rx tx timeout threshold
+		CPU interrup hander
+当接收移位寄存器中的数据传给FIFO的时候，且接收的数据触发了Rx FIFO的阀值，Rx中断产生了。
+发送器中FIFO的还未发得数据到达Tx FIFO阀值的时候，Tx中断产生了。（我觉得应该理解为：发送器中FIFO发送结束，即为空的时候产生中断。）
+
+2.software
+	2.1 ring buffer software fifo
+	2.5
+
+
+Appendix:
+
+FIFO的必要性。在进行UART通信时，中断方式比轮询方式要简便且效率高。但是，如果没有收发FIFO，则每传输一个数据（5～8位）都要中断处理一次，效率仍然不高。如果有了收发FIFO，则可以在连续收发若干个数据（可多至14个）后才产生一次中断，然后一起处理。这就大大提高了收发效率。
+　　接收超时问题。如果没有接收超时功能，则在对方已经发送完毕而接收FIFO未填满时并不会触发中断（FIFO满才会触发中断），结果造成最后接收的有效数据得不到处理的问题。有了接收超时功能后，如果接收FIFO未填满而对方发送已经停，则在不超过3个数据的接收时间内就会触发超时中断，因此数据会照常得到处理。
+　　发送时，只要发送FIFO不满，数据只管往里连续放，放完后就直接退出发送子程序。随后，FIFO真正发送完成后会自动产生中断，通知主程序说：我已经完成真正的发送。
+　　接收时，如果对方是连续不间断发送，则填满FIFO后会以中断的方式通知主程序说：现在有一批数据来了，请处理。
+　　如果对方是间断性发送，也不要紧，当间隔时间过长时（2～3个字符传输时间），也会产生中断，这次是超时中断，通知主程序说：对方可能已经发送完毕，但FIFO未满，也请处理。

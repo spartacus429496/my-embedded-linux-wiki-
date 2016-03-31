@@ -1,0 +1,1001 @@
+
+HOWTO: Linux Device Driver Dos and Don'ts
+Linux Device Drivers DOs and DON'Ts A guide to writing Robust Linux Device Drivers
+Version 1.1
+
+---------------------------------------------------------------------
+
+Index
+
+
+    License, author and version
+    Introduction
+    1-Overview
+    1.1 Why this document
+    1.2 What's a "Hardened Device Driver"
+    1.3 Robust Device Drivers"
+    2.0 Where do I start?"
+    3.0 OK, I'm ready...
+    3.1 Efficient error handling, reporting and recovery
+    3.2 Up-to-date with kernel APIs/Interfaces
+    3.2.1 Module interface changes
+    3.2.2 Sysfs and new driver model
+    3.2.3 Cli() and Sti()
+    3.3 Managing resources
+    3.3.1 String functions
+    3.3.2 Variable declaration and initialization
+    3.3.3 Balancing functions
+    3.4 I/O operations
+    3.4.1 I/O space access
+    3.4.2 Memory mapped I/O access
+    3.5 Obvious DONTZ
+
+
+
+
+
+
+----------------------------------------------------------------------
+License, author and version
+
+
+Copyright (c) 2003 by Intel Corporation.  This material may be
+distributed only subject to the terms and conditions set forth
+in the Open Publication License, v1.0 or later.
+
+The latest version is presently available at:      
+http://www.opencontent.org/openpub. 
+
+Author: Tariq Shureih <tariq.shureih@intel.com>
+
+Version: 1.1
+Date updated:$Date: 2003/06/02 23:42:15 $
+
+
+Introduction
+
+This document is not a real driver HOWTO -- there are books out there on
+how to write a linux kernel driver.
+Writing a linux kernel driver can be as simple as writing three lines
+of code or an extensive task which requires understanding of how Linux
+addresses hardware on the various architectures it supports as well
+as the understanding of PC concepts (all reference in this document is x86
+architecture-centric yet not specific).
+
+What this document will address is the DOs and DON'Ts when writing a linux
+kernel device driver.
+These DOs and DON'Ts are based on the kernel-janitor project's TODO list.
+Further, concepts introduced by the original "Hardened Drivers" spec published
+at http://hardeneddrivers.sf.net are also present in this document.
+
+For more information on the Kernel-Janitor project, visit http://kernel-janitor.sourceforge.net/.
+
+1-Overview
+
+    
+1.1 Why this document?
+
+
+    I wanted to collect the information I learned when I got involved in kernel development
+    in a single document and hopefully make it a guide to newbies and/or people looking for
+    those little tricks that go into writing a robust device driver.
+
+    This document is rather a simple guide to known methods and techniques when writing
+	a Linux device driver and it could be regarded as a companion to other available resources.
+
+
+    
+1.2 What's a "Hardened Device Driver"?
+
+    The answer to this question depends on who you ask.  To some, a hardened
+    device driver is a stable, reliable, instrumental and highly available device
+    driver.  In a previous effort to specify what constitutes a hardened driver, a
+    hardened driver was described as consisting of three levels:
+
+    1-Stability and Reliability:  The use of best-known coding practices within the driver to detect
+    and report errant conditions in hardware and software, to protect the driver, kernel, and other
+    software components from corruption, to provide for fault injection testing, and to make the
+    code clear and easy to read for accurate maintenance.
+
+    2-Instrumentation:  Statistics reporting interface, diagnostic test interface, and POSIX error
+    logging for monitoring and management by higher-level system management components.
+
+    3-High Availability:  Special features, such as device redundancy, hot swap, and fault
+    recovery, to enhance availability.
+
+    This document will attempt to describe "hardened drivers" with a slightly different
+    approach; yet building on some of the highlights above, what a hardened (robust) device
+    driver should mean and how it should be implemented and measured.
+
+    To avoid confusion with previous efforts to speficy the requirements of a hardened driver,
+    this document will refer to the ideal driver as an "robust" driver.
+
+    
+1.3 Robust device drivers
+
+
+    A robust driver is really just a robust, bug free and maintainable example of kernel level code.
+	As Linux evolves, the specifics of what makes up a robust device driver will change, but the 
+	following general attributes will probably hold consistent:
+
+    -Follows the Linux CodingStyle.
+        making it is easy to maintain and consistent with the kernel coding style..
+        Reference: <linux-kernel-source>/Documentation/CodingStyle
+        Reference: http://www.kroah.com/linux/talks/ols_2002_kernel_codingstyle_talk/html/
+
+    Note: no more is discussed on this topic since the references above cover all aspects.
+
+    -Efficient in managing faults and handling, reporting
+        and recovering from errors. (printk levels, enumerated return codes, etc.)
+     Also not panic() happy.  Device drivers can't panic for small reasons.  This goes hand in hand with
+        proper error management and recovery.
+
+    -Complies with latest Linux kernel APIs and interfaces.  This means it's
+        maintained and ported periodically, aware of deprecated functions, macros
+        and interfaces.
+     Uses the new device driver model, kobjects and sysfs.
+     Cli-sti removal.
+
+    -Properly manages resources (memory, semaphores, interrupts, etc.).
+
+    -Uses kernel-provided "C" I/O functions instead of assembly code. (inb, outb, etc.)
+
+	-Does not contain any dead code or unused variable.  If dead code exists and for a
+	 reason (future usage), it should be properly marked as such, not compiled so it 
+	 does not take up space.
+
+	-Optimizes usage of space once compiled (inlining when appropriate for example).
+
+    The above bullets provide a high-level description of the various areas a developer
+    should be aware of during, or should review after, writing or porting a device driver.
+
+    As mentioned before, these are general attributes that would hold true for most
+    robust device drivers.
+
+
+
+    
+2.0 Where do I start?
+
+
+    If you're new to writing Linux device drivers, you're probably better off getting a copy of O'Reilly's book
+    "Linux Device Drivers", reading the "linux-kernel-source/Documentation/driver-model", and looking through
+    some of the simple drivers existing today in the kernel source (such as linux/drivers/char/nvram.c).
+	Also, you can get a great deal of information at www.kernelnewbies.org.
+
+    Once you've written your driver and gotten the basics to work (compiling, loading, unloading, queries,
+    file operations, etc.), you can look over this document and gain some insight into areas you might have
+    missed or that would help you with your driver implementation.
+
+    If you're porting an existing driver or you're experienced in writing Linux device drivers, this document
+    might help guide you to get up to speed on areas that require special attention or common porting tasks
+    you need to be aware of.
+
+    Further, I hope this document will help you in avoiding common DON'Ts and shed light on advocated DOs that
+    will help your driver and code function at the highest levels of performance.
+
+
+    
+3.0 OK, I'm ready...
+
+
+    Let's start examining the aspects of a robust device driver code and the various techniques to achieve
+    high efficiency and stability.
+
+    
+3.1 Efficient error handling, reporting and recovery:
+
+
+    You can follow some simple and proven ways to handle errors and faults within your code:
+
+    <printk()>
+
+        According to the kernel-janitor TODO list, you should always check printk() calls to
+        include appropriate KERN_* constant.
+
+        Sample code:
+        [snip]
+
+            int res;
+            ....
+
+            if (res = register_chrdev(MAJOR, MOD_NAME, &fops)) {
+                printk( KERN_ERR "Failed to register device <%s> with major <%d>\n",
+                                                        MOD_NAME, MAJOR);
+                return res;
+            }
+
+            ....
+
+        KERN_* are defined in linux/include/linux/kernel.h as follows:
+
+            #define KERN_EMERG  "<0>"   /* system is unusable               */
+            #define KERN_ALERT  "<1>"   /* action must be taken immediately */
+            #define KERN_CRIT   "<2>"   /* critical conditions              */
+            #define KERN_ERR    "<3>"   /* error conditions                 */
+            #define KERN_WARNING"<4>"       /* warning conditions               */
+            #define KERN_NOTICE "<5>"   /* normal but significant condition */
+            #define KERN_INFO   "<6>"   /* informational                    */
+            #define KERN_DEBUG  "<7>"   /* debug-level messages             */
+
+		Note:  Use printk only when necessary.  Be informative and avoid flooding the console
+			   with error messages when error condition is detected (flood control).
+
+    <goto>
+
+        Goto statements are advocated in the Linux community for the following reasons:
+        -Uses less repeated code.
+        -Is just as readable as other methods.
+        -Is less error-prone.
+        -Easier to change/maintain for the next person who has to tweak your code.
+        -Keeps the error handling code out of the way for more efficiency in cache utilizations, having
+         (normally) more frequent successful code be a fall through and thus avoiding jumps.
+		 [gcc provides directives likely/unlikely to pick the fall through paths of repeated
+		  code.]
+        -Used across the kernel code and using goto makes error handling uniform
+         across the kernel.
+
+        Sample code:
+        [snip]
+
+            int res;
+            ...
+
+            res = tty_register_driver (&serial_driver);
+            if (res) {
+                printk (KERN_ERR "serial.c: Failed to register serial driver\n");
+                goto out;
+            }
+
+            res = tty_register_driver (&callout_driver);
+            if (res) {
+                printk(KERN_ERR "serial.c: Failed to register callout driver\n");
+                goto out_callout;
+            }
+            .....
+
+            out_callout:
+                tty_unregister_driver (&serial_driver);
+
+            out:
+                return res;
+
+        [snip]
+
+
+    <Enumerated return codes>
+    <return EWHATEVER should be return -EWHATEVER>
+
+        Your device driver should always return a status for a request it received.
+        It is advocated you always use enumerated return codes as well as normal return
+        codes.  Returning 0 = pass 1 or -1 = failed is vague and could be misleading.
+
+        All standard errors returned from driver code should use the standard errors
+        provided by the Linux kernel header files in:
+        linux/include/linux/errno.h
+        linux/include/asm/errno.h
+        linux/include/asm-generic/errno-base.h
+        linux/include/asm-generic/errno.h
+
+        Further, many drivers had the return statement as such:
+            ....
+            return EIO;         /* I/O Error encountered */
+
+        and it should be:
+
+            ....
+            return -EIO;        /* I/O Error encountered */
+
+
+    <No need to panic()>
+
+        A device driver should do everything within it's capabilities to avoid calling
+        panic().  The fact that a device (hardware) is broken, non-responsive, and/or
+        faced an unresolved condition; doesn't mean the device driver should call panic().
+
+        Rather, the device driver should try to recover, re-initialize, or finally simply
+        return an appropriate error code, release allocated resources, log a message and
+        exit gracefully.
+
+        Only in extreme cases where the OS and the system overall is un-recoverable should
+        a device driver call panic().
+
+        As a general rule device drivers should not invoke the panic() function and should
+        leave it to the kernel core sub-systems as the following examples show:
+
+        Example: linux/drivers/char/watchdog/pcwd.c
+            This is a real example from a real driver in the linux-2.5.52 kernel:
+
+        [snip]
+        ....line 272
+        if (revision == PCWD_REVISION_A) {
+            if (cdat & WD_WDRST)
+                rv |= WDIOF_CARDRESET;
+
+            if (cdat & WD_T110) {
+                rv |= WDIOF_OVERHEAT;
+
+                if (temp_panic)
+                    panic("pcwd: Temperature overheat trip!\n");
+            }
+        }
+        [snip]
+
+        In this case, the watchdog card is invoking a panic() when it detects that the
+        CPU is over-heating.
+        If you look at the panic() function in linux/kernel/panic.c you will
+        find that unless the variable "int panic_timeout > 0; where the panic()
+        function would call machine_restart after waiting a panic_timeout amount time;
+        panic() would actually put the system in a dead-lock (infinite loop) which
+        obviously in this case would harm the system more than help.
+
+        A more appropriate way of handling such cases may be to simply shut the system
+        dow n:
+
+        [snip]
+
+        if (revision == PCWD_REVISION_A)
+        {
+            if (cdat & WD_WDRST)
+                rv |= WDIOF_CARDRESET;
+
+            if (cdat & WD_T110)
+            {
+                rv |= WDIOF_OVERHEAT;
+
+                if (temp_panic) {
+                    printk (KERN_EMERG "pcwd: Temperature overheat trip!\n");
+                    machine_power_off();
+                }
+            }
+        }
+
+        [snip]
+
+
+    It's important _NOT_ to confuse "lazy" panics with real appropriate use of panic.
+    What this document advocates against is the "lazy" panics where the developer did not
+    have an understanding of the full picture and opted to panic() out for simplicity.
+
+
+    
+3.2 Up-to-date with kernel APIs/Interfaces:
+
+
+    This document was written during the development of the 2.6 Linux kernel.
+    During the development and various releases of linux-2.5.x, many concepts, interfaces
+    and sub-systems were either introduced new, modified or totally removed.
+
+    Your new or existing device driver needs to be aware of these changes in order for it to
+    operate in the first place;  further, to operate efficiently and avoid any potential
+    side effects that may be cause of any instability or degredation of quality.
+
+    This document addresses to the best of the author's ability all known areas of importance
+    in accordance with the kernel-janitor project, the linux kernel mailing list, personal
+    experience while contributing to linux kernel and gathered input from experienced
+    developers in the open source community.
+
+
+    
+3.2.1 Module interface changes
+
+
+        <Initialization and cleanup>
+
+        Prior to the 2.5 Kernel, a driver would declare:
+
+            static int my_init_func (void) { ...... }
+            static void my_cleanup_func (void) { ........ }
+
+            module_init (my_init_func);
+            module_exit (my_cleanup_func);
+
+        The new way:
+            static int __init my_init_func (void) { ...... }
+            static void __exit my_cleanup_func (void) { ...... }
+
+            module_init (my_init_func);
+            module_exit (my_cleanup_func);
+
+            MODULE_LICENSE ("license_type");     /* This is now required in most cases */
+														   /* Could be GPL, BSD or whatever		 */
+
+
+
+        <Module Reference Count macros>
+
+        Reference: linux/include/linux/module.h
+        Reference: ftp.us.kernel.org/pub/linux/kernel/people/rusty/modules/FAQ
+
+        These macros are no longer supported in 2.5.x and in 2.6 Linux kernel.
+        Instead set the .owner field as part of your file_operations struct.
+
+        IN 2.4 kernel you used to have to adjust the module reference count
+        to keep track usage in case the module dies or is unloaded while it was
+        in use, usually in the open function:
+
+        static int my_open (struct inode *inode, struct file *file) {
+
+            ........
+
+            MOD_INC_USE_COUNT;
+
+            ........
+
+        }
+
+        You no longer need to adjust your own module reference count
+
+        -Reference counting from other modules:
+
+        ;A Golden Rule: if you are calling through a function pointer into a (different) module,
+        you must hold a reference to that module.
+        Otherwise you risk sleeping in the module while it is unloaded.
+
+        You can get a reference to a module by using:
+            try_module_get(owner);
+        and you don't have to check if OWNER != NULL, this is done by try_module_get.
+
+        To put the reference back:
+            module_put(owner);      // Per FAQ, owner == NULL is OK
+
+        Also, if you get an entry point to another module via symbol_get() or you got a function
+        pointer or that module EXPORT_SYMBOLed a function, you need to try_module_get(owner) first
+        and not call into the module if it fails.
+
+        -Avoid using GET_USE_COUNT(module) especially if module unloading is disabled in the kernel.
+         Then, there is no ref count value and nothing to assign to.
+
+        -It is safe to call try_module_get and module_put from an interrupt/softirq. (Fixme:example)
+
+        -Net drivers should call SET_MODULE_OWNER instead of MOD_*_USE_COUNT.
+
+        -It is now required to have all module information in you code:
+            MODULE_AUTHOR,MODULE_DESCRIPTION,SUPPORTED_DEVICE, PARM_DESC
+
+            example:
+                MODULE_AUTHOR("The Linux Kernel Team");
+                MODULE_DESCRIPTION("Digital 21*4* Tulip ethernet driver");
+                MODULE_LICENSE("GPL");
+
+            Note: MODULE_PARM was replaced with module_param and is defined in
+                linux/include/linux/moduleparam.h as follows:
+                module_param(name, type, perm)
+                which works if the driver is built-in or a module not requiring
+                a #ifndef MODULE for parsing the kernel command line arguments.
+
+        <Modules, Kobjects and sysfs>
+
+            See 3.2.2 Sysfs and new driver model below.
+
+
+
+    
+3.2.2 Sysfs and new driver model
+
+
+        Reference: linux-kernel-source/Documentation/driver-model/
+        Reference: linux-kernel-source/Documentation/filesystems/sysfs.txt
+        Reference: linux-kernel-source/Documentation/kobject.txt
+
+        Sysfs was designed with kernel space simplicity and unifrom implementation
+        in mind.  It's not simplifying the user space interface to kernel objects,
+        however, it tries to maintain the same structure yet splitting the information
+        from /proc which has become very confusing.
+
+        Make sure you read the "kobject.txt" file mentioned above first.
+        Sysfs is tied inherently to kobject.
+
+        In this section I will try to show the simple fast ways to use Sysfs, and
+        focus on the details that seem to be missed or not properly documented.
+
+        Sysfs is always compiled in (kernel 2.5 and up) and can be accessed by:
+            mount -t sysfs sysfs /sys
+            where /sys is the mount point and is created by: mkdir /sys
+
+        <I am writing a new driver, how do I add it to sysfs?>
+        <I am porting my driver to linux 2.5 and sysfs, what do I do?>
+
+            So the idea is to expose your device attributes (or driver bus and possibly a class -- 
+			a collection of similar objects or devices logically grouped under the same sysfs
+			subdirectory such as "input".  A mouse could be a PS/2 or USB device but it's still
+			an input device and belongs to the "input" class.)
+            via files created under /sys.  These attributes correspond to specific
+            functionality your device can perfom and user-space can access by
+            writing values directly to these files.
+
+            The most common task is probably porting existing driver to use sysfs or
+            writing new drivers that take advantage of sysfs.
+
+            Since these devices belong to a specific "bus" such as PCI or USB and probably
+            also belong to a class of devices common in functionality but not "bus" -- you
+            can have a PS/2 mouse and a USB mouse; both of class "input" but each attaches
+            obviously to a different bus, the work to convert the buses, classes, etc.
+            is either complete or near complete (network class not yet done as of this document time.)
+
+            When you write a new driver for a PCI device and you allocate your
+            struct pci_dev *pdev, for example, in your device's private data structure, it has
+            a pointer to (struct pci_driver *driver) which has an embedded (struct device dev)
+            in it.  This is pulled by sysfs for the device driver.  To access your device instance from
+            within the driver, you point to xxx_driver->pdev->dev.
+
+            struct xxx_driver {
+                char *xxx_name;
+                int chip_id;
+                ....
+                struct pci_dev *pdev;
+                ....
+
+            }
+
+            Now, your device is discovered by the bus (pci in these examples during registration, the pci
+            subsystem will automatically register your device driver with sysfs and create the appropriate
+            files under the sysfs hierarchy under /sys/bus/pci/drivers/xxx_driver/ which is in reality a
+            symbolic link to /sys/devices/pci0/device_address.
+
+            Under these directories, your device driver attributes are exposed.
+            There are default files created that might not be implemented features but
+            every device gets such as name, power, class, vendor, irq, etc. and then there are device
+            specific features that you will need to implement.  These device-specific are exposed under
+			the device instance's directory and not the driver directory.
+
+            Simple Example 1:
+
+            Here is an example of how you can create a new driver to an existing class.
+            This is a dummy "character" device driver that I created under the "input" class
+            as a system bus device:
+            This driver has the usual struct file_operations fops: open, close, seek, etc.
+            It registers a character device at /dev/mydriver with major 42 and minor 0.
+            I register the driver as normal with
+                register_chrdev(MAJOR, name, &fops);
+
+            For sysfs:
+            I had already declared a:
+                struct device_driver mydriver = {
+                    .name = "mydriver",
+                    .bus = &system_bus_type,        //From linux/device.h
+                    .devclass = &input_devclass     //exported from the input subsystem
+                }
+
+            Note: a big effort in the kernel community has been to enforce the use of C99 style
+                struct declaration.  The example above shows how you do that and how you at the
+                same time comform with the linux-coding-style.
+
+            I wanted to be able to query the driver for the debug flag and also be able
+            to set it by doing:
+                    echo "1" > /sys/class/input/drivers/mydriver/debug  // writing 1 or 0 for on or off
+
+            Sysfs provides two methods (show and store) for reading/writing attributes data.
+            I implmented two functions:
+
+            static ssize_t show_debug (struct device_driver *d, char * buf)
+            {
+                    return sprintf(buf, "debug: %i\n", debug);
+            }
+
+            and
+
+            static ssize_t store_debug (struct device_driver *d, const char * buf,ssize_t count)
+            {
+                int tmp;
+
+                if ( (sscanf(buf, "%i", &tmp)) != 1)
+                        return -EINVAL;
+
+                debug = tmp;
+
+                return strnlen(buf, count);
+                }
+
+            Some important notes from linux/Documentation/filesystems/sysfs.txt
+
+            -sysfs allocates a buffer of size (PAGE_SIZE) and passes it to the method.
+            -The buffer will always be PAGE_SIZE bytes in length. On i386, this is 4096.
+            -show() methods should return the number of bytes printed into the buffer. This is
+             the return value of snprintf().
+            -store() should return the number of bytes used from the buffer. This can be done
+             using strlen().
+
+            Note: The Sysfs implementation will not allow you to change a device driver name
+            from user space, so don't implement an attribute to do so :)
+
+            So now I have my (sysfs) device_driver structure and my methods.
+            I need to register my attributes.  Sysfs "linux/device.h" implementation provides
+            MACROS to simplify this task:
+
+            You simply declare:
+                DRIVER_ATTR(debug, 0644, show_debug, store_debug);
+
+            Now we have to create the files associated with the attributes:
+            for drivers, we call:
+            driver_create_file(&mydriver, &driver_attr_debug);
+            where:
+                mydriver is my device_driver struct.
+                driver_attr is the prefix provided by the function.
+                debug is the attribute name appended to the show_ and store_ method declarations.
+
+            Of course there is also:
+            driver_remove_file(&mydriver, &driver_attr_debug);
+            for when you unload the driver.
+
+            A common question is "Where do I put these functions in my overall code?".
+            Answer is you don't want to register attributes or create files until the driver
+            or module has finished initializing and completely loaded.
+            In device instantiation usually you call these functions once the instance is
+            registered with no errors.  Same goes with removing the files.
+
+
+            Example 2: adding attribute(s) to existing driver
+
+            In this example I am using the "tulip" device driver implemented currently
+            in the kernel.  This example assumes the developer wants to implement a NEW
+            attribute that is "device specific" to the tulip hardware and is not one of the
+            common or default attributes already provided by pci-sysfs.
+
+            The attribute name is "ctrl" and in reality is a dummy attribute that does not
+            do anything.  However, it should demonstrate how you implement an attribute for
+            an existing device driver.
+
+            In function prototypes, I declared three new functions:
+
+                static ssize_t show_ctrl (struct device *d, char *ctrl_buf);        // Show method
+                static ssize_t store_ctrl (struct device *d, const char *ctrl_buf,size_t ctrl_count);   //Store method
+                static void attr_reg (struct tulip_private *device);    // Called to create files
+
+            Also, I declared a global variable:
+                static int tulip_ctrl = 0;
+
+            The functions are implemented as follows:
+                a very simple show method:
+
+                static ssize_t show_ctrl (struct device *d, char *ctrl_buf)
+                {
+                    return snprintf(ctrl_buf,4096, "%i\n", tulip_ctrl);
+                }
+
+
+                and a simple store method:
+
+                static
+                ssize_t store_ctrl
+                (struct device *d, const char *ctrl_buf, size_t ctrl_count)
+                {
+                    int ret;
+
+                    if (sscanf(pm_buf, "%i", &ret) != 1) {
+                        printk (KERN_ALERT "Invalid flag for tulip ctrl\n");
+                        return -EINVAL;
+                    }
+
+                    if (ret) {
+                        tulip_ctrl = 1;
+                    } else {
+                        tulip_ctrl = 0;
+                    }
+
+                    return strnlen(ctrl_buf, ctrl_count);
+                }
+
+            The catch is in attaching these attributes and the created files for them into the existing
+            structure under sysfs for the tulip driver.
+            The tulip device show up under:
+                /sys/buc/pci/drivers/tulip/<device_id>/
+
+            I wanted my new "ctrl" attribute to show under the above-mentioned directory.
+
+            Remember what I said above about the pci_dev structure having the "device" structure embedded in it?
+            Now we can get to the sysfs device structure.  Note the prototype of the attr_reg,
+            a pointer to the tulip_private structure which looks like this:
+
+                struct tulip_private {
+                    const char *product_name;
+                    struct net_device *next_module;
+                    struct tulip_rx_desc *rx_ring;
+                    struct tulip_tx_desc *tx_ring;
+                    .......
+                    struct pci_dev *pdev;
+                    .......
+                };
+
+            Inside the tulip_private structure, you see a pointer to a pci_dev structure which looks like this:
+
+                struct pci_dev {
+
+                    struct list_head global_list;       /* node in list of all PCI devices */
+                    struct list_head bus_list;      /* node in per-bus list */
+                    struct pci_bus  *bus;           /* bus this device is on */
+                    struct pci_bus  *subordinate;       /* bus this device bridges to */
+                    ........
+                    struct  device  dev;            /* Generic device interface */
+                    ........
+
+                };
+
+            Now we have access to the device's entry into sysfs and can access it as such:
+
+                static void attr_reg(struct tulip_private *device) {
+
+                device_create_file(&device->pdev->dev, &dev_attr_ctrl);
+
+                }
+
+            But we're not done yet.  We have not declared the macros for the attributes and did not
+            place the calls for attr_reg and device_remove_file in the tulip code yet.
+
+            I chose to place the DEVICE_ATTR macro right after the function prototypes.
+            Remember all the macro does is declare your attribute structures for you and nothing
+            takes place until you actually call device_create_file.
+
+            Also remember you don't want to call attr_reg until the device instance has initialized
+            and loaded completely.
+
+            Code:
+                ...... Top of the file after includes in prototype declaration.....
+                static ssize_t show_ctrl (struct device *d, char *pm_buf);
+                static ssize_t store_ctrl (struct device *d, const char *pm_buf,size_t pm_count);
+
+                DEVICE_ATTR(ctrl,0644,show_ctrl,store_ctrl);
+
+                static void attr_reg(struct tulip_private *device);
+
+            In function tulip_init_one I added a call to attr_reg:
+
+                .......[snippet from patch]
+                @@ -1687,6 +1699,7 @@
+                        /* No initialization necessary. */
+                        break;
+                    }
+                +   attr_reg (tp);
+
+                /* put the chip in snooze mode until opened */
+                tulip_set_power_state (tp, 0, 1);
+
+
+            Of course let's not forget removing the files when the device instance is unloaded:
+
+                 static void __devexit tulip_remove_one (struct pci_dev *pdev)
+                {
+                @@ -1757,6 +1793,9 @@
+                        return;
+
+                    tp = dev->priv;
+                +
+                +   device_remove_file(&tp->pdev->dev, &dev_attr_ctrl);
+                +
+                    pci_free_consistent (pdev,
+                         sizeof (struct tulip_rx_desc) * RX_RING_SIZE +
+                        sizeof (struct tulip_tx_desc) * TX_RING_SIZE,
+                @@ -1774,7 +1813,6 @@
+                    /* pci_power_off (pdev, -1); */
+                 }
+
+
+            Now as you compile the driver and load it, you will get a new entry for "ctrl" in:
+                /sys/bus/pci/driver/tulip/0:11.0/ctrl
+
+		Keep in mind the above example implements a device-specific attribute; meaning this attribute
+		is not driver-wide and is only available (in this example) if the device itself provided
+		functionality specific to it and is not implemented in the generic driver.
+
+    
+3.2.3 Cli() and Sti()
+
+
+    Starting linux-2.5.x and targeted for linux-2.6.x, the following functions (macros)
+    are absolete and have been deprecated:
+    cli(), sti(), save_flags(), save_flags_cli and restore_flags().
+
+    This is especially true for SMP systems.  Drivers need to use Linux
+    provided locking primitives or use semaphores.
+    See linux/Documentation/cli-sti-removal.txt
+
+    One thing to keep in mind especially when converting exiting drivers
+    to be SMP-safe when handling interrupts and lock synchronization:
+    In most cases, it is not as simple as search and replace old calls
+    with new ones.  When dealing with interrupts and locks, you need to
+    analyze the overall driver code and understand the objective of these
+    calls.
+
+    if you look at linux/include/linux/interrupt.h:
+    The old UniProcessor (UP) macros are mapped until all code gets fixed.
+
+        #if !CONFIG_SMP
+        # define cli()          local_irq_disable()
+        # define sti()          local_irq_enable()
+        # define save_flags(x)      local_save_flags(x)
+        # define restore_flags(x)   local_irq_restore(x)
+        # define save_and_cli(x)    local_irq_save(x)
+        #endif
+
+    These will be phased out by linux-2.6 release.
+
+    Whether your driver is UP or SMP, it's more appropriate to use
+    appropriate locking to protect critical code, handle interrupt within
+	your driver, and synchronization.
+    Spinlocks provide a performance advantage being faster to acquire.
+
+    The spinlock functions (actually macros) are defined in:
+        linux/include/linux/spinlock.h
+
+
+    
+Misc pointers to new API
+
+
+    -proc_register is dead, use create_proc_entry() instead.
+
+    -Look at the new PCI API:
+        o pci_enable_device is required prior to reading device
+          pdev->irq or pdev->resource[] since these values may no
+          be correct until the call is made.
+        o use pci_set_drvdata() to set dev->driver_data, likewise
+          pci_get_drvdata() instead of reading directly.
+        o PCI_CACHE_LINE_SIZE should be done during PCI initialization.
+
+
+    -Replace check_region with request_region and check return code:
+        o Example: [snip from patch sent to KJP]
+
+           if ((state->type != PORT_UNKNOWN) && state->port) {
+        -       request_region(state->port,8,"serial(set)");
+        +       if(!request_region(state->port,8,"serial(set)")) {
+        +        printk(KERN_WARNING "serial port request region %d
+            failed.\n", state->port);
+        +   return -EBUSY;
+        +   }
+        }
+
+    -sleep_on() function will go away in 2.5/2.6 kernels.
+
+
+
+    
+3.3 Managing resources:
+
+    In this section we will look at the various resource allocation
+    methods, variable initialization, balancing function calls and
+    proper string function for drivers.
+
+
+   
+3.3.1 String functions
+
+
+    -strtok() is not thread and SMP safe and strsep() should be used
+     instead:
+
+         -       for (opt = strtok(options, ",");
+         -          opt != NULL;
+         -          opt = strtok(NULL, ",")) {
+         +       while (opt = strsep(&options, ",")) {
+         +               if (!*opt)
+         +                       continue;
+    -strlen and sprintf should be avoided in drivers, especially since
+     sysfs specifies in linux/Documentation/filesystems/sysfs.txt
+     that the show() method should always use snprintf to return the
+     number of bytes printed into the buffer.
+     Same goes with the store() method.  It should return the number of
+     bytes used from the buffer using strnlen().
+
+
+    
+3.3.2 Variable declaration and initialization.
+
+
+    -For optimal assembly code output, declaring
+        [const] char foo[] = "blah";
+     is better than
+        [const] char *foo = "blah";
+     since the later would generate two variables in final
+     assembly code, a static string and a char pointer to it.
+
+    -"Unsigned int" is preferred to "int" because it
+     generates better asm code on all platforms except sh5.
+     However, if needed for negative error return codes,
+     "int" is sufficient.
+
+    -If you have a pointer variable to a struct and need to use
+     "sizeof", it's better to use "sizeof(*var)" than "sizeof(type)".
+     This is a maintenance issue.  If the type is changed, you don't
+     have to search for all instances of "sizeof(type)" and update
+     them.
+
+
+    
+3.3.3 Balancing functions:
+
+
+    It is important to make sure all your function calls for resource
+	allocation/release are balanced and matched on the other end and 
+	during or after failures.
+
+    The obvious memory allocation using kmalloc and kfree as well as
+    kfree_skbs when freeing skbs.
+
+    Common areas found needing attention are:
+    -pci_alloc_consistent() and pci_free_consistent().
+    -ioremap() must be balanced by an iounmap().  This is a common memory
+    leak.
+    -Functions with *_lock_* naming should be balanced with their *_unlock_*
+    partner to void dead-locks.
+
+
+
+    
+3.4 I/O operations:
+
+    
+3.4.1 All I/O space access should use the C I/O functions instead of assembly
+    code.
+
+
+    These functions are:
+        Byte I/O read/writes:
+            unsigned inb(unsigned port);                    //read
+            void outb(unsigned char byte, unsigned port);   //write
+
+        Word I/O read/writes:
+            unsigned inw(unsigned port);                    //read
+            void outw(unsigned short word, unsigned port);  //write
+
+        Long I/O read/writes:
+            unsigned inl(unsigned port);                    //read
+            void outl(unsigned doubleword, unsigned port);  //write
+
+        String versions of the I/O space I/O Access:
+            void insb(unsigned port,void *addr,unsigned long count);    //read
+            void outsb(unsigned port,void *addr,unsigned long count);   //write
+            void insw(unsigned port,void *addr,unsigned loing count);   //read
+            void outsw(unsigned port,void *addr,unsigned long count);   //write
+            void insl(unsigned port,void *addr,unsigned long count);    //read
+            void outsl(unsigned port,void *addr,unsigned long count);   //write
+
+        Example:
+            __asm__( "mov $0, %al\n\t" "outb %al, $0x70");
+        should be:
+            outb(0x00, 0x70);
+
+        
+3.4.2 All memory mapped I.O access should use read()/write()
+            functions instead of de-referencing a pointer.
+
+
+
+        These functions are:
+        unsinged readb(address);
+        unsigned readw(address);
+        unsinged readl(address);
+
+        void writeb(unsigned value, address);
+        void writew(unsigned value, address);
+        void writel(unsigned value, address);
+
+        Example:
+            *(u8 *) (IOBASE+IER) = 0x80;
+        should be:
+            writeb(0x80, IOBASE+IER);
+
+
+        Note: you have to use the -O2 optimization flag while compiling for
+            these functions (macros really) to expand.
+
+
+    
+3.5 Obvious DONTZ
+
+
+		-Device drivers should never add a "e;syscall"e;.
+		 system calls are decided by the linux maintainers and involve
+		 assembly code and mess with software interrup (int 0x80); something
+		 drivers should never do.
+		-Ofcourse always avoid messing with BIOS unless you really know what
+		 you're doing.
+		-Do not access any resources before you check and reserve them:
+		-Do not add driver IOCTLs that duplicate existing ones.
+		-Do not turn off compiler warnings in Makefiles.  This will hide
+		 warning that may be really fatal.
+		-Do not use __SMP__ anymore, it doesn't exist (or won't soon).
+		-Do not mix formats or do type conversion in kernel space.
+		-Do not invent new APIs if you're not sure one exists, do your research
+
+
