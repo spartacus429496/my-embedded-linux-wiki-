@@ -35,3 +35,18 @@ void dumpARM9BIOS(){
     swiCopy((void*
 
     10.1 dma和cpu总线的竞争
+
+2016.0408
+1.linux i2c subsystem
+https://i2c.wiki.kernel.org/index.php/Main_Page
+
+chinese:
+
+http://blog.csdn.net/ypoflyer/article/details/6376545
+http://blog.csdn.net/wangpengqi/article/details/17711165
+2.bus is a special device
+	2.1wowo tech
+		http://www.wowotech.net/linux_kenrel/bus.html
+	2.2
+		kernel bus_type define and comments
+

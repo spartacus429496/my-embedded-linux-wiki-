@@ -1,0 +1,59 @@
+
+sony
+1.
+Pascal case
+FunctionName()
+Camel case
+functionName()
+Snake case
+function_name()
+Hungarian notation
+szFileName, fnCallBack, g_ErrorCode…
+
+2.
+2.1 function
+
+Global)
+SW Block Name + Pascal
+(Local)
+Camel
+
+Global)
+HI_FunctionName()
+(Local)
+functionName()
+
+2.2. variables
+(Global)
+SW Block Name + Pascal
+(Local)
+Camela
+
+
+(Global)
+VariableName
+(Local)
+variableNamea
+
+2.3.
+(マクロ)
+大文字Snakea
+
+(マクロ)
+MACRO_NAME
+2.4
+変数名と同じ
+typedef使用
+typedef struct{
+…
+} STRUCT_NAME;
+
+2.5 file name
+Snake
+file_name.c
+2.6 other
+基本LKCS
+Indent:4(TAB)
+文字Code:sjis
+改行:CRLF
+

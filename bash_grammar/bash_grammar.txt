@@ -161,6 +161,11 @@ Shell中有三种用于循环的语句，它们是while语句、for语句和unti
 10. sed awk
 11.
 	make ls 
+12. "" ''
+echo "$a"
+echo '$a'
+sed 'origin'
+sed "$1"//convert
 
 appendix
 1.0 special 
