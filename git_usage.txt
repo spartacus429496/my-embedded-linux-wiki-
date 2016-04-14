@@ -145,3 +145,46 @@ git fetch ssh://xJie.Chen@scmservgit04.sdna.sony.co.jp:29418/pj/Spritzer/spritze
 
 8. undo the last commit
 	git reset HEAD^
+
+9. rebase
+	9.1 re basing
+before merge/rebase:
+
+A <- B <- C    [master]
+^
+ \
+  D <- E       [branch]
+after git merge master:
+
+A <- B <- C
+^         ^
+ \         \
+  D <- E <- F
+after git rebase master:
+
+A <- B <- C <- D' <- E'
+(A, B, C, D, E and F are commits)
+better for understanding:
+              D'--E' topic
+             /
+    A---B---C master
+
+	9.2 git pull vs git pull --rebase
+		git fetch && git merge
+		git fetch && git rebase
+9.3 
+git fetch origin            # Updates origin/master
+git rebase origin/master    # Rebases current branch onto origin/master
+git pull --rebase origin master
+ git rebase -h
+usage: git rebase [-i] [options] [--exec <cmd>] [--onto <newbase>] [<upstream>] [<branch>]
+   or: git rebase [-i] [options] [--exec <cmd>] [--onto <newbase>] --root [<branch>]
+   or: git-rebase --continue | --abort | --skip | --edit-todo
+
+
+Git: How to rebase your feature branch from one branch to another
+
+In a nutshell: Use git rebase --onto target-branch source-branch
+
+target-branch means "branch you want to be based on"
+source-branch means "commit before your first feature commit"
