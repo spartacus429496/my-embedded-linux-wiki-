@@ -1,0 +1,5017 @@
+
+华为C++笔试题(附答案)
+2015年02月04日 C++ 暂无评论
+
+问题：华为C++笔试题(附答案)
+回答：
+
+1.写出判断ABCD四个表达式的是否正确, 若正确, 写出经过表达式中 a的值(3分)
+int a = 4;
+(A)a += (a++); (B) a += (++a) ;(C) (a++) += a;(D) (++a) += (a++);
+a =
+答：C错误，左侧不是一个有效变量，不能赋值，可改为(++a) += a;
+改后答案依次为9,10,10,11
+2.某32位系统下, C++程序，请计算sizeof 的值(5分).
+char str[] = “http://www.ibegroup.com/”
+char *p = str ;
+int n = 10;
+请计算
+sizeof (str ) = ？（1）
+sizeof ( p ) = ？（2）
+sizeof ( n ) = ？（3）
+void Foo ( char str[100]){
+请计算
+sizeof( str ) = ？（4）
+}
+void *p = malloc( 100 );
+请计算
+sizeof ( p ) = ？（5）
+答：（1）17 （2）4 （3） 4 （4）4 （5）4
+3. 回答下面的问题. (4分)
+(1).头文件中的 ifndef/define/endif 干什么用？预处理
+答：防止头文件被重复引用
+(2). ＃i nclude 和 ＃i nclude “filename.h” 有什么区别？
+答：前者用来包含开发环境提供的库头文件，后者用来包含自己编写的头文件。
+(3).在C++ 程序中调用被 C 编译器编译后的函数，为什么要加 extern “C”声明？
+答：函数和变量被C++编译后在符号库中的名字与C语言的不同，被extern “C”修饰的变
+量和函数是按照C语言方式编译和连接的。由于编译后的名字不同，C++程序不能直接调
+用C 函数。C++提供了一个C 连接交换指定符号extern“C”来解决这个问题。
+(4). switch()中不允许的数据类型是
+答：实型
+4. 回答下面的问题(6分)
+(1).Void GetMemory(char **p, int num){
+*p = (char *)malloc(num);
+}
+void Test(void){
+char *str = NULL;
+GetMemory(&str, 100);
+strcpy(str, “hello”);
+printf(str);
+}
+请问运行Test 函数会有什么样的结果？
+答：输出“hello”
+(2). void Test(void){
+char *str = (char *) malloc(100);
+strcpy(str, “hello”);
+free(str);
+if(str != NULL){
+strcpy(str, “world”);
+printf(str);
+}
+}
+请问运行Test 函数会有什么样的结果？
+答：输出“world”
+(3). char *GetMemory(void){
+char p[] = “hello world”;
+return p;
+}
+void Test(void){
+char *str = NULL;
+str = GetMemory();
+printf(str);
+}
+请问运行Test 函数会有什么样的结果？
+答：无效的指针，输出不确定
+5. 编写strcat函数(6分)
+已知strcat函数的原型是char *strcat (char *strDest, const char *strSrc);
+其中strDest 是目的字符串，strSrc 是源字符串。
+（1）不调用C++/C 的字符串库函数，请编写函数 strcat
+答：
+VC源码：
+char * __cdecl strcat (char * dst, const char * src)
+{
+char * cp = dst;
+while( *cp )
+cp++; /* find end of dst */
+while( *cp++ = *src++ ) ; /* Copy src to end of dst */
+return( dst ); /* return dst */
+}
+（2）strcat能把strSrc 的内容连接到strDest，为什么还要char * 类型的返回值？
+答：方便赋值给其他变量
+6.MFC中CString是类型安全类么？
+答：不是，其它数据类型转换到CString可以使用CString的成员函数Format来转换
+7.C++中为什么用模板类。
+答：(1)可用来创建动态增长和减小的数据结构
+（2）它是类型无关的，因此具有很高的可复用性。
+（3）它在编译时而不是运行时检查数据类型，保证了类型安全
+（4）它是平台无关的，可移植性
+（5）可用于基本数据类型
+8.CSingleLock是干什么的。
+答：同步多个线程对一个数据类的同时访问
+9.NEWTEXTMETRIC 是什么。
+答：物理字体结构，用来设置字体的高宽大小
+10.程序什么时候应该使用线程，什么时候单线程效率高。
+答：1．耗时的操作使用线程，提高应用程序响应
+2．并行操作时使用线程，如C/S架构的服务器端并发线程响应用户的请求。
+3．多CPU系统中，使用线程提高CPU利用率
+4．改善程序结构。一个既长又复杂的进程可以考虑分为多个线程，成为几个独立或半独
+立的运行部分，这样的程序会利于理解和修改。
+其他情况都使用单线程。
+11.Windows是内核级线程么。
+答：见下一题
+12.Linux有内核级线程么。
+答：线程通常被定义为一个进程中代码的不同执行路线。从实现方式上划分，线程有两
+种类型：“用户级线程”和“内核级线程”。 用户线程指不需要内核支持而在用户程序
+中实现的线程，其不依赖于操作系统核心，应用进程利用线程库提供创建、同步、调度
+和管理线程的函数来控制用户线程。这种线程甚至在象 DOS 这样的操作系统中也可实现
+，但线程的调度需要用户程序完成，这有些类似 Windows 3.x 的协作式多任务。另外一
+种则需要内核的参与，由内核完成线程的调度。其依赖于操作系统核心，由内核的内部
+需求进行创建和撤销，这两种模型各有其好处和缺点。用户线程不需要额外的内核开支
+，并且用户态线程的实现方式可以被定制或修改以适应特殊应用的要求，但是当一个线
+程因 I/O 而处于等待状态时，整个进程就会被调度程序切换为等待状态，其他线程得不
+到运行的机会；而内核线程则没有各个限制，有利于发挥多处理器的并发优势，但却占
+用了更多的系统开支。
+Windows NT和OS/2支持内核线程。Linux 支持内核级的多线程
+13.C++中什么数据分配在栈或堆中，New分配数据是在近堆还是远堆中？
+答：栈: 存放局部变量，函数调用参数,函数返回值，函数返回地址。由系统管理
+堆: 程序运行时动态申请，new 和　malloc申请的内存就在堆上
+14.使用线程是如何防止出现大的波峰。
+答：意思是如何防止同时产生大量的线程，方法是使用线程池，线程池具有可以同时提
+高调度效率和限制资源使用的好处，线程池中的线程达到最大数时，其他线程就会排队
+等候。
+15函数模板与类模板有什么区别？
+答：函数模板的实例化是由编译程序在处理函数调用时自动完成的，而类模板的实例化
+必须由程序员在程序中显式地指定。
+16一般数据库若出现日志满了，会出现什么情况，是否还能使用？
+答：只能执行查询等读操作，不能执行更改，备份等写操作，原因是任何写操作都要记
+录日志。也就是说基本上处于不能使用的状态。
+17 SQL Server是否支持行级锁，有什么好处？
+答：支持，设立封锁机制主要是为了对并发操作进行控制，对干扰进行封锁，保证数据
+的一致性和准确性，行级封锁确保在用户取得被更新的行到该行进行更新这段时间内不
+被其它用户所修改。因而行级锁即可保证数据的一致性又能提高数据操作的迸发性。
+18如果数据库满了会出现什么情况，是否还能使用？
+答：见16
+19 关于内存对齐的问题以及sizof()的输出
+答：编译器自动对齐的原因：为了提高程序的性能，数据结构（尤其是栈）应该尽可能
+地在自然边界上对齐。原因在于，为了访问未对齐的内存，处理器需要作两次内存访问
+；然而，对齐的内存访问仅需要一次访问。
+20 int i=10, j=10, k=3; k*=i+j; k最后的值是？
+答：60，此题考察优先级，实际写成： k*=(i+j);，赋值运算符优先级最低
+21.对数据库的一张表进行操作,同时要对另一张表进行操作,如何实现
+答：将操作多个表的操作放入到事务中进行处理
+22.TCP/IP 建立连接的过程 (3-way shake)
+答：在TCP/IP协议中，TCP协议提供可靠的连接服务，采用三次握手建立一个连接。
+　　第一次握手：建立连接时，客户端发送syn包(syn=j)到服务器，并进入SYN_SEND状
+态，等待服务器确认；
+第二次握手：服务器收到syn包，必须确认客户的SYN（ack=j+1），同时自己也发送一个
+SYN包（syn=k），即SYN+ACK包，此时服务器进入SYN_RECV状态；
+　　第三次握手：客户端收到服务器的SYN＋ACK包，向服务器发送确认包ACK(ack=k+1)
+，此包发送完毕，客户端和服务器进入ESTABLISHED状态，完成三次握手。
+23.ICMP是什么协议,处于哪一层
+答：Internet控制报文协议，处于网络层（IP层）
+24.触发器怎么工作的
+答：触发器主要是通过事件进行触发而被执行的，当对某一表进行诸如UPDATE、 INSERT
+、 DELETE 这些操作时，数据库就会自动执行触发器所定义的SQL 语句，从而确保对数
+据的处理必须符合由这些SQL 语句所定义的规则。
+25.winsock建立连接的主要实现步骤
+答：服务器端：socker()建立套接字，绑定（bind）并监听（listen），用accept（）
+等待客户端连接。
+客户端：socker()建立套接字，连接（connect）服务器，连接上后使用send()和recv（
+），在套接字上写读数据，直至数据交换完毕，closesocket()关闭套接字。
+服务器端：accept（）发现有客户端连接，建立一个新的套接字，自身重新开始等待连
+接。该新产生的套接字使用send()和recv（）写读数据，直至数据交换完毕，closesock
+et()关闭套接字。
+26.动态连接库的两种方式
+答：调用一个DLL中的函数有两种方法：
+1．载入时动态链接（load-time dynamic linking），模块非常明确调用某个导出函数
+，使得他们就像本地函数一样。这需要链接时链接那些函数所在DLL的导入库，导入库向
+系统提供了载入DLL时所需的信息及DLL函数定位。
+2．运行时动态链接（run-time dynamic linking），运行时可以通过LoadLibrary或Loa
+dLibraryEx函数载入DLL。DLL载入后，模块可以通过调用GetProcAddress获取DLL函数的
+出口地址，然后就可以通过返回的函数指针调用DLL函数了。如此即可避免导入库文件了
+。
+27.IP组播有那些好处
+答：Internet上产生的许多新的应用，特别是高带宽的多媒体应用，带来了带宽的急剧
+消耗和网络拥挤问题。组播是一种允许一个或多个发送者（组播源）发送单一的数据包
+到多个接收者（一次的，同时的）的网络技术。组播可以大大的节省网络带宽，因为无
+论有多少个目标地址，在整个网络的任何一条链路上只传送单一的数据包。所以说组播
+技术的核心就是针对如何节约网络资源的前提下保证服务质量。
+华为笔试
+
+一、判断题（对的写T，错的写F并说明原因，每小题4分，共20分）
+1、有数组定义int a[2][2]={{1},{2,3}};则a[0][1]的值为0。（ 正确 ）
+2、int (*ptr) (),则ptr是一维数组的名字。（ 错误 int (*ptr) ();定义一个指向函数的指针变量 ）
+3、指针在任何情况下都可进行>,=,
+4、switch(c) 语句中c可以是int ,long,char ,float ,unsigned int 类型。（ 错，不能用实形 ）
+二、填空题（共30分）
+1、在windows下，写出运行结果，每空2分，共10分。
+char str[ ]= ＂Hello＂;
+char *p=str;
+int n=10;
+sizeof(str)=( )
+sizeof(p)=( )
+sizeof(n)=( )
+void func(char str[100]){ }
+sizeof(str)=( )
+答案：6，4，4，4
+2、void getmemory(char **p, int num)
+{ *p=(char *) malloc(num);}
+void test(void)
+{ char *str=NULL;
+getmemory(&str,100);
+strcpy(str,＂hello＂);
+printf(str);
+}
+运行test函数有什么结果？10分
+答案：输出hello，但是发生内存泄漏。
+3、设int arr[]={6,7,8,9,10};
+int *ptr=arr;
+*(ptr++)+=123;
+printf(＂%d,%d＂,*ptr,*(++ptr));
+( ) 10分
+答案：8，8。这道题目的意义不大，因为在不同的编译器里printf的参数的方向是不一样的，在vc6.0下是从有到左，这里先*(++ptr) 后*pt，于是结果为8，8
+二、编程题（第一小题20，第二小题30分）
+1、 不使用库函数，编写函数int strcmp(char *source, char *dest)
+相等返回0，不等返回-1；
+答案：一、
+int strcmp(char *source, char *dest)
+{
+assert((source!=NULL)&&(dest!=NULL));
+int i,j;
+for(i=0; source[i]==dest[i]; i++)
+{
+if(source[i]=='\0' && dest[i]=='\0')
+return 0;
+else
+return -1;
+}
+}
+答案：二、
+int strcmp(char *source, char *dest)
+{
+while ( (*source != '\0') && (*source == *dest))
+{
+source++;
+dest++;
+}
+
+return ( (*source) - (*dest) ) -1 : 0;
+
+}
+2、 写一函数int fun(char *p)判断一字符串是否为回文，是返回1，不是返回0，出错返回-1
+答案：一、
+int fun(char *p)
+{
+if(p==NULL)
+return -1;
+else
+{
+int length = 0;
+int i = 0;
+int judge = 1;
+length = strlen(p);
+for(i=0; i
+{
+if(p[i]!=p[length-1-i])
+judge = 0;
+break;
+}
+if(judge == 0)
+return 0;
+else
+return 1;
+}
+}
+答案：二、
+int fun(char *p)
+{
+int len = strlen(p) - 1;
+char *q = p + len;
+if (!p)
+return -1;
+
+while (p
+if ((*p++) != (*q--))
+return 0;
+}
+
+return 1;
+
+}
+
+华为笔试
+找错
+Void test1()
+{
+char string[10];
+char* str1=”0123456789”;
+strcpy(string, str1);
+}
+
+Void test2()
+{
+char string[10], str1[10];
+for(I=0; I
+{
+str1[i] =’a’;
+}
+strcpy(string, str1);
+}
+
+Void test3(char* str1)
+{
+char string[10];
+if(strlen(str1)
+{
+strcpy(string, str1);
+}
+}
+
+2. 找错
+#define MAX_SRM 256
+
+DSN get_SRM_no()
+{
+static int SRM_no;
+int I;
+for(I=0;I
+{
+SRM_no ％= MAX_SRM;
+if(MY_SRM.state==IDLE)
+{
+break;
+}
+}
+if(I>=MAX_SRM)
+return (NULL_SRM);
+else
+return SRM_no;
+}
+
+3. 写出程序运行结果
+
+int sum(int a)
+{
+auto int c=0;
+static int b=3;
+c+=1;
+b+=2;
+return(a+b+C);
+}
+
+void main()
+{
+int I;
+int a=2;
+for(I=0;I
+{
+printf(“％d,”, sum(a));
+}
+}
+
+4.
+
+int func(int a)
+{
+int b;
+switch(a)
+{
+case 1: 30;
+case 2: 20;
+case 3: 16;
+default: 0
+}
+return b;
+}
+则func(1)=
+
+5:
+int a[3];
+a[0]=0; a[1]=1; a[2]=2;
+int *p, *q;
+p=a;
+q=&a[2];
+则a[q-p]=
+
+6.
+定义 int **a[3][4], 则变量占有的内存空间为：_____
+
+7.
+编写一个函数，要求输入年月日时分秒，输出该年月日时分秒的下一秒。如输入2004年12月31日23时59分59秒，则输出2005年1月1日0时0分0秒。
+
+1、 在一个以太网中，30台PC通过QUTDWAY R2501路由器S0口连接INTERNET，QUIDWAY R2501路由器配置如下：
+Qutidway(config-if-e0)#ip address 192.168.1.1.255.255.255.0
+Qutidway(config-if-e0)eixt
+Qutidway(config)#interface s0
+Qutidway(config-if-s0)#ip address 211.136.3.6.255.255.255.252
+Qutidway(config-if-s0)#encapsulation ppp
+一台PC机默认网关为192.168.2.1,路由器会怎样处理发自这台PC的数据包？
+A． 路由器会认为发自这一台PC的数据包不在同一网段，不转发数据包
+B． 路由器会自动修正这一台PC机的IP地址，转发数据包
+C． 路由器丢弃数据包，这时候需要重启路由器，路由器自动修正误配
+D． 路由器丢弃数据包，不做任何处理，需要重配PC网关为192.168.1.1
+2、关于MAC地址表示正确的是（ ）
+A、00-e0-fe-01-23-45
+B、00e0.fe01.2345
+C、00e.0fe.-012.345
+D、00e0.fe112345
+3、路由器作为网络互连设备，必须具备以下哪些特点（ ）
+A、 支持路由协议
+B、 至少具备一个备份口
+C、 到少支持两个网络接口
+D、 协议至少要实现到网络层
+E、 具有存储、转发和寻径功能
+F、 至少支持两种以上的子网协议
+4、某台路由器有两个以太网接口，分别与不同网段的以太网相连，请问：该路由器最多可有几组？（ ）
+A、 1个
+B、 2个
+C、 3个
+D、 4个
+E、 多于四个。
+5、配置备份中心的目的是（ ）
+A、 增加网络带宽
+B、 提高网络可用性
+C、 降低网络传输费用
+D、 防止数据传输意外中止
+6、X.25作为国际通用标准的广域网协议，内置的差错纠正，流量控制和丢包重传机制使之具有高度的可靠性，由于数据吞吐率很低，包时延较大，故不适于在质量差的信道上传输数据，这种说法正确吗？( )
+A、True
+B、False
+7、V．24接口工作在同步方式下最高传输速率是（ ）
+A、 64000bps
+B、 115200 bps
+C、 2048000 bps
+D、 4096000 bps
+8、下列那一条命令用于配置DDR的链路处于断开状态后，重新建立链接等待的时间？( )
+A、 diater idte-timeout
+B、 diater fast-idle
+C、 diater enable-timeout
+D、 diater wait-for-carmer-time
+9、ISDN的物理线路是（ ）
+A、2B+D
+B、30B+D
+C、同轴电缆
+D、普通电缆
+10、Qutidway路由器上输入“show ip rip“命令，如下所示：
+Qutidway#show ip rip
+RIP is rurining on
+Checkcero is on defauit-metric 16
+On neighter
+Fictucrik all
+BUTO-surttutiry is on preference 100
+下列说法正确的是：( )
+A、 该条命令显示了RIP当前运行状态和配置信息
+B、 默认情况下，RIP路由协议优先级为100，可能通过“IP RIP PRICRITY”命令修改其优先级
+C、 这条命令显示路由器所有接口用了RIP协议，最大可达统计数为1G
+D、 ON NEIGHBOR显示这台路由器没有作为任何其它路由器的邻居
+11.数据分段是OSI七层模型中的（ ）完成的
+A、 物理层
+B、 网络层
+C、 传输层
+D、 接入层
+E、 分发层
+F、 数据链路层
+12.对于10M以太网（ ）是目前使用最广泛的以太网电缆标准，其优点为：易于扩展，维护简单，价格低廉。
+A、 10BASE粗同轴电缆
+B、 10BASE-T
+C、 10BASE2细同轴电缆
+13.用来检查到一台主机的网络层是否连通命令是（ ）
+A、 PING
+B、 TRACERT
+C、 TELNET
+D、 IPCONFIG
+14.下面选项中哪些是数据链路层的主要功能：( )
+A、提供对物理层的控制
+B、差错控制
+C、流量控制
+D、 决定传输报文的最佳路由
+15.OSI参考模型是由下列选项中哪个组织提出：( )
+A、 IEEE
+B、 美国国家标准局（ANSI）
+C、 EIA/TIA
+D、 IBA
+E、 ISO
+16.应用程序PING发出的是（ ）报文
+A、 TCP请求
+B、 TCP应答报文
+C、 ICMP请求报文
+D、 ICMP应答报文
+17.下面属于物理层的设备是（ ）
+A、 网桥
+B、 网关
+C、 中继器
+D、 以太网交换机
+18.ATM是一种面向链接的技术，为在交换式WAN或LAN主干网高速传输数据提供了通用的通信机制( )
+A、TRUE
+B、FALSE
+19.设定路由器在指定备份组中工作为抢占模式的命令是（ ）
+A、 standby[group-number] ip [virtual-address]
+B、 standby[group-number] priority-value]
+C、 standby[group-number] preempt
+D、 standby[group-number] authentication [string]
+20、查看帧中继PVC路由表的命令是（ ）
+A、 show frame-relay pvc
+B、 show frame-relay route
+C、 show frame-relay pvc route
+D、 show rame-relay map
+21、帧中继LMI一般占用哪几个DLCI（ ）
+A、 0
+B、 16
+C、 1007
+D、 1023
+22、PPP协议中，（ ）主要用于协商在该数据链路上所传输的数据包的格式与类型
+A、 链路控制协议
+B、 PPP扩展协议
+C、 网络层控制协议
+D、 PAP、CHAP协议
+23、你在配置X.25网络时怎样配置接口的X.121地址？（ ）
+A、 Quidway#x.25 address 321469056102
+B、 Quidway (config)#x.25address 892735559329
+C、 Quidway(config-if-s0)x25 address 326505160178
+D、 Quidway(config-fi-s0)#x.25 address x.121 329056171
+24、下面哪一组是Quidway路由器封装x.25协议默认的WIN、MOD、OPS的缺省值（ ）
+A、2、8、128
+B、8、8、128
+C、8、128、8
+D、2、128、128
+25、帧中继是一种（ ）的协议
+A、 面向连接
+B、 网络协议
+C、 面积无连接
+D、 可靠
+26、ARP是一个使用广播的地址解析协议，并且使用了ARP高速缓存，原因是使用广播会耗费大量带宽（ ）
+A、TRUE
+B、FALSE
+27、UDP协议和TCP协议的共同之处有：（ ）
+A、 流量控制
+B、 重传机制
+C、 校验和
+D、 提供目的、源端口号
+28、若主机A需要知道主机B的MAC地址，则属于ARP的工作流程为（ ）
+A、 主机A在网络中广播ARP请求报文
+B、 主机A接收到请求报文后将自己的IP地址到MAC地址的映射发送给主机A
+C、 主机B收到请求报文后将主机的IP地址和MAC地址映射存储到自己的CACHE中
+D、 主机A缓存主机B的IP地址到MAC地址的映射
+29、某公司申请到一个C类IP地址，需要分配给8个子公司，最好的子网掩码设应为（ ）
+A、255.255.255.0
+B、255.255.255.128
+C、255.255.255.240
+D、255.255.255.224
+30、在应用层的各协议中（ ）协议提供文件传输服务
+A、 FTP
+B、 TELNET
+C、 WWW
+D、 TFTP
+31、QuidwayS2403F以太网交换机的用户权限级别有（ ）
+A、 normal
+B、 security
+C、 monitor
+D、 manager
+32、对于Quidway S2403F以太网交换机，可以在生成页面配置（ ）
+A、 本交换机优先级
+B、 握手时间间隔
+C、 转发时间
+D、 端口路径值
+33、逻辑上所有的交换机都由（ ）和（ ）两部分组成
+A、 数据转发逻辑
+B、 交换模块
+C、 MAC地址表
+D、 输入/输出接口
+34、关于VLAN下面说法正确的是（ ）
+A、 隔离广播域
+B、 相互间通信要通过路由器
+C、 可以限制网上的计算机互相访问的权限
+D、 只能在同一个物理网络上的主机进行逻辑分组
+35、应使用哪一条命令打开路由器上的IPX路由功能（ ）
+A、 ipx routing
+B、 ipx network
+C、 ipx endcapsulation
+D、 ipx max-paths
+36、( )命令可以显示接口的IPX地址
+A、 show ipx route
+B、 show ipx interace
+C、 show ipx servers
+D、 show ipx traffic
+37、下列哪些命令可以用来查看DDR端口（在端口 S1 上配置）信息？（ ）
+A、 show interface
+B、 show running-conting
+C、 show interface s1
+D、 show diater interface s1
+38、ISDN基本速率接口（BRI）速率是（ ）
+A、 16kbps
+B、 64kbps
+C、 144kbps
+D、 2048kbps
+39、HSRP备份组成的虚拟MAC地址随着生产厂家的不同而不同，因此可以更改以下哪一条命令用来实现虚拟MAC地址以实现与其它厂家路由器的互连（ ）
+A、 standby bia xx-xx-xx-xx-xx
+B、 standby use-bia xx-xx-xx-xx-xx
+C、 standby ovmac xx-xx-xx-xx-xx
+D、 standby use-ovmac xx-xx-xx-xx-xx
+40、下列那一个命令用于指定物理接口做备份接口？（ ）
+A、 Quidway(config)#backup intertace s0
+B、 Quidway(config-s1)#backup s0
+C、 Quidway(config)#backup s0
+D、 Quidway(config-if-s1)#hackup intertace s0
+41、对于一个没有经过子网划分的传统C类网络来说，允许安装多少台主机？（ ）
+A、 1024
+B、 65025
+C、 254
+D、 16
+E、 48
+42、IP地址中网络号的作用有（ ）
+A、 指定了主机所属的网络
+B、 指定了网络上主机的标识
+C、 指定了设备能够进行通信的网络
+D、 指定被寻址的网中的某个节点
+43、C类地址最大可能子网位数是（ ）
+A、 6
+B、 8
+C、 12
+D、 14
+44、UDP使用（ ）提供可靠性
+A、 网际协议
+B、 应用层协议
+C、 网络层协议
+D、 传输控制
+45、RARP的作用是（ ）
+A、 将自己的IP地址转换为MAC地址
+B、 将对方的IP地址转换为MAC地址
+C、 将对方的MAC地址转换为IP地址
+D、 知道自己的MAC地址，通过RARP协议得到自己的IP地址
+46、IP地址219.25.23.56的缺省子网掩码有几位（ ）
+A、 8
+B、 16
+C、 24
+D、 32
+47、Quidway路由器在转发数据包到非直连网段的过程中，依靠下列那一个选项表寻找下一跳地址？（ ）
+A、 帧头
+B、 IP报文
+C、 SSAP字段
+D、 DSAP字段
+48、下面对路由器的描述正确的是（交换机指二层交换机）（ ）
+A、 相对于交换机和网桥来说，路由器具有更加复杂的功能
+B、 相对于交换机和网桥来说，路由器具有更低的延迟
+C、 相对于交换机和网桥来说，路由器可以提供更大的带宽和数据转发功能
+D、 路由器可以实现不同子网之间的通信，交换机和网桥不能
+E、 路由器可以实现虚拟局域网之间的通信，交换机和网桥不能
+49、路由器网络层的基本功能是（ ）
+A、 配置IP地址
+B、 寻找路由和转发报文
+C、 将MAC地址解析成IP地址
+50、异步串口可以设为（ ）
+A、 专线方式
+B、 拨号方式
+C、 语音方式
+D、 PRI接入方式
+51、快速以太网是由（ ）标准定义的
+A、 IEEE802.4
+B、 IEEE802.3U
+C、 IEEE802.1q
+D、 IEEE802.3i
+E、 IEEE802.1d
+52、下列所述的哪一项发送GNS请示数据包来决定为本地最近的服务器？（ ）
+A、 ipx SAP
+B、 ipx DNS
+C、 Routing 更新
+D、 服务器
+E、 以上说法都不对
+53、在NetWare网络中，客户需要访问某个类型的服务器，首先发送( )
+A、 Rip
+B、 Sap
+C、 Gns
+D、 Arp
+54、SNMP依赖于（ ）工作
+A、 IP
+B、 ARP
+C、 TCP
+D、 UDP
+55、关于HUB以下说法正确的是（ ）
+A、 HUB可以用来构建局域网
+B、 一般HUB都具有路由功能
+C、 HUB通常也叫集线器，一般可以作为地址翻译设备
+D、 一台共享式以太网HUB下的所有PC属于同一个冲突域
+56、能保证数据端到端可靠传输能力的是相应OSI的（ ）
+A、 网络层
+B、 传输层
+C、 会话层
+D、 表示层
+57、TFTP服务端口号是（ ）
+A、 23
+B、 48
+C、 53
+D、 69
+58、什么命令用来检查应用层工作正常？( )
+A、 PING
+B、 TRACERT
+C、 TELNET
+D、 IPCONFIG
+59、在数据链路层哪个子层用于管理在一条链路上设备间的通信（ ）
+A、 LLC
+B、 MAC
+C、 BIG MAC
+60.TELNET工作于( )
+A、网络层
+B、传输层
+C、会话层
+D、表示层
+E、应用层
+61.数据在网络层时，我们称之为（ ）
+A、 段
+B、 包
+C、 位
+D、 帧
+62.目前，我国应用最为广泛的LAN标准是基于（ ）的以太网标准
+A、 IEEE802.1
+B、 IEEE802.2
+C、 IEEE802.3
+D、 IEEE802.5
+63.在Quidway路由器上,应该使用什么命令来观察网络的路由表（ ）
+A. Show ip path
+B. Show ip path
+C. Show interface
+D. Show running-config
+E. Show ip rip
+64.RIP协议引入路由保持机制的作用是( )
+A. 节省网络带宽
+B. 防止网络中形成路由环路
+C. 将路由不可达信息在全网扩散
+D. 通知邻居路由器哪些路由是从其他处得到
+65.路由环问题的解决方法包括:（ ）
+A. 采用水平分割
+B. 加快路由更新报文的发送频率
+C. 路由保持
+D. 配置静态路由
+E. 定义路由权的最大值
+66.在路由协议所有接口上使能RIP协议的命令是:（ ）
+A. network all
+B. neighbor
+C. enable
+D. network10.0.0.0
+
+67.下列静态路由器配置正确的是( )
+A. ip route 129.1.0.0 16 serial 0
+B. ip route 10.0.0.2 16 129.1.0.0
+C. ip route 129.1.0.0 16 10.0.02
+D. ip route 129.1.0.0.255.255.0.0 10.0.0.2
+68.下列关于OSPF协议的说法正确的是( )
+A. OSPF 支持基于接口的报文验证
+B. OSPF 支持到同一目的地址的多条等值路由
+C. OSPF 是一个基于链路状态算法的边界网关路由协议
+D. OSPF 发现的路由可以根据不同的类型而有不同的优先级
+69.输入哪条命令可以看到以下信息 （ ）
+LS DataBase
+无效 :Router
+Ls id :10.1.2.2
+Ady rtr :1050
+Len :72
+Seq# :80000008
+Cksum (DC)
+Area Border Router
+Link count 4
+Link id :192.168.2.1
+Data :255.255.255.255
+Metric:1562
+Link id :10.1.2.2
+Data :10.1.3.1
+无效 :Router
+Metric :1562
+Link id :10.1.3.2
+Data :255.255.255.255
+无效 :StubNet
+Metric :1562
+A. show ip route
+B. show ip ospf isa
+C. show ip ospf database
+D. show ip ospf interface
+
+70.以下关于IGRP的说法正确的是:（ ）
+A. 默认情况下,在帧中继网络中运行IGRP协议,启用水平分割功能
+B. IGRP支持多条路径负载均衡
+C. 在一个1500字节的路由更新数据包中最多包含有104条路由
+D. 触发更新定期发送
+71.你在配置x.25网络时怎样配置接口的X.121地址 （ ）
+A. Quidway#x25 address 321469056102
+B. Quidway(config)#x.25address 892735559329
+C. Quidway(config-if-s0)#x25 address 32505160178
+D. Quidwayxonfig-if-s0)#x25 address x121 329056171025
+
+72.在帧中继网络中,帧中继通过( )协议监控PVC的状态
+A. DLCI
+B. BECN
+C. LMI
+D. FECN
+73.PPP协议族中,哪个协议提供了对网络层的支持（ ）
+A. IPCP
+B. LCP
+C. IPXCP
+D. SNA
+74.在封装x.25协议的接口上,设置缺省的最大发送分组大小为256字节的命令是:（ ）
+A. x25 ops 256
+B. x25 dps 256
+C. x25 dbs 2048
+D. x25 dps 2048
+75.PPP协议中,( )主要用于协商在该数据链路上所传输的数据包的格式与类型
+A. 链路控制协议
+B. PPP扩展协议
+C. 网络层控制协议
+D. PAP.CHAP协议
+76.x.25协议包含三层（ ）
+A、 分组层
+B、 数据链路层
+C、 物理层
+D、 传输层
+E、 网络层
+77.在一个接口配置x25 map ip 102.112.43.125 12345命令,其中102.112.43.125和123456分别是( )
+A. 对端的IP地址和对端的x.121地址
+B. 对端的IP地址和本接口的X.121地址
+C. 本接口的IP地址和对端的x.121地址
+D. 本接口的IP地址和本接口的x.121地址
+78.使配置的访问列表应用到接口上的命令是什么（ ）
+A. access-group
+B. access-list
+C. ip access-list
+D. ip access-group
+79.下列关于地址转换的描述,正确的是:（ ）
+A. 地址转换解决了因特网地址短缺所面临问题
+B. 地址转换实现了对用户透明的网络外部地址的分配
+C. 使用地址转换后,对IP包加长,快速转发不会造成什么影响
+D. 地址转换内部主机提供一定的”隐私”
+E. 地址转换使得网络调试变得更加简单
+80.某单位路由器防火墙作了如下配置:
+finewall enable
+access-list normal 101 permit ip 202.38.0.0.0.0.0.255 10.10.10.10 0.0.0.255
+access-list normal 101 deny tcp 202.38.0.0.0.0.0.255 10.10.10.10 0.0.0.255 gt 1024
+access-list normal 101 deny ip any any
+端口配置如下:
+interface Sdriat0
+Ip address 202.38.111.25.255.255.255.0
+Encapsulation ppp ip
+Access-group 101 in
+Interface Ethernet0
+Ip address 10.10.10.1 255.255.255.0
+内部局域网主机均为10.10.10.0 255.255.255.0网段,以下说法正确的是(本题假设其它网络均没有使用access)( )
+A. 外部主机202.38.0.50可以PING通任何内部主机
+B. 内部主机10.10.10.5,可任意访问外部网络资源
+C. 内部任意主机都可以与外部任意主机建立TCP连接
+D. 外部202.38.5.0/24网段主机可以与此内部网主机TCP连接
+E. 外部202.38.0.0/24网段主机不可以与此内部同主机建立端口号大于1024的TCP连接
+81.以下为局域网协议的有( )
+A. PPP
+B. X.25
+C. SLIP
+D. Ethemetll
+E. FrameRelay
+F. EthemetSNAP
+G. Ppp-Multilink
+H. IEEE802.3
+82.在以太网中,工作站在发数据之前,要检查网络是否空闲,只有在网络不阻塞时工作站才能发送数据,是采用了( )机制
+A. ip
+B. tcp
+C. ICMP
+D. 数据侦听与冲突控制CSMA/CD
+83.以太网使用的物理介质主要有( )
+A. 同轴电缆
+B. 双绞线
+C. 电缆
+D. V.24电缆
+84.华为S2403交换机支持（ ）的特性
+A． VLAN
+B． STP
+C． TRUNK
+D． SNMP AGENT
+85.对全双工以太网的描述正确的是（ ）
+A、 可以在共享式以太网中实现全双工技术
+B、 可以在一对双绞线上同时接收和发送以太网帧
+C、 仅可以用于点对点连接
+D、 可用于点对点和点对多点连接
+86.下列所描述的协议哪些属于OSI参考模型表示层协议（多选）（ ）
+A. ASCII、EBCDIC
+B、IP、ARP
+C、MAC、LLC
+D、MPEG、MIDI
+E、 NFS、SQL
+F、 PICT、MPEG
+87.下列哪一条命令可以显示Quidway路由器RAM中的配置信息（ ）
+A、 show buffer pool
+B、 show running－config
+C、 show interface
+88.下面对我国广泛使用的DDN网络描述正确的是什么（ ）
+A、 DDN线路使用简便，覆盖面广
+B、 DDN专线是点到点的链路，它给予用户访问整个链路带宽的可能性
+C、 DDN相对于分组交换网络来说，线路费用较高
+D、 DDN专线被广泛用于企业网互连，专线internet接入
+89.为了查看Quidway路由器搭建的帧中继网络的封装类型，应启用什么命令（ ）
+A、 show frame-relay map
+B、 show frame-relay pvc
+C、 show frame-relay lmi
+D、 show interface
+90.在配置华为路由器和思科路由器搭建的帧中继网络时，你应该怎样配置华为路由器的链路封装格式？（假定思科采用默认封装格式）（ ）
+A、 arpa
+B、 ansi
+C、 ietf
+D、 cisco-compatiable
+E、 Q.933a
+F、 Cisco
+91、X．25协议是哪两种设备进行交互的规程（ ）
+A、 PSE、PSN
+B、 DCE、DTE
+C、 DCE、PSE
+D、 DTE、PSE
+92.属于点到点连接的链路层协议有（ ）
+A、X.25
+B、HDLC
+C、ATM
+D、PPP
+93.请问您应该在下列哪些模式中使用degbug命令（ ）
+A、 用户模式
+B、 特权模式
+C、 全局配置模式
+D、 接口配置模式
+94.国际上负责分配IP 地址的专业组织划分了几个网段作为私有网段，可以供人们在私有网络上自由分配使用，以下属于私有地址的网段是（多选）（ ）
+A、10．0．0．0/8
+B、172.16.0.0/12
+C、192．168．0.0/16
+D、224．0.0.0/8
+95.下列有关NAT叙述正确的是（ ）
+A、 NAT是英文“网络地址转换”的缩写
+B、 址转换又称地址翻译，用来实现私有地址和公用网络地址之间的转换
+C、 当内部网络的主机访问外部网络的时候，一定不需要NAT
+D、 地址转换的提出为解决IP地址紧张的问题提供了一个有效途径
+96.访问控制列表可以过滤进入和流出路由器接口的数据包流量，这句话是（ ）
+A、 true
+B、 false
+97.检查一个访问控制列表在特定接口的应用情况，应使用下列哪条命令？（ ）
+A、 show access-list access-list-number
+B、 show access-list applied
+C、show access-list all
+D、show access-list inter interface-无效 interface-number
+
+98.下列对华为备份中心技术描述正确的是（ ）
+A、 备份技术提高了网络的可靠性，增强了网络的可用性
+B、备份中心技术可以为路由器任意接口提供备份接口，包括逻辑接口
+C、 备份中心技术可以实现对多个网络设备的冗余备份
+D、 以上说法正确
+99.你打算将HSRP备份组中的某台路由器设置为工作在抢占方式，以下命令中的哪一条可以达到这样的效果（ ）
+A、standby 1 priority 255
+B、standby 1 timers
+C、standby 1 track ethernet
+D、standby 1 preempt
+E、 standby 1 preexist
+100.使能DDR的命令是（ ）
+A、 dialer-list
+B、 access-list
+C、 dialer-group
+D、 dialer in-band
+101.IGRP协议的综合路由权包括（多选）（ ）
+A、 带宽
+B、 时延
+C、 跳数
+D、 可靠性
+E、 负载
+F、 最大传输单元
+102.动态路由协议相比静态路由协议（多选）（ ）
+A、带宽占用少
+B、简单
+C、路由器能自动发现网络变化
+D、路由器能自动计算新的路由
+103.RIP协议是基于（ ）
+A、UDP
+B、TCP
+C、ICMP
+D、Raw IP
+104.因为在生成路由表过程中，OSPF协议需要进行复杂的SPF算法来计算网络拓扑结构，所以相对于距离矢量路由选择协议来说，它需要更大的开销，更多的延迟，更高的CPU占用率。（ ）
+A、true
+B、false
+105.（ ）命令查看一些接口的信息，包括接口的花费、状态、类型、优先级等
+A、show ip ospf
+B、show ip ospf error
+C、show ip ospf interface
+D、show ip ospf enighbor
+106.（ ）命令显示OSPF在接收报文时记录的所发生的错误（ ）
+A、 show ip ospf
+B、 show ip ospf error
+C、 show ip ospf intterface
+D、 show ip ospf neighbor
+107.下面关于１０００兆以太网口的描述正确的是（多选）（ ）
+A、１０００M以太网可以提供全双工/半双工通信
+B、１０００M以太网的物理介质可以采用５类以上双绞线、单模/多模光纤
+C、1０００M以太网有自动协商功能，可以与低速以太网之间协商速率
+D、在同一冲突域中，千兆以太网允许中继器互链
+108.以太网中，是根据（ ）地址来区分不同的设备的（ ）
+A、 IP地址
+B、 MAC地址
+C、 IPX地址
+D、 LLC地址
+109.华为S2403交换机基于STF特性设置的参数：（多选）（ ）
+A、 Bridge Priority(交换机优先级)
+B、 Hellow Time (根桥交换机向外发送配置报文的时间间隔)
+C、 Max Age Time (最大老化时间)
+D、 Forward Time (端口状态转换时间)
+E、 Port Path Cost (端口路径值)
+F、 Port Priority(端口优先级)
+110.Quidway路由器在执行数据包转发时，下列哪些项没有发生变化（假定没有使用地址转换技术）（ ）
+A、 原端口号
+B、 目的端口号
+C、 原网络地址
+D、 目的网络地址
+E、 原MAC地址
+F、 目的MAC地址
+111.下面哪些协议属于OSI参考模型第七层？(多选)（ ）
+A、 FTP
+B、 SPX
+C、 Telnet
+D、 PPP
+E、 TCP
+F、 IGMP
+112.和交换电路相比，分组交换的时延小（ ）
+A、 true
+B、 false
+113. ISO提出OSI的关键是（ ）
+A、网络互联
+B、网络分层
+C、七层模型
+D、制定标准
+114.局域网常用设备有：（多选）( )
+A、 线缆，如光纤、双绞线、同轴电缆等
+B、 集线器
+C、 MODEM
+D、 路由器
+115.RFC文档是下面哪一个标准的工作文件（ ）
+A、 ISO
+B、 ITU
+C、 IETF
+D、 IEEE
+116.可路由协议的网络地址由哪两部分组成（ ）
+A、 网络地址和主机地址
+B、 主机地址和网络掩码
+C、 网络地址和网络掩码
+117.IP地址190.233.27.13/16所在的网段地址是（ ）
+A、190.0.0.0
+B、190.233.0.0
+C、190.233.27.0
+D、190.233.27.1
+118.下面哪一些选项是物理层的基本功能：（多选）（ ）
+A、 在终端设备之间传送比特流
+B、 建立、维护虚电路，进行差错校验和流量控制
+C、 定义电压、接口、线缆标准、传输距离等特性
+119.Traceroute功能是（ ）（多选）( )
+A、 用于检查网管工作是否正常
+B、 用于检查网络连接是否可通
+C、 用于分析网络在哪里出现了问题
+120.TCP、UDP、SPX属于OSI的 （ ）
+A、 网络层
+B、 传输层
+C、 会话层
+D、 表示层
+121.关于IP报文头的TTL字段，以下说法正确的有（ ）（多选）
+A、 TTL的最大可能值是65535
+B、 在正常情况下，路由器不应该从接口收到TTL=0的报文
+C、 TTL主要是为了防止IP报文在网络中的循环转发，浪费网络带宽
+D、 IP报文每经过一个网络设备，包括Hub、LAN SWITCH和路由器，TTL值都会被减去一定的数值
+122.给您分配一个B类IP网络172.16.0.0，子网掩码255.255.255.192,则您可以利用的网络数为（ ），每个网段最大主机数（ ）
+A、512 126
+B、1022 62
+C、1024 62
+D、256 254
+E、192 254
+123.下列所述的哪些是ICMP协议的功能？（多选）（ ）
+A、 报告TCP连接超时信息
+B、 重定向UDP消息
+C、 转发SNMP数据
+D、 查找子网掩码
+E、 报告路由更新错误信息
+124.如果C类子网的掩码为255.255.255.240，则包含的子网位数、子网数目、每个子网中的主机数目正确的是（ ）
+A、２ ２ ２
+B、３ ６ ３０
+C、４ １４ １４
+D、５ ３０ ６
+125.10.1.0.1/17的广播地址是（ ）
+A、10.1.128.255
+B、10.1.63.255
+C、10.1.127.255
+D、10.1.126.255
+126.您在Quidway路由器上配置IPX/SPX网络时，必须配置的命令有哪些？（多选）（ ）
+A、 接口封装类型
+B、 路径负载均衡
+C、 接口网络号
+D、 启动IPX进程
+127.下列哪些技术有助于减少路由环路 （ ）
+A、 直接交换
+B、 采用链路状态路由协议
+C、 水平分割
+D、 保持间隔
+E、 定义最大跳数
+F、 路由中毒
+128.在运行win98的计算机中配置网关类似于在路由器上配置（ ）
+A、 直接路由
+B、 默认路由
+C、 动态路由
+D、 间接路由
+129.以下哪些路由项由网管手动配置（ ）
+A、 静态路由
+B、 直接路由
+C、 缺省路由
+D、 动态路由
+130.请选出在华为路由器上运行IGRP协议的所有必须配置命令（ ）
+A、 启用IGRP路由进程
+B、 进入接口配置模式
+C、 配置邻居
+D、 在路由器接口上
+131.哪些模式可以用degbug命令（ ）
+A、 用户模式
+B、 特权模式
+C、 全局模式
+D、 接口模式
+132.以太网是哪一种标准的实现（ ）
+A、 IEEE802.1
+B、 IEEE 802.2
+C、 IEEE 802.3
+D、 IEEE 802.5
+133、命令backup state-up interval-time 运用于（ ）
+A、 主接口是物理接口
+B、 备份接口是物理接口
+C、 主接口是逻辑通道
+D、 备份接口是逻辑通道
+134、请选出在华为路由器上运行IGRP协议的所有必须配置命令（ ）
+A、启用IGRP路由进程
+B、进入接口配置模式
+C、配置邻居
+D、在路由器接口上
+135.判断路由好坏的原则不包括（ ）
+A、 快速收敛性
+B、 灵活性、弹性
+C、 拓扑结构的先进性
+D、 最好路径
+136.可以为以下哪些接口提供备份接口（ ）
+A、 ISDN BRI
+B、 ISDN PRI
+C、 X.25
+D、 拨号接口
+E、 以太网子接口
+F、 虚拟接口模板
+137.下列关于DLCI叙述不正确的是（ ）
+A、 DLCI是本地接口
+B、 DLCI是由DCE侧分配的
+C、 用户可用的DLCI范围是1－1007
+D、 不同的物理接口可以配置相同的DLCI
+E、 相同的物理接口可以配置相同的DLCI
+138.VRP支持的X.25协议封装格式有（ ）
+A、 IETF
+B、 ITU-T Q.933a
+C、 DDN
+D、 BFE
+E、 IEEE802.3
+F、 CISCO兼容
+139.广域网协议有（ ）
+A、 PPP
+B、 X.25
+C、 SLIP
+D、 Ethernetll
+E、 Frame－relay
+F、 IEEE802.2/802.3
+G、 IPX
+140.在配置帧中继子接口时，可配的子接口类型有哪些（ ）
+A、 point-to-point
+B、 NBMA
+C、 point-to-multipoint
+D、 broadcast
+141.IP 地址中网络号的作用是（ ）
+A、 指定主机所属网络
+B、 指定网络上主机标识
+C、 指定设备能够运行通信的网络
+D、 指定被寻址的子网中的某个节点
+142.术语ARP代表什么（ ）
+A、地址解析协议
+B、反向地址解析协议
+143.为了确定网络层所经过的路由器数目，应使用什么命令( )
+A、 ping
+B、 arp-a
+C、 stack-test
+D、 traceroute
+E、 telnet
+144.IEEE802.3不是VLAN的标准（ ）
+A、true
+B、false
+145.CSMA/CD网络中，所有主机都可独占网络带宽（ ）
+A、 true
+B、 false
+146.OSI中，哪些不是表示层功能？( )
+A、 数据加密
+B、 数据压缩
+C、 密码控制
+D、 数据格式转换
+147.Telnet工作于哪一层？（ ）
+A、 应用层
+B、 表示层
+C、 会话层
+D、 传输层
+E、 网络层
+F、 链路层
+G、 物理层
+148.TFTP服务器的端口号是（ ）
+A、23
+B、48
+C、53
+D. 69
+149.在Quidway路由器上如何查看e0 IPX接口（ ）
+A、 show interface
+B、 show ipx interface
+C、 show ipx serverce
+D、 show interface e0
+150.路由器中，IPX 地址 0XFFFFFFFE表示（ ）
+A、 本地地址
+B、 网内广播地址
+C、 网间广播地址
+151.在下列对HSRP各参数缺省值的描述中，哪几条是正确的（ ）
+A、Hellow Time 缺省3 Hold Time缺省10
+B、备份组号的缺省1
+C、验证字缺省quidway
+D、优先级 50
+E、设置指定接口时，接口失败后，优先级减少的缺省为10
+152.下列哪些接口可作逻辑通道（ ）
+A、X.25
+B、帧中继
+C、dialer
+D、同/异步串口
+153.DNS工作于（ ）
+A、 网络层
+B、 传输层
+C、 会话层
+D、 表示层
+E、 应用层
+154.IP地址与它的掩码取反相与，所得的非零点分十进制数是此IP地址的（ ）
+A、A类
+B、主机地址
+C、网络地址
+D、解析地址
+155.OSI中，链路层和传输层都是面向连接的，但链路层建立的是点到点的连接，传输层建立的是端到端的连接（ ）
+A、true
+B、false
+156.在华为路由器特权模式下输入show interface ,显示物理接口UP，线路接口DOWN，可能的故障现象是（ ）
+A、存活间隔设置不一致
+B、时钟速率与对端不一致
+C、链路协商没有通过
+D、没有来自对端的载波信息
+157.当接口运行在RIP2广播方式时，它可接收的报文有（ ）
+A、RIP1广播报文
+B、RIP1组播报文
+C、RIP2广播报文
+D、RIP2组播报文
+158.下面接口为物理接口的有（ ）
+A、dialer
+B、语音接口
+C、serial口
+D、子接口
+E、CE1/PRI2接口
+F、 虚拟接口模板
+G、 ISDN BRI接口
+H、 备份中心逻辑通道
+159.属于点到点连接链路层协议的有( )
+A、X.25
+B、HDLC
+C、ATM
+D、ppp
+160.190.233.27.13./16所在网段地址（ ）
+A、190.233.0.0
+B、190.0.0.0
+C、190.233.27.0
+161.在华为路由器上配置IPX/SPX网络时，必须配置的命令有（ ）
+A、接口封装类型
+B、负载均衡
+C、接口网络号
+D、启动IPX进程
+162.RFC是哪个组织提出的（ ）
+A、 ISO
+B、 ITU
+C、 IETF
+D、 IEEE
+163.哪个地址表示子网内所有的参与多播的路由及主机（ ）
+A、224.0.0.1
+B、224.0.0.5
+C、224.0.0.6
+D、224.0.0.9
+164.ISO规定的网络管理的五部分的功能是（ ）
+A、性能管理
+B、配置管理
+C、安全管理
+D、协议管理
+E、 记账管理
+165.以下选项属于广域网协议的有（ ）
+A、 PPP
+B、 X.25
+C、 SLIP
+D、 Ethernetll
+E、 Frame－relay
+F、 IEEE802.2/802.3
+G、 IPX
+166. 以太网交换机中，哪种转发方法延迟较小（ ）
+A、 直接转发
+B、 存储转发
+167.tcp协议工作于TCP/IP协议栈的哪一层( )
+A、 应用层
+B、 传输层
+C、 网络层
+D、 链路层
+E、 物理层
+168.192.168.1.127代表的是（ ）地址
+A、主机
+B、网络
+C、广播
+D、组播
+E、都不对
+169.一个A类地址，其子网掩码是255.255.240.0，有多少位被用来划分子网？（ ）
+A、8
+B、16
+C、 20
+D、 24
+170. 以下关于IP地址借用说法正确的是（ ）
+A、借用方不能为以太网接口
+B、如果被借用接口没有IP地址，则借用接口的IP地址为0.0.0.0
+C、被借用方接口的地址本身不能为借用地址
+D、被借用方的地址可以借给多个接口
+171.路由器转发数据包到非直接网段的过程中，依靠下列哪一个选项来寻找下一跳地址( )
+A. 帧头
+B、IP报文头部
+C、SSAP子段
+D、DSAP子段
+172.支持可变长子网掩码的路由协议有（ ）
+A、RIP V1
+B、OSPF
+C、RIV2
+D、IS-IS
+173.以下哪些可作为备份接口（ ）
+A、ISDN BRI
+B、ISDN PRI
+C、X.25
+D、拨号接口
+E、 以太网接口
+F、 以太网子接口
+G、 虚拟接口模板
+
+174对于访问控制列表条件的判断语句中，与子网掩码类似的32位比特的数字字符串称为（ ）
+A、 IP地址
+B、 主机地址
+C、 网络地址
+D、 通配符
+175.改变您的Quidway路由器名字为myrouter时，应输入什么命令( )
+A、 config myrouter
+B、 show myroter
+C、 hostname myrouter
+176.IP 地址中，网络部分全0表示( )
+A、 主机地址
+B、 网络地址
+C、 所有主机
+D、 所有网络
+177.IP 地址中网络号的作用是（ ）
+A、制定主机所属网络
+B、指定网络上主机标识
+C、指定设备能够运行通信的网络
+D、指定被寻址的子网中的某个节点
+178.为了确定网络层所经过的路由器数目，应使用什么命令（ ）
+A、ping
+B、arp-a
+C、stack-test
+D、traceroute
+E、telnet
+179.IEEE802.3不是VLAN的标准（ ）
+A、 true
+B、 false
+180、CSMA/CD网络中，所有主机都可独占网络带宽( )
+A、true
+B、false
+181. DNS工作于（ ）
+A、 网络层
+B、 传输层
+C、 会话层
+D、 表示层
+E、 应用层
+182.IP地址与它的掩码取反相与，所得的非零点分十进制数是此IP地址的（ ）
+A、 A类
+B、 主机地址
+C、 网络地址
+D、 解析地址
+183 .数据分段在OSI哪一层( )
+A、 应用层
+B、 表示层
+C、 会话层
+D、 传输层
+E、 网络层
+F、 数据链路层
+184. 下列是外部可路由协议的是（ ）
+A、 rip
+B、 ospf
+C、 igrp
+D、 bgp
+E、 eigrp
+185.属于点到点连接链路层协议的有（ ）
+A、X.25
+B、HDLC
+C、ATM
+D、ppp
+186.190.233.27.13./16所在网段地址（ ）
+A、190.233.0.0
+B、190.0.0.0
+C、190.233.27.0
+187 在华为路由器上配置IPX/SPX网络时，必须配置的命令有（ ）
+A、 接口封装类型
+B、负载均衡
+C、接口网络号
+D、启动IPX进程
+188.下列列出的网络设备中，属于DCE设备的有（ ）
+A、 集线器
+B、 帧中继交换机
+C、 CSU/DSU
+D、 计算机
+189.华为R4001路由器提供CE1/PR2接口，对于CE1封装，最多可以支持同时划分（ ）
+个64个逻辑接口，用于DDN连接。
+A、30
+B、31
+C、32
+D、16
+190.在ISDN网络中，U接口定义在（ ）之间。
+A、 TE1和NT
+B、 TE2和TA
+C、 NT1和ISDN网络
+D、 NT1和NT2
+191.路由器并不具备计费功能( )
+A、 true
+B、 false
+192.在配置帧中继DLCI和对端IP地址的映射后，使用什么命令来校验配置（ ）
+A、 show frame-relay pvc
+B、 show frame-relay map
+C、 show frame-relay traffic
+D、 show frame-relay lmi
+193.以下协议技术中，采用面向连接方式进行通信的有（多选）（ ）
+A、 IP
+B、 X.25
+C、 Ethernet
+D、 Frame-relay
+194.VLAN的划分方法有（多选）（ ）
+A、 基于设备端口
+B、 协议
+C、 MAC
+D、 物理地址
+195.IPX/SPX协议中，IPX地址的网络号是多少位( )
+A、2
+B、4
+C、6
+D、8
+196.路由项10.0.24.0/21由哪几条子网路由聚合而来（ ）
+A、10.0.0.25/16
+B、10.0.0.23/16
+C、10.0.0.26/16
+D、10.0.0.22/16
+197.保留给自环测试的IP地址是( )
+A、127.0.0.0
+B、127.0.0.1
+C、224.0.0.9
+D、126.0.0.1
+198.流控有哪三种方式？( )
+A、 抑制技术；
+B、 端口速率自协商机制；
+C、 窗口机制
+199.可路由网络协议的网络地址由哪两部分组成？( )
+A、 主机地址 网络地址
+B、 主机地址 子网掩码
+C、 网络地址 子网掩码
+200.华为路由器中，IPX协议支持（ ）封装格式（ ）
+A、 Ethernet－11
+B、 Ethernet－snap
+C、 Ethernet－nap
+D、 Ethernet－802.2
+E、 Ethernet—802.3
+F、 Ethernet—802.5
+201.RIP协议引入路由保持机制的作用是防止路由形成环路（ ）
+A、true
+B、false
+202.通常情况下，IGRP是如何获得路由信息( )
+A、广播
+B、单播和多播
+C、多播
+D、多播和广播
+203.DTE可以在（ ）虚电路区间发起呼叫
+A、 双向信道区间
+B、 永久虚电路区间
+C、 单向呼入信道区间
+D、 单向呼出信道区间
+204.VLAN tag在OSI参考模型的哪一层( )
+A、 应用层
+B、 表示层
+C、 会话层
+D、 传输层
+E、 网络层
+F、 链路层
+G、 物理层
+205.属于局域网协议的有（ ）
+A、PPP
+B、X.25
+C、SLIP
+D、Ethernet 11
+E、Frame－relay
+F、thernet SNAP
+G、PPP-multilink
+H、 IEEE-802.3
+206.无类路由协议路由表表目为三维组，其中不包括（ ）
+A、 子网掩码
+B、 源网络地址
+C、 目的网络地址
+D、 下一跳地址
+207.帧中继的最大帧传输长度是（ ）
+A、 128比特
+B、 256比特
+C、 1024比特
+D、 1600比特
+208.一个子网掩码为255.255.240.0的网络中（ ），合法网段地址。
+A、150.150.0.0
+B、150.150.0.8
+C、150.150.8.0
+D、150.150.16.0
+209.网段2.0.0.0，掩码255.255.224.0，有效网段地址是（ ）
+A、2.1.16.0
+B、2.2.32.0
+C、2.3.48.0
+D、2.4.172.0
+210.衡量网络性能的主要标准是（ ）
+A、 带宽
+B、 延迟
+211. X.25使用映射的作用是（ ）
+A. 映射本地IP到对端端口值，以便路由器发送数据时确认发送端口
+B. 映射本地IP到本地端口值，以便路由器发送数据时确认发送端口
+C. 映射对端IP到本地端口值，以便X.25交换网络查找数据发送路径
+D. 映射对端IP到对端端口值，以便X.25交换网络查找数据发送路径
+212. 各个路由协议衡量路由的好坏标准是（ ）
+A. 路由
+B. 路由器优先级
+C. 路由权
+D. 包转发率
+213. 路由器作为网络互连设备，必须具备以下哪些特点。（ ）
+A. 至少支持两个网络接口
+B. 协议至少要实现到网络层
+C. 至少支持两种以上的子网协议
+D. 至少具备一个备份口
+E. 具有存储、转发和寻径功能
+F. 一组路由协议
+G. 必须有较高的协议处理能力
+214. OSPF 协议适用于基于 IP 的（ ）
+A. 大型网络
+B. 中小型网络
+C. 更大规模的网络
+D. isp与isp之间
+215. 某单位路由器防火墙作了如下配置：
+firewall enable
+access-list normal 101 permit ip 202.38.0.0 0.0.0.255 10.10.10.10 0.0.0.255
+access-list normal 101 deny tcp 202.38.0.0 0.0.0.255 10.10.10.10 0.0.0.255 gt 1024
+access-list normal 101 deny ip any any
+
+端口配置如下
+interface Serial0
+Enable
+Ip address 202.38.111.25 255.255.255.0
+encapsulation ppp
+ip access-group 101 out
+interface Ethernet0
+ip address 10.10.10.1 255.255.255.0
+内部局域网主机均为10.10.10.0 255.255.255.0网段。以下说法正确的是（本题假设其他网络均没有使用防火墙）：（ ）
+A. 外部主机202.38.0.50可以ping通任何内部主机；
+B. 内部主机10.10.10.5，可以任意访问外部网络资源；
+C. 外部202.38.5.0 255.255.255.0网段主机可以与此内部网主机建立tcp连接；
+D. 外部202.38.0.0 255.255.255.0网段主机不可以与此内部网主机建立tcp连接
+E. 内部任意主机都可以与外部任意主机建立tcp连接；
+F. 内部任意主机只可以与外部202.38.0.0 255.255.255.0网段主机建立tcp连接
+216. 以下的协议中，哪些是面向连接的协议（ ）。
+A. X25
+B. Ethernet
+C. IP
+D. Frame-relay
+217. 路由器A的配置如下：
+Quidway#SHOW RUN
+Current configuration
+!
+user huawei service-无效 ppp password 0 quidway
+!
+interface Ethernet0
+ip address 1.1.1.1 255.0.0.0
+!
+interface Serial0
+encapsulation ppp
+ppp authentication chap
+ppp chap host huawei
+ip address 2.1.1.1 255.0.0.0
+!
+interface Serial1
+encapsulation ppp
+!
+interface Serial2
+flowcontrol normal
+async mode dedicated
+encapsulation ppp
+!
+exit
+ip route 0.0.0.0 0.0.0.0 2.1.1.2 preference 60
+end
+路由器B的配置如下
+Quidway#SHOW RUN
+Current configuration
+!
+user hw service-无效 ppp password 0 quidway
+!
+interface Ethernet0
+ip address 3.1.1.1 255.0.0.0
+!
+interface Serial0
+clock-select DTECLK1
+encapsulation ppp
+ppp chap host huawei
+ip address 1.1.1.2 255.0.0.0
+!
+interface Serial1
+encapsulation ppp
+!
+interface Serial2
+flowcontrol normal
+async mode dedicated
+encapsulation ppp
+!
+exit
+ip route 0.0.0.0 0.0.0.0 2.1.1.2 preference 60
+end
+发现两端路由器不能PING同对端以太网端口，下述说法正确的是（ ）
+A.A验证配置错误
+B.B验证配置错误
+C.A验证方路由配置错误
+D.B被验证方路由配置错误
+-----------------------------------------------------------------------------------------
+1. 以下属于数据链路层的设备是（ ）
+(A) 中继器 (B) 以太网交换机
+(C) 网桥 (D) 网关
+2. 解决路由环问题的办法是（ ）
+(A) 定义路由权的最大值 (B) 路由保持法
+(C) 水平分割 (D) 路由器重起
+3. BGP是在（ ）之间传播路由的协议
+(A) 主机 (B) 子网
+(C) 区域(area) (D) 自治系统(AS)
+4. 配置备份中心的目的是（ ）
+(A) 增加网络的带宽 (B) 提高网络的可用性
+(C) 防止数据传输的意外中止 (D) 降低网络的传输费用
+5. 以下内容那些是路由信息中所不包含的（ ）
+(A) 目标网络 (B) 源地址
+(C) 路由权值 (D) 下一跳
+6. 选出基于TCP协议的应用程序（ ）
+(A) PING (B) TFTP
+(C) TELNET (D) OSPF
+7. X.25协议提供给用户的可用的逻辑信道最多为（ ）条
+(A) 16 (B) 32
+(C) 4095 (D) 4096
+8. OSI代表（ ）
+(A) Organization for Standards Institute (B) Organization for Internet Standards (C) Open Standards Institute (D) Open Systems Interconnection
+9. 帧中继LMI一般占用哪几个DLCI （ ）
+(A) 0 (B) 16
+(C) 1007 (D) 1023
+10. PPP验证成功后，将由Authenticate阶段转入什么阶段（ ）
+(A) Dead (B) Establish
+(C) Network (D) Terminate
+11. 在七十年代末，国际标准化组织ISO提出了开放系统互连参考模型。协议分层大大简化了网络协议的复杂性，在OSI 7层模型中，网络层的功能主要是（ ）
+(A) 在信道上传输原始的比特流 (B) 加强物理层数据传输原始比特流的功能并且进行流量调控
+(C) 确定数据包从源端到目的端如何选择路由 (D) 确保到达对方的各段信息正确无误
+12. 访问列表如下： access-list 4 deny 202.38.0.0 0.0.255.255 access-list 4 permit 202.38.160.1 0.0.0.255 应用于该路由器端口的配置如下： Quidway(config)# firewall default permit Quidway(config-if-Serial0)# ip access-group 4 in 该路由器E0口接本地局域网，S0口接到INTERNET，以下说法正确的有： （ ）
+(A) 所有外部数据包都可以通过S口，自由出入本地局域网 (B) 内部主机可以任意访问外部任何地址的主机
+(C) 内部主机不可以访问本列表禁止的外部地址的主机 (D) 连在该路由器其他端口的主机可任意访问内部网资源
+13. 在 IPX 之上承载各种上层协议，包括（ ）
+(A) Rip (B) Netbios
+(C) Ncp (D) Tcp
+14. 在帧中继封装中配置静态MAP必须指定哪些参数： （ ）
+(A) 本地的DLCI (B) 对端的DLCI
+(C) 本地的协议地址 (D) 对端的协议地址
+15. 某公司申请到一个C类IP地址，但要连接6个的子公司，最大的一个子公司有31台计算机，每个子公司在一个网段中，则子网掩码应设为（ ）
+(A) 255.255.255.0 (B) 255.255.255.128
+(C) 255.255.255.192 (D) 255.255.255.224
+(E) 255.255.255.240 (F) 以上都不对！
+16. 以下关于Rip路由聚合的说法正确的是
+(A) Rip V1默认支持路由聚合，需要时可以关闭路由聚合功能 (B) 华为Quidway 系列路由器Rip V2的实现可以关闭路由聚合功能
+(C) 、Rip V1不支持子网路由聚合到一个非自然子网路由 (D) Rip V2支持子网路由聚合到一个非自然子网路由
+17. 当一台主机从一个网络移到另一个网络时，以下说法正确的是（ ）
+(A) 必须改变它的IP地址和MAC地址 (B) 必须改变它的IP地址，但不需改动MAC地址
+(C) 必须改变它的MAC地址，但不需改动IP地址 (D) MAC地址、IP地址都不需改动
+华为笔试
+Q1：请你分别划划OSI的七层网络结构图，和TCP/IP的五层结构图？
+Q2：请你详细的解释一下IP协议的定义，在哪个层上面，主要有什么作用？ TCP与UDP呢？
+Q3：请问交换机和路由器分别的实现原理是什么？分别在哪个层次上面实现的？
+Q4:请问C++的类和C里面的struct有什么区别？
+Q5:请讲一讲析构函数和虚函数的用法和作用？
+
+A1：OSI/ISO根据整个计算机网络功能将网络分为物理层、数据链路层、网络层、传输层、会话层、表示层、应用层七层。也称"七层模型"
+TCP/IP"五层模型" 物理层、网络接口层、网络层、传输层、应用层
+路由的功能，即寻径的功能，TCP协议 是一个传输层的协议它向下屏蔽了IP协议不可靠传输的特性，向上提供一个可靠的点到点的传输，UDP提供的是一种无连接的服务,主要考虑到很多应用不需要可靠的连接，但需要快速的传输
+A2：IP协议是网络层的协议，它实现了Internet中自动
+A3：交换机用在局域网中，交换机通过纪录局域网内各节点机器的MAC地址就可以实现传递报文，无需看报文中的IP地址。路由器识别不同网络的方法是通过识别不同网络的网络ID号(IP地址的高端部分)进行的，所以为了保证路由成功，每个网络都必须有一个唯一的网络编号。路由器通过察看报文中IP地址，来决定路径，向那个子网(下一跳)路由 也就是说交换机工作在数据链路层看MAC地址，路由器工作在网络层看IP地址，但是由于现在网络设备的发展，很多设备既有交换机的功能有由路由器的功能(交换试路由器)使得两者界限越来越模糊。
+A4:C++的类具有数据封装，其包含属性访问级别可以为Private,public 和protect,还具有 实现类接口功能和辅助功能的操作函数，而struct属性访问全县只有public，没有数据封装功能，也就没有实现信息隐藏着一面向对象的思想的机制,struct本身不含有操作函数,只有数据
+A5:析构函数是在类对象死亡时由系统自动调用，其作用是用来释放对象的指针数据成员所指的动态空间,如果在构造函数中你申请了动态空间，那么为了避免引起程序错误，你必须在析构函数中释放这部分内存空间，如果基类的函数用 virtual修饰，成为虚函数，则其派生类相应的重载函数仍能继承该虚函数的性质，虚函数进行动态联编，也即具有多态性,也就是派生类可以改变基类同名函数的行为，在面向对象世界中，多太是最强大的机制，须函数就是这一机制的c++的实现方式
+答案不是绝对正确，个人觉得解释的还是比较全面的.
+
+2006年华为研发类笔试编程题(2006年10月29日晚，成都电子科技大学考试题目)
+
+题目：网球中心共有100个网球场，每个单位可以来申请1到100的场地，申请的场地编号必须是连续的，如果场地已经被其他单位占用，就不能再次使用，而且单位在使用完场地后必须归还。请设计一个完整的系统(c语言）。（限时5分钟）
+Tennis.h
+struct TennisGround
+{
+int num;
+char *agentName;
+};
+typedef struct TennisGround TG;
+
+void mallocTG(TG *total);
+void freeTG(TG *total);
+
+Tennis.c
+#include
+#include
+#include
+#include
+#include “Tennis.h”
+void mallocTG(TG *total)
+{
+int size, start,count = 0;
+char *agentName = (char*)malloc(sizeof(char)*10);
+
+printf(“Please input your agentName:”);
+scanf(“%s”, agentName);
+printf(“Please input the size of the TennisGround:”);
+scanf(“%d”, &size);
+printf(“Please input the TennisGround number you want to start:”);
+scanf(“%d”, &start);
+if((total+start)->agentName != ” “)
+{
+printf(“malloc failed!\n”);
+exit(-1);
+}
+else
+{
+while(count
+{
+(total+start+count)->agentName = agentName;
+count++;
+}
+}
+}
+
+void freeTG(TG* total)
+{
+char *an = (char*)malloc(sizeof(char)*10);
+printf(“please input agentName you want to free:”);
+scanf(“%s”, an);
+int count = 0;
+while(count
+{
+if(strcmp((total+count)->agentName, an) == 0)
+(total+count)->agentName = ” “;
+count++;
+}
+}
+
+int main()
+{
+int i;
+int sw;
+TG *total = (TG*)malloc(sizeof(TG)*100);
+
+for(i=0; i
+{
+(total+i)->num = i;
+(total+i)->agentName = ” “;
+}
+
+while(1)
+{
+printf(“*******Tennis Ground Mallocation******************\n”);
+for(i=0; i
+{
+printf("%d(%s) ", (total+i)->num, (total+i)->agentName);
+if(i%5 == 0)
+printf(“\n”);
+}
+printf(“\n”);
+printf(“**************************************************\n”);
+printf(“Please input your choosen:(1-malloc,2-free):”);
+scanf(“%d”, &sw);
+if(sw == 1)
+mallocTG(total);
+else
+freeTG(total);
+
+}
+
+return 0;
+}
+
+请你详细地解释一下IP协议的定义，在哪个层上面？主要有什么作用？TCP与UDP呢？
+IP是Internet Protocol的缩写，意思是“网络之间互连的协议”，规定了计算机在因特网上进行通信时应当遵守的规则。任何厂家生产的计算机系统，只要遵守IP协议就可以与因特网互连互通。IP协议运行在互连网络层，负责提供基本的数据封包传送功能，让每一块数据包都能够到达目的主机（但不检查是否被正确接收）。IP协议工作在网络层。
+UDP，TCP都工作在传输层。
+TCP协议是英文Transmission Control Protocol的缩写，意思是传输控制协议。TCP提供IP环境下的数据可靠传输，它提供的服务包括数据流传送、可靠性、有效流控、全双工操作和多路复用。通过面向连接、端到端和可靠的数据包发送。通俗说，它是事先为所发送的数据开辟出连接好的通道，然后再进行数据发送；UDP是User Datagram Protocol的缩写，意思是：用户数据包协议，UDP不为IP提供可靠性、流控或差错恢复功能。一般来说，TCP对应的是可靠性要求高的应用，而UDP对应的则是可靠性要求低、传输经济的应用。
+
+华为C语言笔试题
+一、判断题（对的写T，错的写F并说明原因，每小题4分，共20分）
+1、有数组定义int a[2][2]={{1},{2,3}};则a[0][1]的值为0。（ ）
+2、int (*ptr) (),则ptr是一维数组的名字。（ ）
+3、指针在任何情况下都可进行>,=,
+4、switch(c) 语句中c可以是int ,long,char ,float ,unsigned int 类型。（ ）
+5、#define print(x) printf(＂the no, ＂#x＂,is ＂)
+
+二、填空题（共30分）
+1、在windows下，写出运行结果，每空2分，共10分。
+char str[ ]= ＂Hello＂;
+char *p=str;
+int n=10;
+sizeof(str)=( )
+sizeof(p)=( )
+sizeof(n)=( )
+void func(char str[100])
+{ }
+sizeof(str)=( )
+
+2、void setmemory(char **p, int num)
+{ *p=(char *) malloc(num);}
+void test(void)
+{ char *str=NULL;
+getmemory(&str,100);
+strcpy(str,＂hello＂);
+printf(str);
+}
+运行test函数有什么结果？（ ）10分
+
+3、设int arr[]={6,7,8,9,10};
+int *ptr=arr;
+*(ptr++)+=123;
+printf(＂%d,%d＂,*ptr,*(++ptr));
+( ) 10分
+
+二、编程题（第一小题20，第二小题30分）
+1、 不使用库函数，编写函数int strcmp(char *source, char *dest)
+相等返回0，不等返回-1；
+2、 写一函数int fun(char *p)判断一字符串是否为回文，是返回1，不是返回0，出错返回-1
+五、 阅读程序题(每个小题5分，共20分)
+1．阅读以下程序，概括地写出程序的功能。
+＃i nclude
+double Exp(double x)
+{ double sum=1.0;
+double term=x;
+double i=1 ;
+while (term>=1.0E-8)
+{ sum+=term ;
+i++;
+term=term*x/i ;
+}
+return sum ;
+}
+void main()
+{ double s;
+s=Exp(1.0)+Exp(2.0);
+cout.precision(8);
+cout
+}
+2. 阅读程序，写出程序执行时输出结果。
+＃i nclude
+const int SIZE=10;
+class stack
+{ char stck[SIZE];
+int top;
+public:
+void init();
+void push(char ch);
+char pop();
+};
+void stack::init()
+{ top=0; }
+void stack::push(char ch)
+{ if(top==SIZE)
+　{ cout
+return ;
+　}
+stck[top++]=ch;
+}
+char stack::pop()
+{ if(top==0)
+　　　{ cout
+　　　return 0;
+}
+return stck[--top];
+}
+void main()
+{ stack s1, s2;
+　s1.init();
+　s2.init();
+　s1.push('a');
+　s1.push('b');
+　s1.push('c');
+　s2.push('x');
+　s2.push('y');
+　s2.push('z');
+　for(int i=0; i
+cout
+　for(i=0; i
+cout
+}
+程序结果:
+3.阅读程序，写出程序运行时输出结果。
+＃i nclude
+class Tdate
+{ public:
+Tdate();
+Tdate(int d);
+Tdate(int m, int d);
+Tdate(int m, int d, int y);
+protected:
+int month;
+int day;
+int year;
+};
+Tdate::Tdate()
+{ month=4;
+　　　day=15;
+　　　year=1995;
+cout
+}
+Tdate::Tdate(int d)
+{ month=4;
+　　　day=d;
+　　year=1996;
+cout
+}
+Tdate::Tdate(int m, int d)
+{ month=m;
+　　　day=d;
+　　　year=1997;
+cout
+}
+Tdate::Tdate(int m, int d, int y)
+{ month=m;
+　　　day=d;
+　　　year=y;
+cout
+}
+void main()
+{ Tdate aday;
+Tdate bday(10);
+Tdate cday(2,12);
+Tdate dday(1,2,1998);
+}
+运行结果:
+4．阅读程序，写出程序运行时输出结果。
+＃i nclude
+＃i nclude
+class shape
+{ public:
+shape(double x, double y):xCoord(x), yCoord(y){}
+virtual double Area()const {return 0.0; }
+protected:
+double xCoord, yCoord;
+};
+class AA :public shape
+{ public:
+AA(double x, double y, double r): shape(x,y), rad(r){}
+virtual double Area()const { return 3.0 * rad * rad; }
+protected:
+double rad;
+};
+class BB :public shape
+{ public:
+BB(double x1, double y1, double x2, double y2)
+:shape(x1, y1), x2Coord(x2), y2Coord(y2){ }
+virtual double Area()const;
+protected:
+double x2Coord, y2Coord;
+};
+double BB:Area()const
+{ return fabs((xCoord-x2Coord)* (yCoord - y2Coord));
+//库函数fabs(double t)求得t的绝对值
+}
+void fun(const shape& sp)
+{ cout
+}
+void main()
+{ AA aa(2.0, 5.0, 4.0);
+fun(aa);
+BB bb(2.0, 8.0, 12.0, 17.0);
+fun(bb);
+}
+运行结果:
+六、 编写程序题（每小题10分，共20分）
+1.编写一个函数int Judge(int *pArray, int n)，判断一个n×n二维整数数组pArray 是否为“魔方阵”，若是返回1，否则返回0。所谓魔方阵就是将1到n2的各个数字组成的方阵，它的每一行、每一列以及两个对角线上数字之和均相等。例如，3×3的中，A是魔方阵，而B不是魔方阵。然后在主程序中调用Judge函数判断数组A是否为魔方阵。
+参考程序
+＃i nclude
+int Judge(int *pArray, int n)
+{ int s1, s2, s3,s4,sum=0;
+int *p=pArray;
+for(int i=1; i
+{ int Found=0; //为0，不在方阵中；
+for(int j=0; j
+if(p[j]==i)
+{ Found=1; //为1，在方阵中
+break;
+}
+if(Found==0) return 0; // 值为 i 的元素不在数组中，显然不是魔方阵
+}
+for( i=1; i
+sum=sum+i;
+sum=sum / n; // 各行、各列、对角线元素应当得到的和
+s3=0;
+s4=0;
+for( i=0; i
+{ s1=0, s2=0;
+p=pArray;
+for(int j=0; j
+{ s1=s1+p[i*n+j]; //第i行的元素和
+　s2=s2+p[j*n+i]; //第i列的元素和
+}
+if ( s1!=sum)
+return 0;
+if ( s2!=sum)
+return 0;
+s3=s3+pArray[i*n+i]; 　　　　// 对角线一元素和
+s4=s4+pArray[i*n+(n-1-i)]; // 对角线二元素和
+}
+if(s3!=sum)
+return 0;
+if(s4 != sum)
+return 0;
+return 1;
+}
+void main()
+{ int Array[3][3]={{ 8, 1, 6},{ 3, 5, 7},{ 4, 9, 2}};
+当 x 输入值为9999时，函数返回值为多少？
+int fun ( unsigned int x )
+{ int count = 0;
+while(x)
+{
+x = x & (x-1);
+count++;
+}
+return count;
+}
+答案：此函数是在计算 x 中含有1的个数，所以返回值为8。
+if(Judge((int*)Array, 3))
+cout
+else
+cout
+}
+/*********************************
+* 两个超大数相乘算法
+*********************************/
+＃i nclude
+void main()
+{
+int a[30],b[30],c[60];
+int i,j;
+/* 给乘数和被乘数赋值，并把结果赋零 */
+for (i=0;i
+{
+a[i]=i%10;
+b[i]=i%10;
+c[2*i]=0;
+c[2*i+1]=0;
+}
+/* 给每位结果赋值，这里应该考虑清楚为什么这么写
+还有这里的位的值的最大限度应该是-128 -- +127
+所以就算是10*10也可以满足存进去一个char类型里 */
+for(i=0;i
+for(j=0;j
+c[i+j]+=a[i]*b[j];
+/* 这里把每个位>10的数进位和把余数重新赋值给这一位 */
+for(i=0;i
+{
+c[i+1]+=c[i]/10;
+c[i]=c[i]%10;
+}
+/* 打印出来 */
+for(i=0;i
+printf("%d",a[30-i-1]);
+printf("\n");
+for(i=0;i
+printf("%d",b[30-i-1]);
+printf("\n");
+for(i=0;i
+printf("%d",c[60-i-1]);
+printf("\n");
+}
+
+华为2004年招收应届大学毕业生技术支持面试题。
+笔试内容包括：
+1。技术试题：系统windows/linux，网络基础，通信基础，数据库
+2。能力试题：根据两故事发表看法
+3。英语作文
+筛选后进入面试。
+问题一：两笔记本电脑连起来后拼不通，你觉得可能有哪些问题？
+问题二：我们在南京，和深圳的网络是通的，但和北京的网络不通，你以怎样的顺序检查问题？
+问题三：解释什么叫“透明”？什么叫“网格”？
+问题四：交换和路由的区别？VLAN的特点？
+问题五：画一个积分电路和一个微分电路。
+问题六：知道现在的路由器是第几代了吗？
+
+C语言面试题大汇总之华为面试题
+silver6 | 01 二月, 2007 15:57
+1、局部变量能否和全局变量重名？ 　　答：能，局部会屏蔽全局。要用全局变量，需要使用"::" 　　局部变量可以与全局变量同名，在函数内引用这个变量时，会用到同名的局部变量，而不会用到全局变量。对于有些编译器而言，在同一个函数内可以定义多个同名的局部变量，比如在两个循环体内都定义一个同名的局部变量，而那个局部变量的作用域就在那个循环体内。 　　
+2、如何引用一个已经定义过的全局变量？ 　　答：extern 　　可以用引用头文件的方式，也可以用extern关键字，如果用引用头文件方式来引用某个在头文件中声明的全局变理，假定你将那个变写错了，那么在编译期间会报错，如果你用extern方式引用时，假定你犯了同样的错误，那么在编译期间不会报错，而在连接期间报错。 　　
+3、全局变量可不可以定义在可被多个.C文件包含的头文件中？为什么？ 　　答：可以，在不同的C文件中以static形式来声明同名全局变量。 　　可以在不同的C文件中声明同名的全局变量，前提是其中只能有一个C文件中对此变量赋初值，此时连接不会出错 　　
+4、语句for( ；1 ；)有什么问题？它是什么意思？ 　　答：和while(1)相同。 　　
+5、do……while和while……do有什么区别？ 　　答：前一个循环一遍再判断，后一个判断以后再循环 　　
+6、请写出下列代码的输出内容 　　
+#include 　　
+main() 　　
+{ 　　　
+int a,b,c,d;
+　　　a=10; 　
+　　b=a++; 　
+　　c=++a; 　　
+　d=10*a++; 　
+　　printf("b，c，d：%d，%d，%d"，b，c，d）; 　
+　　return 0; 　
+　} 　　
+答：10，12，120 　　
+7、static全局变量与普通的全局变量有什么区别？static局部变量和普通局部变量有什么区别？static函数与普通函数有什么区别？ 　　全局变量(外部变量)的说明之前再冠以static 就构成了静态的全局变量。全局变量本身就是静态存储方式， 静态全局变量当然也是静态存储方式。 这两者在存储方式上并无不同。这两者的区别虽在于非静态全局变量的作用域是整个源程序， 当一个源程序由多个源文件组成时，非静态的全局变量在各个源文件中都是有效的。 而静态全局变量则限制了其作用域， 即只在定义该变量的源文件内有效， 在同一源程序的其它源文件中不能使用它。由于静态全局变量的作用域局限于一个源文件内，只能为该源文件内的函数公用， 因此可以避免在其它源文件中引起错误。 　　从以上分析可以看出， 把局部变量改变为静态变量后是改变了它的存储方式即改变了它的生存期。把全局变量改变为静态变量后是改变了它的作用域， 限制了它的使用范围。 　　static函数与普通函数作用域不同。仅在本文件。只在当前源文件中使用的函数应该说明为内部函数(static)，内部函数应该在当前源文件中说明和定义。对于可在当前源文件以外使用的函数，应该在一个头文件中说明，要使用这些函数的源文件要包含这个头文件 　　static全局变量与普通的全局变量有什么区别：static全局变量只初使化一次，防止在其他文件单元中被引用; 　　static局部变量和普通局部变量有什么区别：static局部变量只被初始化一次，下一次依据上一次结果值； 　　static函数与普通函数有什么区别：static函数在内存中只有一份，普通函数在每个被调用中维持一份拷贝 　　
+8、程序的局部变量存在于（堆栈）中，全局变量存在于（静态区 ）中，动态申请数据存在于（ 堆）中。 　　
+9、设有以下说明和定义： 　
+　typedef union
+{
+long i; int k[5]; char c;} DATE; 　
+　struct data { int cat; DATE cow; double dog;} too; 　
+　DATE max; 　　
+则语句 printf("%d",sizeof(struct date)+sizeof(max));的执行结果是：___52____ 　　
+答：DATE是一个union, 变量公用空间. 里面最大的变量类型是int[5], 占用20个字节. 所以它的大小是20 data是一个struct, 每个变量分开占用空间. 依次为int4 + DATE20 + double8 = 32. 所以结果是 20 + 32 = 52. 　　当然...在某些16位编辑器下, int可能是2字节,那么结果是 int2 + DATE10 + double8 = 20 　　
+10、队列和栈有什么区别？ 　　 　　队列先进先出，栈后进先出 　　
+11、写出下列代码的输出内容 　　
+#include 　　
+int inc(int a) 　　 { 　　　 return(++a); 　　 } 　　 int multi(int*a,int*b,int*c) 　　 { 　　　 return(*c=*a**b); 　　 } 　　 typedef int(FUNC1)(int in); 　　 typedef int(FUNC2) (int*,int*,int*); 　　 void show(FUNC2 fun,int arg1, int*arg2) 　　 { 　　　 INCp=&inc; 　　　 int temp =p(arg1); 　　　 fun(&temp,&arg1, arg2); 　　　 printf("%dn",*arg2); 　　 } 　　 main() 　　 { 　　　 int a; 　　　 show(multi,10,&a); 　　　 return 0; 　　 } 　　答：110 　　
+12、请找出下面代码中的所以错误 　　
+说明：以下代码是把一个字符串倒序，如“abcd”倒序后变为“dcba” 　　
+#include"string.h" 　　
+main() 　　
+{ 　　
+char*src="hello,world"; 　　
+char* dest=NULL; 　　
+int len=strlen(src); 　　
+dest=(char*)malloc(len); 　　
+char* d=dest; 　　
+char* s=src[len]; 　　
+while(len--!=0) 　　
+d++=s--; 　　
+printf("%s",dest); 　　
+return 0; 　　
+} 　　
+答： 　　
+方法1： 　　
+int main() 　　
+{ 　　
+　char* src = "hello,world"; 　　
+　int len = strlen(src); 　　
+　char* dest = (char*)malloc(len+1);//要为分配一个空间 　　　char* d = dest; 　　
+　char* s = &src[len-1];//指向最后一个字符 　　
+　while( len-- != 0 ) 　　
+　*d++=*s--; 　　
+　*d = 0;//尾部要加 　　
+　printf("%sn",dest); 　　　
+free(dest);// 使用完，应当释放空间，以免造成内存汇泄露 　　　return 0; 　
+　}
+方法2： 　　
+#include
+#include
+main()
+{
+char str[]=”hello,world”;
+int len=strlen(str);
+char t;
+for(int i=0; i
+{
+t=str[i];
+str[i]=str[len-i-1]; str[len-i-1]=t;
+}
+printf("%s",str);
+return 0;
+}
+13.对于一个频繁使用的短小函数,在C语言中应用什么实现,在C++中应用什么实现 　　c用宏定义，c++用inline 　　
+14.直接链接两个信令点的一组链路称作什么 　　PPP点到点连接 　　 　
+6.接入网用的是什么接口
+V5接口　 　　
+16.voip都用了那些协议 　H.323协议簇、SIP协议、Skype协议、H.248和MGCP协议　
+17.软件测试都有那些种类 　　黑盒：针对系统功能的测试 　　白合：测试函数功能，各函数接口 　　
+18.确定模块的功能和模块的接口是在软件设计的那个队段完成的 　　概要设计阶段 　　
+19. 　
+enum string
+{
+x1,
+x2,
+x3=10,
+x4,
+x5,
+}x;
+问x= 0x801005，0x8010f4 ;
+　　20. 　　
+unsigned char *p1;
+unsigned long *p2;
+p1=(unsigned char *)0x801000;
+p2=(unsigned long *)0x810000;
+请问p1+5= ;
+p2+5= ;
+选择题: 　　
+21.Ethternet链接到Internet用到以下那个协议 　　A.HDLC;B.ARP;C.UDP;D.TCP;E.ID 　 　
+22.属于网络层协议的是: 　 　　 A.TCP;B.IP;C.ICMP;D.X.25 　　23.Windows消息调度机制是: 　　A.指令队列;B.指令堆栈;C.消息队列;D.消息堆栈; 　　
+24. 　　 unsigned short hash(unsigned short key)
+{
+return (key>>)%256
+}
+请问hash(16),hash(256)的值分别是:
+A.1.16;B.8.32;C.4.16;D.1.32
+找错题: 　　
+25.请问下面程序有什么错误 　　
+int a[60][250][1000],i,j,k; 　　
+for(k=0;kMax_GT_Length) 　　　
+{ 　　　　return GT_Length_ERROR; 　
+　} 　　　……. } 　　
+问答题: 　　 29.IP Phone的原理是什么 　　IPV6 　
+　 30.TCP/IP通信建立的过程怎样，端口有什么作用？ 　　三次握手，确定是哪个应用程序使用该协议 　　
+31.1号信令和7号信令有什么区别，我国某前广泛使用的是那一种？ 　　
+32.列举5种以上的电话新业务
+四.找错题:
+1.请问下面程序有什么错误
+int a[60][250][1000],i,j,k;
+for(k=0;k
+for(j=0;j
+for(i=0;i
+a[i][j][k]=0;
+把循环语句内外换一下
+2.#define Max_CB 500
+void LmiQueryCSmd(Struct MSgCB * pmsg)
+{
+unsigned char ucCmdNum;
+......
+for(ucCmdNum=0;ucCmdNum
+{
+......;
+}
+死循环
+3.以下是求一个数的平方的程序,请找出错误:
+#define SQUARE(a)((a)*(a))
+int a=5;
+int b;
+b=SQUARE(a++);
+4.typedef unsigned char BYTE
+int examply_fun(BYTE gt_len; BYTE *gt_code)
+{
+BYTE *gt_buf;
+gt_buf=(BYTE *)MALLOC(Max_GT_Length);
+......
+if(gt_len>Max_GT_Length)
+{-
+return GT_Length_ERROR;
+}
+…….
+}
+五.问答题:
+1.IP Phone的原理是什么
+IPV6
+2.TCP/IP通信建立的过程怎样，端口有什么作用？
+三次握手，确定是哪个应用程序使用该协议
+3. 1号信令和7号信令有什么区别，我国某前广泛使用的是那一种？
+4. 列举5种以上的电话新业务？
+微软亚洲技术中心的面试题！！！
+1．进程和线程的差别。
+线程是指进程内的一个执行单元,也是进程内的可调度实体.
+与进程的区别:
+(1)调度：线程作为调度和分配的基本单位，进程作为拥有资源的基本单位
+(2)并发性：不仅进程之间可以并发执行，同一个进程的多个线程之间也可并发执行
+(3)拥有资源：进程是拥有资源的一个独立单位，线程不拥有系统资源，但可以访问隶属于进程的资源.
+(4)系统开销：在创建或撤消进程时，由于系统都要为之分配和回收资源，导致系统的开销明显大于创建或撤消线程时的开销。
+2.测试方法
+人工测试：个人复查、抽查和会审
+机器测试：黑盒测试和白盒测试
+2．Heap与stack的差别。
+Heap是堆，stack是栈。
+Stack的空间由操作系统自动分配/释放，Heap上的空间手动分配/释放。
+Stack空间有限，Heap是很大的自由存储区
+C中的malloc函数分配的内存空间即在堆上,C++中对应的是new操作符。
+程序在编译期对变量和函数分配内存都在栈上进行,且程序运行过程中函数调用时参数的传递也在栈上进行
+3．Windows下的内存是如何管理的？
+4．介绍.Net和.Net的安全性。
+5．客户端如何访问.Net组件实现Web Service？
+6．C/C++编译器中虚表是如何完成的？
+7．谈谈COM的线程模型。然后讨论进程内/外组件的差别。
+8．谈谈IA32下的分页机制
+小页(4K)两级分页模式，大页(4M)一级
+9．给两个变量，如何找出一个带环单链表中是什么地方出现环的？
+一个递增一，一个递增二，他们指向同一个接点时就是环出现的地方
+10．在IA32中一共有多少种办法从用户态跳到内核态？
+通过调用门，从ring3到ring0，中断从ring3到ring0，进入vm86等等
+11．如果只想让程序有一个实例运行，不能运行两个。像winamp一样，只能开一个窗口，怎样实现？
+用内存映射或全局原子（互斥变量）、查找窗口句柄..
+FindWindow，互斥，写标志到文件或注册表,共享内存。.　
+12．如何截取键盘的响应，让所有的’a’变成’b’？
+键盘钩子SetWindowsHookEx
+13．Apartment在COM中有什么用？为什么要引入？
+14．存储过程是什么？有什么用？有什么优点？
+我的理解就是一堆sql的集合，可以建立非常复杂的查询，编译运行，所以运行一次后，以后再运行速度比单独执行SQL快很多
+15．Template有什么特点？什么时候用？
+16．谈谈Windows DNA结构的特点和优点。
+17. 网络编程中设计并发服务器，使用多进程 与 多线程 ，请问有什么区别？
+1，进程：子进程是父进程的复制品。子进程获得父进程数据空间、堆和栈的复制品。
+2，线程：相对与进程而言，线程是一个更加接近与执行体的概念，它可以与同进程的其他线程共享数据，但拥有自己的栈空间，拥有独立的执行序列。
+两者都可以提高程序的并发度，提高程序运行效率和响应时间。
+线程和进程在使用上各有优缺点：线程执行开销小，但不利于资源管理和保护；而进程正相反。同时，线程适合于在SMP机器上运行，而进程则可以跨机器迁移。
+思科
+1. 用宏定义写出swap（x，y）
+#define swap(x, y)
+x = x + y;
+y = x – y;
+x = x – y;
+2.数组a[N]，存放了1至N-1个数，其中某个数重复一次。写一个函数，找出被重复的数字.时间复杂度必须为o（N）函数原型：
+int do_dup(int a[],int N)
+3 一语句实现x是否为2的若干次幂的判断
+int i = 512;
+cout
+4.unsigned int intvert(unsigned int x,int p,int n)实现对x的进行转换,p为起始转化位,n为需要转换的长度,假设起始点在右边.如x=0b0001 0001,p=4,n=3转换后x=0b0110 0001
+unsigned int intvert(unsigned int x,int p,int n){
+unsigned int _t = 0;
+unsigned int _a = 1;
+for(int i = 0; i
+_t |= _a;
+_a = _a
+}
+_t = _t
+x ^= _t;
+return x;
+}
+慧通：
+1. 什么是预编译，何时需要预编译：
+１、总是使用不经常改动的大型代码体。
+２、程序由多个模块组成，所有模块都使用一组标准的包含文件和相同的编译选项。在这种情况下，可以将所有包含文件预编译为一个预编译头。
+2. 上述三个有什么区别？
+char * const p;
+char const * p
+const char *p
+解答：
+char * const p; //常量指针，p的值不可以修改
+char const * p；//指向常量的指针，指向的常量值不可以改
+const char *p； //和char const *p
+3. 解释下列输出结果
+char str1[] = "abc";
+char str2[] = "abc";
+const char str3[] = "abc";
+const char str4[] = "abc";
+const char *str5 = "abc";
+const char *str6 = "abc";
+char *str7 = "abc";
+char *str8 = "abc";
+cout
+cout
+cout
+cout
+结果是：0 0 1 1
+解答：str1,str2,str3,str4是数组变量，它们有各自的内存空间；
+而str5,str6,str7,str8是指针，它们指向相同的常量区域。
+4. 以下代码中的两个sizeof用法有问题吗？[C易]
+void UpperCase( char str[] ) // 将 str 中的小写字母转换成大写字母
+{
+for( size_t i=0; i
+if( 'a'
+str[i] -= ('a'-'A' );
+}
+char str[] = "aBcDe";
+cout
+UpperCase( str );
+cout
+答：函数内的sizeof有问题。根据语法，sizeof如用于数组，只能测出静态数组的大小，无法检测动态分配的或外部数组大小。函数外的str是一个静态定义的数组，因此其大小为6，函数内的str实际只是一个指向字符串的指针，没有任何额外的与数组相关的信息，因此sizeof作用于上只将其当指针看，一个指针为4个字节，因此返回4。
+4. 一个32位的机器,该机器的指针是多少位
+指针是多少位只要看地址总线的位数就行了。80386以后的机子都是32的数据总线。所以指针的位数就是4个字节了。
+5. 指出下面代码的输出，并解释为什么。
+main()
+{
+int a[5]={1,2,3,4,5};
+int *ptr=(int *)(&a+1);
+printf("%d,%d",*(a+1),*(ptr-1));
+}
+输出：2,5
+*(a+1）就是a[1]，*(ptr-1)就是a[4],执行结果是2，5
+&a+1不是首地址+1，系统会认为加一个a数组的偏移，是偏移了一个数组的大小（本例是5个int）
+int *ptr=(int *)(&a+1);
+则ptr实际是&(a[5]),也就是a+5
+原因如下：
+&a是数组指针，其类型为 int (*)[5];
+而指针加1要根据指针类型加上一定的值，
+不同类型的指针+1之后增加的大小不同
+a是长度为5的int数组指针，所以要加 5*sizeof(int)
+所以ptr实际是a[5]
+但是prt与(&a+1)类型是不一样的(这点很重要)
+所以prt-1只会减去sizeof(int*)
+a,&a的地址是一样的，但意思不一样，a是数组首地址，也就是a[0]的地址，&a是对象（数组）首地址，a+1是数组下一元素的地址，即a[1],&a+1是下一个对象的地址，即a[5].
+6.请问以下代码有什么问题：
+1).
+int main()
+{
+char a;
+char *str=&a;
+strcpy(str,"hello");
+printf(str);
+return 0;
+}
+没有为str分配内存空间，将会发生异常
+问题出在将一个字符串复制进一个字符变量指针所指地址。虽然可以正确输出结果，但因为越界进行内在读写而导致程序崩溃。
+2).
+char* s="AAA";
+printf("%s",s);
+s[0]='B';
+printf("%s",s);
+有什么错？
+"AAA"是字符串常量。s是指针，指向这个字符串常量，所以声明s的时候就有问题。
+cosnt char* s="AAA";
+然后又因为是常量，所以对是s[0]的赋值操作是不合法的。
+1、写一个“标准”宏，这个宏输入两个参数并返回较小的一个。
+.#define Min(X, Y) ((X)>(Y) (Y):(X))//结尾没有;
+2、嵌入式系统中经常要用到无限循环，你怎么用C编写死循环。
+while(1){}或者for(;;)
+3、关键字static的作用是什么？
+定义静态变量
+4、关键字const有什么含意？
+表示常量不可以修改的变量。
+5、关键字volatile有什么含意？并举出三个不同的例子？
+提示编译器对象的值可能在编译器未监测到的情况下改变。
+6. int (*s[10])(int) 表示的是什么啊
+int (*s[10])(int) 函数指针数组，每个指针指向一个int func(int param)的函数。
+1.有以下表达式：
+int a=248; b=4;int const c=21;const int *d=&a;
+int *const e=&b;int const *f const =&a;
+请问下列表达式哪些会被编译器禁止？为什么？
+*c=32;d=&b;*d=43;e=34;e=&a;f=0x321f;
+*c 这是个什么东东，禁止
+*d 说了是const， 禁止
+e = &a 说了是const 禁止
+const *f const =&a; 禁止
+2.交换两个变量的值，不使用第三个变量。即a=3,b=5,交换之后a=5,b=3;
+有两种解法, 一种用算术算法, 一种用^(异或)
+a = a + b;
+b = a – b;
+a = a – b;
+or
+a = a^b;// 只能对int,char..
+b = a^b;
+a = a^b;
+or
+a ^= b ^= a;
+3.c和c++中的struct有什么不同？
+c和c++中struct的主要区别是c中的struct不可以含有成员函数，而c++中的struct可以。c++中struct和class的主要区别在于默认的存取权限不同，struct默认为public，而class默认为private
+4.#include
+#include
+void getmemory(char *p)
+{
+p=(char *) malloc(100);
+strcpy(p,”hello world”);
+}
+int main( )
+{
+char *str=NULL;
+getmemory(str);
+printf(“%s/n”,str);
+free(str);
+return 0;
+}
+程序崩溃，getmemory中的malloc 不能返回动态内存， free（）对str操作很危险
+5.char szstr[10];
+strcpy(szstr,”0123456789″);
+产生什么结果？为什么？
+长度不一样，会造成非法的OS
+6.列举几种进程的同步机制，并比较其优缺点。
+原子操作
+信号量机制
+自旋锁
+管程，会合，分布式系统
+7.进程之间通信的途径
+共享存储系统
+消息传递系统
+管道：以文件系统为基础
+8.
+一般分类 :: 评论 (41) :: 静态链接网址 :: 引用 (0)
+面试经典试题
+silver6 | 02 一月, 2007 11:41
+面试经典试题
+Author：Vince
+————即使你是个编程高手，你在面试前也应该要看看这套题，她也许会给你带来好运，否则你有可能后悔当初为什么没有看而跳楼自杀，这样我会很内疚的。这套题看似简单，但你未必能得高分，即使你看不懂也要把她背下来！
+欢迎转载此文，转载时请注明文章来源：文斯测试技术研究中心 http://blog.csdn.net/vincetest
+1 编程基础
+1.1 基本概念
+1. const的理解：const char*, char const*, char*const的区别问题几乎是C++面试中每次 都会有的题目。 事实上这个概念谁都有只是三种声明方式非常相似很容易记混。 Bjarne在他的The C++ Programming Language里面给出过一个助记的方法： 把一个声明从右向左读。
+char * const cp; ( * 读成 pointer to )
+cp is a const pointer to char
+const char * p;
+p is a pointer to const char;
+char const * p;
+同上因为C++里面没有const*的运算符，所以const只能属于前面的类型。
+2. c指针
+int *p[n];—–指针数组，每个元素均为指向整型数据的指针。
+int (*)p[n];——p为指向一维数组的指针，这个一维数组有n个整型数据。
+int *p();———-函数带回指针，指针指向返回的值。
+int (*)p();——p为指向函数的指针。
+3. 数组越界问题
+下面这个程序执行后会有什么错误或者效果:
+#define MAX 255
+int main()
+{
+unsigned char A[MAX],i;
+for (i=0;i
+A[i]=i;
+}
+解答：MAX=255,数组A的下标范围为:0..MAX-1,这是其一,其二 当i循环到255时,循环内执行: A[255]=255;这句本身没有问题，但是返回for (i=0;i
+注：char类型为一个字节，取值范围是[-128，127]，unsigned char [0 ,255]
+4. C++:memset ,memcpy 和strcpy 的根本区别？
+#include "memory.h"
+memset用来对一段内存空间全部设置为某个字符，一般用在对定义的字符串进行初始化为' '或''；例:char a[100];memset(a, '', sizeof(a));
+memcpy用来做内存拷贝，你可以拿它拷贝任何数据类型的对象，可以指定拷贝的数据长度；例：char a[100],b[50]; memcpy(b, a, sizeof(b));注意如用sizeof(a)，会造成b的内存地址溢出。
+strcpy就只能拷贝字符串了，它遇到''就结束拷贝；例：char a[100],b[50];strcpy(a,b);如用strcpy(b,a)，要注意a中的字符串长度（第一个''之前）是否超过50位，如超过，则会造成b的内存地址溢出。
+strcpy
+原型：extern char *strcpy(char *dest,char *src);
+用法：#include
+功能：把src所指由NULL结束的字符串复制到dest所指的数组中。
+说明：src和dest所指内存区域不可以重叠且dest必须有足够的空间来容纳src的字符串。
+返回指向dest的指针。
+memcpy
+原型：extern void *memcpy(void *dest, void *src, unsigned int count);
+用法：#include
+功能：由src所指内存区域复制count个字节到dest所指内存区域。
+说明：src和dest所指内存区域不能重叠，函数返回指向dest的指针。
+Memset
+原型：extern void *memset(void *buffer, char c, int count);
+用法：#include
+功能：把buffer所指内存区域的前count个字节设置成字符c。
+说明：返回指向buffer的指针。
+5. ASSERT()是干什么用的
+ASSERT()是一个调试程序时经常使用的宏，在程序运行时它计算括号内的表达式，如果表达式为FALSE (0), 程序将报告错误，并终止执行。如果表达式不为0，则继续执行后面的语句。这个宏通常原来判断程序中是否出现了明显非法的数据，如果出现了终止程序以免导致严重后果，同时也便于查找错误。例如，变量n在程序中不应该为0，如果为0可能导致错误，你可以这样写程序：
+......
+ASSERT( n != 0);
+k = 10/ n;
+......
+ASSERT只有在Debug版本中才有效，如果编译为Release版本则被忽略。
+assert()的功能类似，它是ANSI C标准中规定的函数，它与ASSERT的一个重要区别是可以用在Release版本中。
+6. system（"pause");系统的暂停程序，按任意键继续，屏幕会打印，"按任意键继续。。。。。" 省去了使用getchar（）；
+7. 请问C++的类和C里面的struct有什么区别？
+c++中的类具有成员保护功能，并且具有继承，多态这类oo特点，而c里的struct没有
+8. 请讲一讲析构函数和虚函数的用法和作用？
+析构函数也是特殊的类成员函数，它没有返回类型，没有参数，不能随意调用，也没有重载。知识在类对象生命期结束的时候，由系统自动调用释放在构造函数中分配的资源。这种在运行时，能依据其类型确认调用那个函数的能力称为多态性，或称迟后联编。另：析构函数一般在对象撤消前做收尾工作，比如回收内存等工作，虚拟函数的功能是使子类可以用同名的函数对父类函数进行重载，并且在调用时自动调用子类重载函数，如果是纯虚函数，则纯粹是为了在子类重载时有个统一的命名而已。
+9. 全局变量和局部变量有什么区别？实怎么实现的？操作系统和编译器是怎么知道的？
+全局变量的生命周期是整个程序运行的时间，而局部变量的生命周期则是局部函数或过程调用的时间段。其实现是由编译器在编译时采用不同内存分配方法。全局变量在main函数调用后，就开始分配，如果是静态变量则是在main函数前就已经初始化了。而局部变量则是在用户栈中动态分配的（还是建议看编译原理中的活动记录这一块）
+10. 8086是多少尉的系统？在数据总线上是怎么实现的？
+8086系统是16位系统，其数据总线是20位。
+1.2 程序设计
+1. 编写用C语言实现的求n阶阶乘问题的递归算法：
+long int fact(int n)
+{
+int x;
+long int y;
+if(n
+{
+printf("error!");
+}
+if(n==0)
+return 1;
+x=n-1;
+y=fact(x);
+return (n*y);
+}
+2. 二分查找算法：
+1) 递归方法实现：
+int BSearch(elemtype a[],elemtype x,int low,int high)
+/*在下届为low，上界为high的数组a中折半查找数据元素x*/
+{
+int mid;
+if(low>high) return -1;
+mid=(low+high)/2;
+if(x==a[mid]) return mid;
+if(x
+else return(BSearch(a,x,mid+1,high));
+}
+2) 非递归方法实现：
+int BSearch(elemtype a[],keytype key,int n)
+{
+int low,high,mid;
+low=0;high=n-1;
+while(low
+{
+mid=(low+high)/2;
+if(a[mid].key==key) return mid;
+else if(a[mid].key
+else high=mid-1;
+}
+return -1;
+}
+3. 递归计算如下递归函数的值（斐波拉契）：
+f(1)=1
+f(2)=1
+f(n)=f(n-1)+f(n-2) n>2
+解：
+int f(int n)
+{
+int i,s,s1,s2;
+s1=1;/*s1用于保存f(n-1)的值*/
+s2=1;/*s2用于保存f(n-2)的值*/
+s=1;
+for(i=3;i
+{
+s=s1+s2;
+s2=s1;
+s1=s;
+}
+return(s);
+}
+4. 交换两个数，不用第三块儿内存：
+int a = ……;
+int b = ……;
+a = a + b;
+b = a - b;
+a = a - b;
+5. 冒泡排序：
+void BubbleSort(elemtype x[],int n)
+{
+int i,j;
+elemtype temp;
+for(i=1;i
+for(j=0;j
+{
+if(x[j].key>x[j+1].key)
+{
+temp=x[j];
+x[j]=x[j+1];
+x[j+1]=temp;
+}
+}
+}
+6. c语言 文件读写
+#include “stdio.h”
+main()
+{
+FILE *fp;
+char ch,filename[10];
+scanf(“%s”,filename);
+if((fp=fopen(filename,”w”)==NULL)
+{
+printf(“cann’t open filen”);
+exit(0);
+}
+ch=getchar();
+while(ch!=’#')
+{
+fputc(ch,fp);
+putchar(ch);
+ch=getchar();
+}
+fclose(fp);
+}
+7. winsocket编程
+#include
+#include
+void main()
+{
+WORDwVersionRequested;
+WSADATA wsaData;
+int err;
+wVersionRequested = MAKEWORD(1,1);
+err = WSAStartup(wVersionRequested,&wsaData);
+if( err != 0)
+{
+return;
+}
+if(LOBYTE( wsaData.wVersion ) != 1||
+HIBYTE( wsaData.wVersion) != 1)
+{
+WSACleanup();
+return;
+}
+SOCKET sockSrv=socket(AF_INET,SOCK_STREAM,0);
+SOCKADDR_IN addrSrv;
+addrSrv.sin_addr.S_un.S_addr=htonl(INADDR_ANY);
+addrSrv.sin_family=AF_INET;
+addrSrv.sin_port=htons(6000);
+bind(sockSrv,(SOCKADDR*)&addrSrv,sizeof(SOCKADDR));
+listen(sockSrv,5);
+SOCKADDR_IN addrClient;
+int len=sizeof(SOCKADDR);
+while(1)
+{
+SOCKET sockConn=accept(sockSrv,(SOCKADDR*)&addrClient,&len);
+char sendBuf[100];
+sprint(sendBuf,”Welcome %s to http://www.sunxin.org”,
+inet_ntoa(addrClient.sin_addr));
+send(sockConn,sendBuf,strlen(sendBuf)+1,0);
+char recvBuf[100];
+recv(sockConn,recvBuf);
+printf(“%sn”,recvBuf);
+closesocket(sockConn);
+WSACleanup();
+}
+}
+注：这是Server端；File->New->Win32 Console Application，工程名：TcpSrv；然后，File->New->C++ Source File，文件名：TcpSrv；在该工程的Setting的Link的Object/library modules项要加入ws2_32.lib
+#include
+#include
+void main()
+{
+WORDwVersionRequested;
+WSADATA wsaData;
+int err;
+wVersionRequested = MAKEWORD(1,1);
+err = WSAStartup(wVersionRequested,&wsaData);
+if( err != 0)
+{
+return;
+}
+if(LOBYTE( wsaData.wVersion ) != 1||
+HIBYTE( wsaData.wVersion) != 1)
+{
+WSACleanup();
+return;
+}
+SOCKET sockClient=socket(AF_INET,SOCK_STREAM,0);
+SOCKADDR_IN addrSrv;
+addrSrv.sin_addr.S_un.S_addr=inet_addr(“127.0.0.1″);
+addrSrv.sin_family=AF_INET;
+addrSrv.sin_porthtons(6000);
+connect(sockClient,(SOCKADDR*)&addrSrv,sizeof(SOCKADDR));
+char recvBuf[100];
+recv(sockClient,recvBuf,100,0);
+printf(“%sn”,recvBuf);
+send(sockClient,”This is zhangsan”,strlen(“This is zhangsan”)+1,0);
+closesocket(sockClient);
+WSACleanup();
+}
+注：这是Client端；File->New->Win32 Console Application，工程名：TcpClient；然后，File->New->C++ Source File，文件名：TcpClient；同理，在该工程的Setting的Link的Object/library modules项要加入ws2_32.lib
+8. 类的知识
+C＋＋
+#include
+class human
+{
+public:
+human(){ human_num++;};
+static int human_num;
+~human()
+{
+human_num–;
+print();
+}
+void print()
+{
+cout
+}
+protected:
+private:
+};
+int human::human_num = 0;
+human f1(human x)
+{
+x.print();
+return x;
+}
+int main(int argc, char* argv[])
+{
+human h1;
+h1.print();
+human h2 = f1(h1);
+h2.print();
+return 0;
+}
+输出：
+1
+1
+0
+0
+－1
+－2
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+分析：
+human h1; //调用构造函数,---hum_num = 1;
+h1.print(); //输出:"human is 1"
+human h2 = f1(h1); //再调用f1(h1)的过程中,由于函数参数是按值传递对象,调用默认的复制构造函数, 一般分类 :: 评论 (9) :: 静态链接网址 :: 引用 (0)
+C/C++ 程序设计员应聘常见面试试题深入剖析
+silver6 | 25 九月, 2006 09:07
+本文的写作目的并不在于提供C/C++程序员求职面试指导，而旨在从技术上分析面试题的内涵。文中的大多数面试题来自各大论坛，部分试题解答也参考了网友的意见。
+
+　　许多面试题看似简单，却需要深厚的基本功才能给出完美的解答。企业要求面试者写一个最简单的strcpy函数都可看出面试者在技术上究竟达到了怎样的程度，我们能真正写好一个strcpy函数吗？我们都觉得自己能，可是我们写出的strcpy很可能只能拿到10分中的2分。读者可从本文看到strcpy 函数从2分到10分解答的例子，看看自己属于什么样的层次。此外，还有一些面试题考查面试者敏捷的思维能力。
+
+　　分析这些面试题，本身包含很强的趣味性；而作为一名研发人员，通过对这些面试题的深入剖析则可进一步增强自身的内功。
+
+　　2.找错题
+
+　　试题1：
+void test1()
+{
+　char string[10];
+　char* str1 = "0123456789";
+　strcpy( string, str1 );
+}
+
+　　试题2：
+void test2()
+{
+　char string[10], str1[10];
+　int i;
+　for(i=0; i
+　{
+　　str1[i] = 'a';
+　}
+　strcpy( string, str1 );
+}
+
+　　试题3：
+void test3(char* str1)
+{
+　char string[10];
+　if( strlen( str1 )
+　{
+　　strcpy( string, str1 );
+　}
+}
+
+　　解答：
+
+　　试题1字符串str1需要11个字节才能存放下（包括末尾的’’），而string只有10个字节的空间，strcpy会导致数组越界；
+
+　　对试题2，如果面试者指出字符数组str1不能在数组内结束可以给3分；如果面试者指出strcpy(string, str1)调用使得从str1内存起复制到string内存起所复制的字节数具有不确定性可以给7分，在此基础上指出库函数strcpy工作方式的给10 分；
+
+　　对试题3，if(strlen(str1)
+
+　　剖析：
+
+　　考查对基本功的掌握：
+
+　　(1)字符串以’’结尾；
+
+　　(2)对数组越界把握的敏感度；
+
+　　(3)库函数strcpy的工作方式，如果编写一个标准strcpy函数的总分值为10，下面给出几个不同得分的答案：
+
+　　2分
+void strcpy( char *strDest, char *strSrc )
+{
+　 while( (*strDest++ = * strSrc++) != '’ );
+}
+
+　　4分
+void strcpy( char *strDest, const char *strSrc )
+//将源字符串加const，表明其为输入参数，加2分
+{
+　 while( (*strDest++ = * strSrc++) != '’ );
+}
+
+　　7分
+void strcpy(char *strDest, const char *strSrc)
+{
+　//对源地址和目的地址加非0断言，加3分
+　assert( (strDest != NULL) && (strSrc != NULL) );
+　while( (*strDest++ = * strSrc++) != '’ );
+}
+
+　　10分
+//为了实现链式操作，将目的地址返回，加3分！
+
+char * strcpy( char *strDest, const char *strSrc )
+{
+　assert( (strDest != NULL) && (strSrc != NULL) );
+　char *address = strDest;
+　while( (*strDest++ = * strSrc++) != '’ );
+　　return address;
+}
+
+　　从2分到10分的几个答案我们可以清楚的看到，小小的strcpy竟然暗藏着这么多玄机，真不是盖的！需要多么扎实的基本功才能写一个完美的strcpy啊！
+
+　　(4)对strlen的掌握，它没有包括字符串末尾的''。
+
+　　读者看了不同分值的strcpy版本，应该也可以写出一个10分的strlen函数了，完美的版本为： int strlen( const char *str ) //输入参数const
+{
+　assert( strt != NULL ); //断言字符串地址非0
+　int len;
+　while( (*str++) != '' )
+　{
+　　len++;
+　}
+　return len;
+}
+
+　　试题4：
+void GetMemory( char *p )
+{
+　p = (char *) malloc( 100 );
+}
+
+void Test( void )
+{
+　char *str = NULL;
+　GetMemory( str );
+　strcpy( str, "hello world" );
+　printf( str );
+}
+
+　　试题5：
+char *GetMemory( void )
+{
+　char p[] = "hello world";
+　return p;
+}
+
+void Test( void )
+{
+　char *str = NULL;
+　str = GetMemory();
+　printf( str );
+}
+
+　　试题6：
+void GetMemory( char **p, int num )
+{
+　*p = (char *) malloc( num );
+}
+
+void Test( void )
+{
+　char *str = NULL;
+　GetMemory( &str, 100 );
+　strcpy( str, "hello" );
+　printf( str );
+}
+
+　　试题7：
+void Test( void )
+{
+　char *str = (char *) malloc( 100 );
+　strcpy( str, "hello" );
+　free( str );
+　... //省略的其它语句
+}
+
+　　解答：
+
+　　试题4传入中GetMemory( char *p )函数的形参为字符串指针，在函数内部修改形参并不能真正的改变传入形参的值，执行完
+char *str = NULL;
+GetMemory( str );
+
+　　后的str仍然为NULL；
+
+　　试题5中
+char p[] = "hello world";
+return p;
+
+　　的p[]数组为函数内的局部自动变量，在函数返回后，内存已经被释放。这是许多程序员常犯的错误，其根源在于不理解变量的生存期。
+
+　　试题6的GetMemory避免了试题4的问题，传入GetMemory的参数为字符串指针的指针，但是在GetMemory中执行申请内存及赋值语句
+*p = (char *) malloc( num );
+
+　　后未判断内存是否申请成功，应加上：
+if ( *p == NULL )
+{
+　...//进行申请内存失败处理
+}
+
+　　试题7存在与试题6同样的问题，在执行
+char *str = (char *) malloc(100);
+
+　　后未进行内存是否申请成功的判断；另外，在free(str)后未置str为空，导致可能变成一个“野”指针，应加上：
+str = NULL;
+
+　　试题6的Test函数中也未对malloc的内存进行释放。
+
+　　剖析：
+
+　　试题4～7考查面试者对内存操作的理解程度，基本功扎实的面试者一般都能正确的回答其中50~60的错误。但是要完全解答正确，却也绝非易事。
+
+　　对内存操作的考查主要集中在：
+
+　　（1）指针的理解；
+
+　　（2）变量的生存期及作用范围；
+
+　　（3）良好的动态内存申请和释放习惯。
+
+　　再看看下面的一段程序有什么错误：
+swap( int* p1,int* p2 )
+{
+　int *p;
+　*p = *p1;
+　*p1 = *p2;
+　*p2 = *p;
+}
+
+　　在swap函数中，p是一个“野”指针，有可能指向系统区，导致程序运行的崩溃。在VC++中DEBUG运行时提示错误“Access Violation”。该程序应该改为：
+swap( int* p1,int* p2 )
+{
+　int p;
+　p = *p1;
+　*p1 = *p2;
+　*p2 = p;
+}
+
+　　3.内功题
+
+　　试题1：分别给出BOOL，int，float，指针变量 与“零值”比较的 if 语句（假设变量名为var）
+
+　　解答：
+
+　　　BOOL型变量：if(!var)
+
+　　　int型变量： if(var==0)
+
+　　　float型变量：
+
+　　　const float EPSINON = 0.00001;
+
+　　　if ((x >= – EPSINON) && (x
+
+　　　指针变量：　　if(var==NULL)
+
+　　剖析：
+
+　　考查对0值判断的“内功”，BOOL型变量的0判断完全可以写成if(var==0)，而int型变量也可以写成if(!var)，指针变量的判断也可以写成if(!var)，上述写法虽然程序都能正确运行，但是未能清晰地表达程序的意思。
+
+　　一般的，如果想让if判断一个变量的“真”、“假”，应直接使用if(var)、if(!var)，表明其为“逻辑”判断；如果用if判断一个数值型变量(short、int、long等)，应该用if(var==0)，表明是与0进行“数值”上的比较；而判断指针则适宜用if(var==NULL)，这是一种很好的编程习惯。
+
+　　浮点型变量并不精确，所以不可将float变量用“==”或“！=”与数字比较，应该设法转化成“>=”或“
+
+　　试题2：以下为Windows NT下的32位C++程序，请计算sizeof的值
+void Func ( char str[100] )
+{
+　sizeof( str ) =
+}
+
+void *p = malloc( 100 );
+sizeof ( p ) =
+
+　　解答：
+sizeof( str ) = 4
+sizeof ( p ) = 4
+
+　　剖析：
+
+　　Func ( char str[100] )函数中数组名作为函数形参时，在函数体内，数组名失去了本身的内涵，仅仅只是一个指针；在失去其内涵的同时，它还失去了其常量特性，可以作自增、自减等操作，可以被修改。
+
+　　数组名的本质如下：
+
+　　（1）数组名指代一种数据结构，这种数据结构就是数组；
+
+　　例如：
+char str[10];
+cout
+
+　　输出结果为10，str指代数据结构char[10]。
+
+　　（2）数组名可以转换为指向其指代实体的指针，而且是一个指针常量，不能作自增、自减等操作，不能被修改；
+char str[10];
+str++; //编译出错，提示str不是左值　
+
+　　（3）数组名作为函数形参时，沦为普通指针。
+
+　　Windows NT 32位平台下，指针的长度（占用内存的大小）为4字节，故sizeof( str ) 、sizeof ( p ) 都为4。
+
+　　试题3：写一个“标准”宏MIN，这个宏输入两个参数并返回较小的一个。另外，当你写下面的代码时会发生什么事？
+least = MIN(*p++, b);
+
+　　解答：
+#define MIN(A,B) ((A)
+
+　　MIN(*p++, b)会产生宏的副作用
+
+　　剖析：
+
+　　这个面试题主要考查面试者对宏定义的使用，宏定义可以实现类似于函数的功能，但是它终归不是函数，而宏定义中括弧中的“参数”也不是真的参数，在宏展开的时候对“参数”进行的是一对一的替换。
+
+　　程序员对宏定义的使用要非常小心，特别要注意两个问题：
+
+　　（1）谨慎地将宏定义中的“参数”和整个宏用用括弧括起来。所以，严格地讲，下述解答：
+#define MIN(A,B) (A)
+#define MIN(A,B) (A
+
+　　都应判0分；
+
+　　（2）防止宏的副作用。
+
+　　宏定义#define MIN(A,B) ((A)
+
+((*p++)
+
+　　这个表达式会产生副作用，指针p会作三次++自增操作。
+
+　　除此之外，另一个应该判0分的解答是：
+#define MIN(A,B) ((A)
+
+　　这个解答在宏定义的后面加“;”，显示编写者对宏的概念模糊不清，只能被无情地判0分并被面试官淘汰。
+
+　　试题4：为什么标准头文件都有类似以下的结构？
+#ifndef __INCvxWorksh
+#define __INCvxWorksh
+#ifdef __cplusplus
+
+extern "C" {
+#endif
+/*...*/
+#ifdef __cplusplus
+}
+
+#endif
+#endif /* __INCvxWorksh */
+
+　　解答：
+
+　　头文件中的编译宏
+#ifndef　__INCvxWorksh
+#define　__INCvxWorksh
+#endif
+
+　　的作用是防止被重复引用。
+
+　　作为一种面向对象的语言，C++支持函数重载，而过程式语言C则不支持。函数被C++编译后在symbol库中的名字与C语言的不同。例如，假设某个函数的原型为：
+void foo(int x, int y);
+
+　　该函数被C编译器编译后在symbol库中的名字为_foo，而C++编译器则会产生像_foo_int_int之类的名字。_foo_int_int这样的名字包含了函数名和函数参数数量及类型信息，C++就是考这种机制来实现函数重载的。
+
+　　为了实现C和C++的混合编程，C++提供了C连接交换指定符号extern "C"来解决名字匹配问题，函数声明前加上extern "C"后，则编译器就会按照C语言的方式将该函数编译为_foo，这样C语言中就可以调用C++的函数了。
+　试题5：编写一个函数，作用是把一个char组成的字符串循环右移n个。比如原来是“abcdefghi”如果n=2，移位后应该是“hiabcdefgh”
+
+　　函数头是这样的：
+//pStr是指向以''结尾的字符串的指针
+//steps是要求移动的n
+
+void LoopMove ( char * pStr, int steps )
+{
+　//请填充...
+}
+
+　　解答：
+
+　　正确解答1：
+void LoopMove ( char *pStr, int steps )
+{
+　int n = strlen( pStr ) - steps;
+　char tmp[MAX_LEN];
+　strcpy ( tmp, pStr + n );
+　strcpy ( tmp + steps, pStr);
+　*( tmp + strlen ( pStr ) ) = '';
+　strcpy( pStr, tmp );
+}
+
+　　正确解答2：
+void LoopMove ( char *pStr, int steps )
+{
+　int n = strlen( pStr ) - steps;
+　char tmp[MAX_LEN];
+　memcpy( tmp, pStr + n, steps );
+　memcpy(pStr + steps, pStr, n );
+　memcpy(pStr, tmp, steps );
+}
+
+　　剖析：
+
+　　这个试题主要考查面试者对标准库函数的熟练程度，在需要的时候引用库函数可以很大程度上简化程序编写的工作量。
+
+　　最频繁被使用的库函数包括：
+
+　　（1） strcpy
+
+　　（2） memcpy
+
+　　（3） memset
+
+　　试题6：已知WAV文件格式如下表，打开一个WAV文件，以适当的数据结构组织WAV文件头并解析WAV格式的各项信息。
+
+　　WAVE文件格式说明表
+偏移地址 字节数 数据类型 内 容
+文件头
+00H 4 Char "RIFF"标志
+04H 4 int32 文件长度
+08H 4 Char "WAVE"标志
+0CH 4 Char "fmt"标志
+10H 4 过渡字节（不定）
+14H 2 int16 格式类别
+16H 2 int16 通道数
+18H 2 int16 采样率（每秒样本数），表示每个通道的播放速度
+1CH 4 int32 波形音频数据传送速率
+20H 2 int16 数据块的调整数（按字节算的）
+22H 2 每样本的数据位数
+24H 4 Char 数据标记符＂data＂
+28H 4 int32 语音数据的长度
+
+　　解答：
+
+　　将WAV文件格式定义为结构体WAVEFORMAT：
+typedef struct tagWaveFormat
+{
+　char cRiffFlag[4];
+　UIN32 nFileLen;
+　char cWaveFlag[4];
+　char cFmtFlag[4];
+　char cTransition[4];
+　UIN16 nFormatTag ;
+　UIN16 nChannels;
+　UIN16 nSamplesPerSec;
+　UIN32 nAvgBytesperSec;
+　UIN16 nBlockAlign;
+　UIN16 nBitNumPerSample;
+　char cDataFlag[4];
+　UIN16 nAudioLength;
+
+} WAVEFORMAT;
+
+　　假设WAV文件内容读出后存放在指针buffer开始的内存单元内，则分析文件格式的代码很简单，为：
+WAVEFORMAT waveFormat;
+memcpy( &waveFormat, buffer,sizeof( WAVEFORMAT ) );
+
+　　直接通过访问waveFormat的成员，就可以获得特定WAV文件的各项格式信息。
+
+　　剖析：
+
+　　试题6考查面试者组织数据结构的能力，有经验的程序设计者将属于一个整体的数据成员组织为一个结构体，利用指针类型转换，可以将memcpy、memset等函数直接用于结构体地址，进行结构体的整体操作。 透过这个题可以看出面试者的程序设计经验是否丰富。
+
+　　试题7：编写类String的构造函数、析构函数和赋值函数，已知类String的原型为：
+class String
+{
+　public:
+　　String(const char *str = NULL); // 普通构造函数
+　　String(const String &other); // 拷贝构造函数
+　　~ String(void); // 析构函数
+　　String & operate =(const String &other); // 赋值函数
+　private:
+　　char *m_data; // 用于保存字符串
+};
+
+　　解答：
+//普通构造函数
+
+String::String(const char *str)
+{
+　if(str==NULL)
+　{
+　　m_data = new char[1]; // 得分点：对空字符串自动申请存放结束标志''的空
+　　//加分点：对m_data加NULL 判断
+　　*m_data = '';
+　}
+　else
+　{
+　　int length = strlen(str);
+　　m_data = new char[length+1]; // 若能加 NULL 判断则更好
+　　strcpy(m_data, str);
+　}
+}
+
+// String的析构函数
+
+String::~String(void)
+{
+　delete [] m_data; // 或delete m_data;
+}
+
+//拷贝构造函数
+
+String::String(const String &other) 　　　// 得分点：输入参数为const型
+{
+　int length = strlen(other.m_data);
+　m_data = new char[length+1]; 　　　　//加分点：对m_data加NULL 判断
+　strcpy(m_data, other.m_data);
+}
+
+//赋值函数
+
+String & String::operate =(const String &other) // 得分点：输入参数为const型
+{
+　if(this == &other) 　　//得分点：检查自赋值
+　　return *this;
+　delete [] m_data; 　　　　//得分点：释放原有的内存资源
+　int length = strlen( other.m_data );
+　m_data = new char[length+1]; 　//加分点：对m_data加NULL 判断
+　strcpy( m_data, other.m_data );
+　return *this; 　　　　　　　　//得分点：返回本对象的引用
+}
+
+　　剖析：
+
+　　能够准确无误地编写出String类的构造函数、拷贝构造函数、赋值函数和析构函数的面试者至少已经具备了C++基本功的60%以上！
+
+　　在这个类中包括了指针类成员变量m_data，当类中包括指针类成员变量时，一定要重载其拷贝构造函数、赋值函数和析构函数，这既是对C++程序员的基本要求，也是《Effective　C++》中特别强调的条款。
+
+　　仔细学习这个类，特别注意加注释的得分点和加分点的意义，这样就具备了60%以上的C++基本功！
+
+　　试题8：请说出static和const关键字尽可能多的作用
+
+　　解答：
+
+　　static关键字至少有下列n个作用：
+
+　　（1）函数体内static变量的作用范围为该函数体，不同于auto变量，该变量的内存只被分配一次，因此其值在下次调用时仍维持上次的值；
+
+　　（2）在模块内的static全局变量可以被模块内所用函数访问，但不能被模块外其它函数访问；
+
+　　（3）在模块内的static函数只可被这一模块内的其它函数调用，这个函数的使用范围被限制在声明它的模块内；
+
+　　（4）在类中的static成员变量属于整个类所拥有，对类的所有对象只有一份拷贝；
+
+　　（5）在类中的static成员函数属于整个类所拥有，这个函数不接收this指针，因而只能访问类的static成员变量。
+
+　　const关键字至少有下列n个作用：
+
+　　（1）欲阻止一个变量被改变，可以使用const关键字。在定义该const变量时，通常需要对它进行初始化，因为以后就没有机会再去改变它了；
+
+　　（2）对指针来说，可以指定指针本身为const，也可以指定指针所指的数据为const，或二者同时指定为const；
+
+　　（3）在一个函数声明中，const可以修饰形参，表明它是一个输入参数，在函数内部不能改变其值；
+
+　　（4）对于类的成员函数，若指定其为const类型，则表明其是一个常函数，不能修改类的成员变量；
+
+　　（5）对于类的成员函数，有时候必须指定其返回值为const类型，以使得其返回值不为“左值”。例如：
+const classA operator*(const classA& a1,const classA& a2);
+
+　　operator*的返回结果必须是一个const对象。如果不是，这样的变态代码也不会编译出错：
+classA a, b, c;
+(a * b) = c; // 对a*b的结果赋值
+
+　　操作(a * b) = c显然不符合编程者的初衷，也没有任何意义。
+
+　　剖析：
+
+　　惊讶吗？小小的static和const居然有这么多功能，我们能回答几个？如果只能回答1~2个，那还真得闭关再好好修炼修炼。
+
+　　这个题可以考查面试者对程序设计知识的掌握程度是初级、中级还是比较深入，没有一定的知识广度和深度，不可能对这个问题给出全面的解答。大多数人只能回答出static和const关键字的部分功能。
+
+　　4.技巧题
+
+　　试题1：请写一个C函数，若处理器是Big_endian的，则返回0；若是Little_endian的，则返回1
+
+　　解答：
+int checkCPU()
+{
+　{
+　　union w
+　　{
+　　　int a;
+　　　char b;
+　　} c;
+　　c.a = 1;
+　　return (c.b == 1);
+　}
+}
+
+　　剖析：
+
+　　嵌入式系统开发者应该对Little-endian和Big-endian模式非常了解。采用Little-endian模式的CPU对操作数的存放方式是从低字节到高字节，而Big-endian模式对操作数的存放方式是从高字节到低字节。例如，16bit宽的数0x1234在Little- endian模式CPU内存中的存放方式（假设从地址0x4000开始存放）为：
+内存地址 存放内容
+0x4000 0x34
+0x4001 0x12
+
+　　而在Big-endian模式CPU内存中的存放方式则为：
+内存地址 存放内容
+0x4000 0x12
+0x4001 0x34
+
+　　32bit宽的数0x12345678在Little-endian模式CPU内存中的存放方式（假设从地址0x4000开始存放）为：
+内存地址 存放内容
+0x4000 0x78
+0x4001 0x56
+0x4002 0x34
+0x4003 0x12
+
+　　而在Big-endian模式CPU内存中的存放方式则为：
+内存地址 存放内容
+0x4000 0x12
+0x4001 0x34
+0x4002 0x56
+0x4003 0x78
+
+　　联合体union的存放顺序是所有成员都从低地址开始存放，面试者的解答利用该特性，轻松地获得了CPU对内存采用Little-endian还是Big-endian模式读写。如果谁能当场给出这个解答，那简直就是一个天才的程序员。
+
+　　试题2：写一个函数返回1+2+3+…+n的值（假定结果不会超过长整型变量的范围）
+
+　　解答：
+int Sum( int n )
+{
+　return ( (long)1 + n) * n / 2;　　//或return (1l + n) * n / 2;
+}
+
+　　剖析：
+　
+　　对于这个题，只能说，也许最简单的答案就是最好的答案。下面的解答，或者基于下面的解答思路去优化，不管怎么“折腾”，其效率也不可能与直接return ( 1 l + n ) * n / 2相比！
+int Sum( int n )
+{
+　long sum = 0;
+　for( int i=1; i
+　{
+　　sum += i;
+　}
+　return sum;
+}
+
+　　所以程序员们需要敏感地将数学等知识用在程序设计中。
+
+华为公司 java 面试题
+silver6 | 11 五月, 2006 17:28
+第一部分：选择题
+QUESTION NO: 1
+1、public class Test {
+public static void changeStr(String str){
+str="welcome";
+}
+public static void main(String[] args) {
+String str="1234";
+changeStr(str);
+System.out.println(str);
+}
+}
+Please write the output result ：
+
+QUESTION NO:2
+1. public class Test {
+2. static boolean foo(char c) {
+3. System.out.print(c);
+4. return true;
+5. }
+6. public static void main( String[] argv ) {
+7. int i =0;
+8. for ( foo('A'); foo('B')&&(i
+9. i++ ;
+10. foo('D');
+12. }
+13. }
+14. }
+What is the result
+A. ABDCBDCB
+B. ABCDABCD
+C. Compilation fails.
+D. An exception is thrown at runtime.
+
+QUESTION NO: 3
+1. class A {
+2. protected int method1(int a, int b) { return 0; }
+3. }
+Which two are valid in a class that extends class A (Choose two)
+A. public int method1(int a, int b) { return 0; }
+B. private int method1(int a, int b) { return 0; }
+C. private int method1(int a, long b) { return 0; }
+D. public short method1(int a, int b) { return 0; }
+E. static protected int method1(int a, int b) { return 0; }
+
+QUESTION NO: 4
+1. public class Outer{
+2. public void someOuterMethod() {
+3. // Line 3
+4. }
+5. public class Inner{}
+6. public static void main( String[]argv ) {
+7. Outer o = new Outer();
+8. // Line 8
+9. }
+10. }
+Which instantiates an instance of Inner
+A. new Inner(); // At line 3
+B. new Inner(); // At line 8
+C. new o.Inner(); // At line 8
+D. new Outer.Inner(); // At line 8//new Outer().new Inner()
+
+QUESTION NO: 5
+Which method is used by a servlet to place its session ID in a URL that is written to the servlet’s response output stream
+A. The encodeURL method of the HttpServletRequest interface.
+B. The encodeURL method of the HttpServletResponse interface.
+C. The rewriteURL method of the HttpServletRequest interface.
+D. The rewriteURL method of the HttpServletResponse interface.
+
+QUESTION NO: 6
+Which two are equivalent (Choose two)
+A.
+B.
+C.
+D.
+E.
+F.
+G.
+
+QUESTION NO: 7
+Which of the following statements regarding the lifecycle of a session bean are correct
+1. java.lang.IllegalStateException is thrown if SessionContext.getEJBObject() is invoked when a stateful session bean instance is passivated.
+2. SessionContext.getRollbackOnly() does not throw an exception when a session bean with bean-managed transaction demarcation is activated.
+3. An exception is not thrown when SessionContext.getUserTransaction() is called in the afterBegin method of a bean with container-managed transactions.
+4. JNDI access to java:comp/env is permitted in all the SessionSynchronization methods of a stateful session bean with container-managed transaction demarcation.
+5. Accessing resource managers in the SessionSynchronization.afterBegin method of a stateful session bean with bean-managed transaction does not throw an exception.
+
+第二部分：概念题
+1． 描述Struts体系结构？对应各个部分的开发工作主要包括哪些？
+
+2． XML包括哪些解释技术，区别是什么？
+
+3． JSP有哪些内置对象和动作？它们的作用分别是什么？
+
+4、SQL问答题
+SELECT * FROM TABLE
+和
+SELECT * FROM TABLE
+WHERE NAME LIKE ‘%%’ AND ADDR LIKE ‘%%’
+AND (1_ADDR LIKE ‘%%’ OR 2_ADDR LIKE ‘%%’
+OR 3_ADDR LIKE ‘%%’ OR 4_ADDR LIKE ‘%%’ )
+的检索结果为何不同？
+
+5、SQL问答题
+表结构：
+1、 表名：g_cardapply
+字段(字段名/类型/长度)：
+g_applyno varchar 8；//申请单号（关键字）
+g_applydate bigint 8；//申请日期
+g_state varchar 2；//申请状态
+2、 表名：g_cardapplydetail
+字段(字段名/类型/长度)：
+g_applyno varchar 8；//申请单号（关键字）
+g_name varchar 30；//申请人姓名
+g_idcard varchar 18；//申请人身份证号
+g_state varchar 2；//申请状态
+其中，两个表的关联字段为申请单号。
+题目：
+1、 查询身份证号码为440401430103082的申请日期
+2、 查询同一个身份证号码有两条以上记录的身份证号码及记录个数
+3、 将身份证号码为440401430103082的记录在两个表中的申请状态均改为07
+4、 删除g_cardapplydetail表中所有姓李的记录
+public class Test {
+public static void changeStr(String str){
+str=”welcome”;
+}
+public static void main(String[] args) {
+String str=”1234″;
+changeStr(str);
+System.out.println(str);
+}
+}
+这一题我想他主要考查 static这个关键字，changestr是个静态的方法（类方法）那么str应该也是一个静态成员，所有的对象都是公用这样的一个成员，那么对他的修改应该是可以保持的。而为什么最后的结果却是初始值1234，我有点迷惑
+终于明白了：按值传递意味着当将一个参数传递给一个函数时，函数接收的是原始值的一个副本。因此，如果函数修改了该参数，仅改变副本，而原始值保持不变。按引用传递意味着当将一个参数传递给一个函数时，函数接收的是原始值的内存地址，而不是值的副本。因此，如果函数修改了该参数，调用代码中的原始值也随之改变。
+不管是在c/c++中还是在java函数调用都是传值调用，.
+当参数是对象的时候，传递的是对象的引用，这个和c/c++传递指针是一个道理，在函数中改变引用本身，不会改变引用所指向的对象，而在QUESTION NO: 1中只是改变了引用，所以在main函数中输出还是原来的那个值：1234
+参数是对象时传的是地址。但str=”welcome”;相当于str=new String(“welcome”);，所以原对象没变。
+可以参考以下代码：
+public class Test {
+public int ss = 999;
+public Test(int s){
+ss = s;
+}
+public static void changeStr(Test t){
+t.ss = 888;
+}
+public static void main(String[] args) {
+Test t = new Test(999);
+changeStr(t);
+System.out.println(t.ss);
+}
+}
+
+public class Test {
+public int ss = 999;
+public Test(int s){
+ss = s;
+}
+public static void changeStr(Test t){
+t = new Test(888);
+}
+public static void main(String[] args) {
+Test t = new Test(999);
+changeStr(t);
+System.out.println(t.ss);
+}
+}
+QUESTION NO:2
+1. public class Test {
+2. static boolean foo(char c) {
+3. System.out.print(c);
+4. return true;
+5. }
+6. public static void main( String[] argv ) {
+7. int i =0;
+8. for ( foo(‘A’); foo(‘B’)&&(i
+9. i++ ;
+10. foo('D');
+12. }
+13. }
+14. }
+What is the result
+A. ABDCBDCB
+B. ABCDABCD
+C. Compilation fails.
+D. An exception is thrown at runtime
+
+做一下这个吧！！
+第一题终于清楚了。
+
+对象是传引用的。但是下面还是有区别
+
+public class test6 {
+
+public int ss = 999;
+public test6(int s){
+ss = s;
+}
+public static void changeStr(test6 t){
+t.ss = 888;
+}
+public static void change(test6 t){
+
+t = new test6(222);
+}
+public static void main(String[] args) {
+
+test6 t = new test6(999);
+changeStr(t);
+System.out.println(t.ss);
+change(t);
+System.out.println(t.ss);
+
+}
+}
+import javax.swing.JOptionPane;
+public class Test {
+public void changeStr(String str){
+str="welcome";
+}
+public void main(String[] args) {
+String str="1234";
+str="welcome";
+//changeStr(str);
+JOptionPane.showMessageDialog(null,str);
+}
+}
+
+如果这样做的话结果是welcome
+
+在我我想说的是在C语言以后所有的参数传递都是值传递，问题是传的值是是什么，而没有什么引用传递之类的东西。
+
+关于输出为1234而不是welcome 还有待进一步分析。
+我现在去上课了，回来再和大家细说
+对第一题的详细分析：
+Java中函数参数传递是值传递，在C语言以后的都是这样的，关键是传进来的值是什么（这一点我在上面说了到一次）。
+①如果参数是基础类型，如int型的，则传进来的是int型变量的值，这个值放在堆里。
+举个例子：
+void fun(int i){};
+int i = 5;
+fun(i);
+传进fun函数的是5;
+②如果参数是引用类型。如String型的，则传进来的是String型变量的值，这个值放在栈里，此值是该变量将要指向的对象的地址。
+举个例子：
+void fun(String str0){};
+String str = "Hello";
+fun(str);
+
+fun()方法调用时第一件事就是，做了一个赋值操作：str0 = str;
+这个操作的结果就是将str变量的值传给str0变量的值，也就是使得str0也指向str所指向的对象。对str0所指向的对象做修改操作，也就是对str所指的对象做修改。
+
+有了上面的两点，我想做第一个题目一定是没什么问题的了：
+
+说明：为了方便分析我把changeStr()方法中的参数名改成了str0。
+改动后的代码如下：
+1.public class Test {
+public static void changeStr(String str0){
+str0="welcome";
+}
+public static void main(String[] args) {
+String str="1234";
+changeStr(str);
+System.out.println(str);
+}
+}
+哎,第一题没那么复杂,都说的离谱了,具体讨论请见TIJ的附录一 关于别名和引用那一章.
+
+我们不争论JAVA到底是传值还是传引用,因为两者某种意义上都是正确的.传值的认为传递引用本身是传值行为,这没错,可我们一般把reference当成了对象,所以说成传引用也说得过去,概念就不多说了.
+为什么str在changeStr之后没变 这是因为JAVA对所有的外覆类性(基本类型的对应类)是采用所谓的恒常对象(唯读对象,read- only),这些外覆类中的任何函数行为的调用都不会改变原对象,而是产生一个新对象,这就是为什么我们在需要动态增加String时要用 StringBuffer的原因.可对于我们自己所创建的对象,并没有这个"恒常"的特性，所以在这里有个"别名"现象，也就是几个引用同时指向一个对象,任何一个引用对对象的修改都将影响到其他.
+
+在这个例子中,changeStr函数的行为其实产生了一个新的对象,函数内的str是局部性的,它指向新的对象，可对原对象没有产生任何影响.
+
+不知道我的解释清楚了,更具体讨论请见Thinking in Java
+对第一题的详细分析：
+Java中函数参数传递是值传递，在C语言以后的都是这样的，关键是传进来的值是什么（这一点我在上面说了到一次）。
+①如果参数是基础类型，如int型的，则传进来的是int型变量的值，这个值放在堆里。
+举个例子：
+void fun(int i){};
+int i = 5;
+fun(i);
+传进fun函数的是5;
+②如果参数是引用类型。如String型的，则传进来的是String型变量的值，这个值放在栈里，此值是该变量将要指向的对象的地址。
+举个例子：
+void fun(String str0){};
+String str = "Hello";
+fun(str);
+
+fun()方法调用时第一件事就是，做了一个赋值操作：str0 = str;
+这个操作的结果就是将str变量的值传给str0变量的值，也就是使得str0也指向str所指向的对象。对str0所指向的对象做修改操作，也就是对str所指的对象做修改。
+
+有了上面的两点，我想做第一个题目一定是没什么问题的了：
+
+说明：为了方便分析我把changeStr()方法中的参数名改成了str0。
+改动后的代码如下：
+1.public class Test {
+2. public static void changeStr(String str0){
+3. str0="welcome";
+4. }
+5. public static void main(String[] args) {
+6. String str="1234";
+7. changeStr(str);
+8. System.out.println(str);
+9. }
+10.}
+
+第7行代码执行过程如下：
+将str的值赋给str0，使得str0和str指向同一个String类对象1234
+而在changeStr()方法中第3行代码执行的结果是将str0值（也就是对象的地址）做了修改，str0的值为String类对象welcome的地址，这样一来，使得str和str0所指向的对象不再是同一个对象了，而且str的值并没有改变，也就是说str还是指向String类对象1234的。
+
+综上所述，程序最终的结果一定是1234。
+
+补充：
+ziyongkun 在 2006-05-10 10:08:00 发的贴子里说的不是很对，并不是一个副本的问题，它们会指向同一个对象的。
+QUESTION NO:2
+1. public class Test {
+2. static boolean foo(char c) {
+3. System.out.print(c);
+4. return true;
+5. }
+6. public static void main( String[] argv ) {
+7. int i =0;
+8. for ( foo('A'); foo('B')&&(i
+9. i++ ;
+10. foo('D');
+12. }
+13. }
+14. }
+========================================================================
+考察的是for语句的执行过程：
+for(1;2;3)
+过程如下：
+1；
+2；
+3；
+2；
+.
+.
+.
+当i
+4、SQL问答题
+SELECT * FROM TABLE
+和
+SELECT * FROM TABLE
+WHERE NAME LIKE '%%' AND ADDR LIKE '%%'
+AND (1_ADDR LIKE '%%' OR 2_ADDR LIKE '%%'
+OR 3_ADDR LIKE '%%' OR 4_ADDR LIKE '%%' )
+的检索结果为何不同？
+=========================================================
+前者检索全部，后者有三种情况检索不出：NAME＝null或ADDR=null或1_ADDR LIKE 2_ADDR 3_ADDR 4_ADDR其一为null.
+4、SQL问答题
+SELECT * FROM TABLE
+和
+SELECT * FROM TABLE
+WHERE NAME LIKE '%%' AND ADDR LIKE '%%'
+AND (1_ADDR LIKE '%%' OR 2_ADDR LIKE '%%'
+OR 3_ADDR LIKE '%%' OR 4_ADDR LIKE '%%' )
+的检索结果为何不同？
+
+答：前者检索所有记录，后者只能检索出 NAME 和ADDR中非Null的记录。
+
+5、SQL问答题
+表结构：
+1、 表名：g_cardapply
+字段(字段名/类型/长度)：
+g_applyno varchar 8；//申请单号（关键字）
+g_applydate bigint 8；//申请日期
+g_state varchar 2；//申请状态
+2、 表名：g_cardapplydetail
+字段(字段名/类型/长度)：
+g_applyno varchar 8；//申请单号（关键字）
+g_name varchar 30；//申请人姓名
+g_idcard varchar 18；//申请人身份证号
+g_state varchar 2；//申请状态
+其中，两个表的关联字段为申请单号。
+题目：
+1、 查询身份证号码为440401430103082的申请日期
+select A.g_applydate
+from g_cardapply A inner join g_cardapplydetail B on A.g_applyno = B.g_applyno
+where B.g_idCard = '440401430103082'
+
+2、 查询同一个身份证号码有两条以上记录的身份证号码及记录个数
+select g_idCard,count(*) as Cnt from g_cardapplydetail
+group by g_idcard
+having count(*) > 1
+
+3、 将身份证号码为440401430103082的记录在两个表中的申请状态均改为07
+update g_cardapplydetail set g_state = ’07′
+where g_idcard = ’440401430103082′
+
+update A set g_state = ’07′
+from g_cardapply A inner join g_cardapplydetail B on A.g_applyno = B.g_applyno
+where B.g_idcard = ’440401430103082′
+
+4、 删除g_cardapplydetail表中所有姓李的记录
+delete from g_cardapplydetail
+where g_name like ‘李%’
+3、 将身份证号码为440401430103082的记录在两个表中的申请状态均改为07
+update g_cardapplydetail set g_state = ’07′
+where g_idcard = ’440401430103082′
+
+update A set g_state = ’07′
+from g_cardapply A inner join g_cardapplydetail B on A.g_applyno = B.g_applyno
+where B.g_idcard = ’440401430103082′
+5、SQL问答题:
+/*Select g_cardapply. g_applydate
+From g_cardapply, g_cardapplydetail
+Where g_cardapply. g_applyno=g_cardapplydetail. g_applyno
+And g_cardapplydetail.g_idcard=’440401430103082′*/
+
+/*Select *From (select count(*) g_count , g_idcard
+From g_cardapplydetail
+Group by g_idcard ) a
+Where a. g_count >= 2*/
+
+/*Update g_cardapply
+set g_state=’07′
+where g_applyno in (select distinct g_applyno
+from g_cardapplydetail
+where g_idcard =’440401430103082′)
+update g_cardapplydetail
+set g_state=’07′
+where g_idcard=’440401430103082′ */
+
+/*Delete from g_cardapplydetail
+Where g_name like ‘李%’*/
+通过测试
+PS:偶GF做的，自己先汗一下
+
+一般分类 :: 评论 (261) :: 静态链接网址 :: 引用 (0)
+金山公司几道面试题
+silver6 | 22 四月, 2006 10:43
+2. What are three ways in which a thread can enter the waiting state
+
+解析： 操作系统问题
+
+4. In C++, there’re four type of Casting Operators, please enumerate and explain them especially the difference.
+
+解析： C++类型转换问题
+答案：
+
+7 以下代码有什么问题，如何修改？
+#include
+#include
+using namespace std;
+
+void print(vector);
+
+int main()
+{
+
+vector array;
+array.push_back(1);
+array.push_back(6);
+array.push_back(6);
+array.push_back(3);
+//删除array数组中所有的6
+vector::iterator itor;
+vector::iterator itor2;
+itor=array.begin();
+
+for(itor=array.begin(); itor!=array.end(); )
+{
+if(6==*itor)
+{
+itor2=itor;
+
+array.erase(itor2);
+}
+itor++;
+
+}
+
+print(array);
+return 0;
+
+}
+void print(vector v)
+{
+cout
+vector::iterator p = v.begin();
+}
+我的答案是，迭代器问题，只能删除第一个6，以后迭代器就失效了，不能删除之后的元素。
+但我不知道怎么改
+void print(const vector&);
+
+int main()
+{
+
+vector array;
+array.push_back(1);
+array.push_back(6);
+array.push_back(6);
+array.push_back(3);
+
+//删除array数组中所有的6
+array.erase( remove( array.begin(), array.end(), 6 ) , array.end() );
+
+print(array);
+return 0;
+
+}
+
+void print(const vector& v)
+{
+cout
+copy(v.begin(), v.end(), ostream_iterator(cout, ” “) );
+}
+#include
+#include
+using namespace std;
+
+int main()
+{
+
+vector array;
+
+array.push_back(1);
+
+array.push_back(6);
+array.push_back(6);
+array.push_back(6);
+array.push_back(6);
+array.push_back(6);
+
+array.push_back(3);
+array.push_back(9);
+array.push_back(8);
+array.push_back(5);
+
+//É¾³ýarrayÊý×éÖÐËùÓÐµÄ6
+vector::iterator itor;
+itor=array.begin();
+
+for(itor=array.begin(); itor!=array.end();++itor )
+{
+if(6==*itor)
+{
+
+itor=array.erase(itor);
+–itor;
+}
+
+}
+
+cout
+for(itor=array.begin(); itor!=array.end();++itor )
+{
+cout
+}
+
+system("pause");
+
+return 0;
+
+}
+2. What are three ways in which a thread can enter the waiting state
+尝试答一下
+CPU调度给优先级更高的thread，原先thread进入waiting
+阻塞的thread获得资源或者信号，进入waiting
+还有什么
+static_cast 数制转换
+dynamic_cast 用于执行向下转换和在继承之间的转换
+const_cast 去掉const
+reinterpret_cast 用于执行并不安全的orimplmentation_dependent类型转换
+我给你一个完整的解释：
+执行itor=array.erase(itor);这句话后，itor不会移动，而只是把删除的数后面的数都往前移一位，所以删除了第一个6后，指针指向第2个6，然后在来个itor++，指针就指向array.end()了，给你画个草图：
+1 6 6 3 array.end() //最开始指针itor指向第一个6；
+1 6 3 array.end() //删除第一个6后，指向第二个6
+1 6 3 array.end() //itor++后，就指向3了，所以不能删除
+
+一般分类 :: 评论 (0) :: 静态链接网址 :: 引用 (0)
+利用Visual Basic开发SAP接口程序初探
+silver6 | 17 四月, 2006 08:37
+SAP R/3系统是业界最先进、最稳定的ERP系统，国际和国内大型企业采用该系统的比例遥遥领先于其它ERP系统的总和。SAP R/3内建了二次开发平台，使用的开发语言叫做ABAP，是一种类似于COBOL的编程语言。ABAP在报表输出方面功能相对较弱（只能按行打印在屏幕上或者导出到Excel中处理），所以日常工作中经常需要在外部开发程序。通过程序接口自动读取SAP R/3的数据表（视图），在外部进行处理和利用水晶报表等工具生成符合中国人习惯的报表样式。
+
+　　SAP R/3的接口方式主要有RFC、IDOC、BAPI三种，本文要介绍的是相对比较简单的RFC（Romote Function Call，远程函数调用）。SAP系统RFC调用的原理其实很简单，有一些类似于三层构架的C/S系统，第三方的客户程序通过接口调用SAP内部的标准或自定义函数，获得函数返回的数据进行处理后显示或打印。下面是RFC调用的模型：
+
+　　本文主要不是讨论SAP R/3函数的开发，因为使用SAP的公司一般都有专门的ABAP开发人员。大家如果有机会接触ABAP平台，可以通过事务代码SE37进入ABAP开发平台的"函数编制器"进行函数开发测试。如图：
+
+　　下面主要以VB为例介绍一下SAP接口RFC的开发思路。在SAP客户端SAP Gui Client安装的时候，注意选择安装附带的SDK包（最保险是选择完全安装）。RFC接口程序开发，主要用的是"SAP.Functions"这个控件，通过控件在外部程序模拟SAP Gui Client的用户登录和函数调用，然后返回函数的值。请看下面的程序片段和重点注解（尤其是test_Click()）：
+Private Sub Command1_Click()
+　' 定义R/3用户名和密码变量（用户名应由SAP管理员开运行函数的权限）
+　Dim logname As String * 22, password As String * 22
+　Call logonr3(logname, password) ' 调用SAP登录界面程序
+　If logflag Then ' 调用生产、开发系统开关
+　　StatusBar1.Visible = True
+　　StatusBar1.SimpleText = "正在登录SAP R/3系统..."
+　　Dim R3AppServer As String, R3Client As String, R3SystemNo As String
+　　If Form2.opPRD.Value Then
+　　　' 以下服务器参数请根据客户配置情况更改
+　　　R3AppServer = "10.3.1.4" ' 生产系统服务器IP
+　　　R3Client = "800"　　　　　'生产系统集团代码
+　　　R3SystemNo = "00" '生产系统号
+　　Else
+　　　R3AppServer = "10.3.3.1" ' 开发系统服务器IP
+　　　R3Client = "101"
+　　　R3SystemNo = "00"
+　　End If
+　　Unload Form2 ' 释放 Form2 ， 所有控件及值不可用
+　　Set Functions = CreateObject("Sap.Functions") ' 创建RFC的本地对象
+　　Set Connect = Functions.Connection ' 设置连接
+　　Connect.ApplicationServer = R3AppServer ' 赋值服务器IP
+　　Connect.Client = R3Client ' 赋值SAP集团代码
+　　Connect.Language = "ZH" ' 置SAP系统界面中文
+　　Connect.User = Trim(logname) ' 赋值SAP登录用户名
+　　Connect.password = Trim(password) ' 赋值SAP登录用户密码
+　　Connect.SystemNumber = R3SystemNo ' 赋值SAP系统号
+　　If Not Connect.Logon(0, True) Then ' 软件登录SAP并判断
+　　　MsgBox "登录SAP R/3失败，请重新登录!", vbOKOnly + vbExclamation, "系统提示"
+　　　Command1.SetFocus
+　　Else ' 登录SAP成功
+　　　Command1.Enabled = False
+　　　Command2.Enabled = True
+　　　test.Enabled = True
+　　End If
+
+　　StatusBar1.SimpleText = ""
+　　StatusBar1.Visible = False
+　End If
+End Sub
+
+Private Sub Command2_Click() ' 注销SAP登录
+　Connect.LogOff
+　Command2.Enabled = False
+　Command1.Enabled = True
+　test.Enabled = False
+End Sub
+
+Private Sub Command3_Click() ' 退出SAP接口演示程序
+　If Form1.Command2.Enabled Then
+　　MsgBox "退出前请断开SAP R/3系统!", vbOKOnly + vbInformation, "系统提示"
+　Else
+　　End
+　End If
+End Sub
+
+Private Sub Form_Load()
+　Command2.Enabled = False
+　test.Enabled = False
+　logoflag = False
+End Sub
+
+Private Sub test_Click() ' SAP RFC远程调用处理主演示
+　Dim GetCustomers As Object
+　Dim Customers As Object
+　Dim i As Integer
+　 ' 通过RFC接口远程运行SAP内部函数RFC_CUSTOMER_GET
+　' 赋要调用的SAP内建函数名
+　Set GetCustomers = Functions.Add("RFC_CUSTOMER_GET")
+
+　GetCustomers.Exports("KUNNR") = "0000000103" ' 向函数入口赋值（客户代码）
+　' 向函数入口赋查询表名称
+　Set Customers = GetCustomers.Tables("CUSTOMER_T")
+
+　If GetCustomers.Call Then ' 调用成功遍历显示客户所有信息条目
+　　For i = 1 To Customers.rowcount
+　　　MsgBox Customers(i, "KUNNR")
+　　Next i
+　Else
+　　MsgBox " 搜索出错! 出错信息: " + GetCustomers.Exception
+　End If
+End Sub
+　　SAP的RFC调用是其接口技术中最简单和易用的一种方式，该方式开发比较简便，特别适合于外部报表开发，但对于大数据量的查询效率相对较低。大家在熟练掌握后，可以进一步学习高级的IDOC和BAPI接口开发技术。
+
+一般分类 :: 评论 (299) :: 静态链接网址 :: 引用 (0)
+面试与被面试总结
+silver6 | 17 四月, 2006 08:34
+我从事技术工作，
+这几年的面试与被面试总结
+先说我去被面试的经验吧。
+回答清楚了2个问题，就能顺利过关了。
+1。为什么要离开上一家公司。
+2。公司为什么要雇佣你。
+问第一个问题的是hr（或老板）,呵呵 ，即使你技术过关，hr那里没有好的影响，结果是一个字，难！
+如何回答呢？ hr想推论出你在他的公司能呆多久。这个时候，你甚至可以明确告诉他，我在贵公司至少能呆n（n>=1）年—-当然，你没有把握的话，绝对不能乱说，社会上混，要讲信用的。
+有一次，我就在这个问题上吃了大亏，我看公司环境还不错，就我自做主张回答1年，结果，hr心目中是m（m>=2）年，呵呵，结果可想而知了。要知道，技术面试都过关了，Hr面试是2选1，在回家的路上，我只能祈祷对手自动放弃或找到了其他更好的工作。：）
+问第二个问题的是技术官。你要让他知道你已经做过哪些商业作品。一定要是商业作品。在里面负责哪方面具体工作，对于你熟悉的地方要多说。最好就是能争取笔试或上机，因为用用口说的话，大家理解都不一样，误差可能很大，结果对你相当不利。在这个问题上我也吃过亏的，曾有一个我很看好的职位，认为把握很大，业务理解上也很有优势，和技术官一谈，结果是game over。要知道，在其他公司的上机和笔试中，我都能在应聘者中取得高分。
+再说我去面试别人的经验吧。
+当时，我的任务是出题，给分。若你觉得题很难，那么，请千万不要放弃，显然，你的对手也觉得难。只要坚持，我会认为这人有耐心很毅力，在以后的工作中也是好的合作者。题一定要做完，表现出认真的态度，若有疑问或卡壳，还可以寻求面试官的帮助，这些不会减分，相反，会增加你和他们的接触机会，面试官会评估你的沟通能力。
+有一次，有1个人来面试，题没有完全ok,但很规范，态度很认真，他把他知道的都做上去了，我给了他技术类的高分。后来，顺利进入公司，再后来进步很快，成了重要角色。
+若文章对你有帮助的话，请在此讨论。
+祝你成功
+
+一般分类 :: 评论 (109) :: 静态链接网址 :: 引用 (0)
+面试题
+silver6 | 14 四月, 2006 09:36
+1.链表和数组的区别在哪里？
+2.编写实现链表排序的一种算法。说明为什么你会选择用这样的方法？
+3.编写实现数组排序的一种算法。说明为什么你会选择用这样的方法？
+4.请编写能直接实现strstr()函数功能的代码。
+5.编写反转字符串的程序，要求优化速度、优化空间。
+6.在链表里如何发现循环链接？
+7.给出洗牌的一个算法，并将洗好的牌存储在一个整形数组里。
+8.写一个函数，检查字符是否是整数，如果是，返回其整数值。（或者：怎样只用4行代码编写出一个从字符串到长整形的函数？）
+9.给出一个函数来输出一个字符串的所有排列。
+10.请编写实现malloc()内存分配函数功能一样的代码。
+11.给出一个函数来复制两个字符串A和B。字符串A的后几个字节和字符串B的前几个字节重叠。
+12.怎样编写一个程序，把一个有序整数数组放到二叉树中？
+13.怎样从顶部开始逐层打印二叉树结点数据？请编程。
+14.怎样把一个链表掉个顺序（也就是反序，注意链表的边界条件并考虑空链表）？
+另外：
+
+一、单项选择题：（共12题，每题2分，共24分）
+
+1. 下面哪一个不是C++的标准数据类型？ （ ）
+
+A. int B. char
+
+C. bool D. real
+
+2. break关键字在哪一种语法结构中不能使用？ （ ）
+
+A. for语句 B. switch语句
+
+C. if语句 D. while语句
+
+3. 类的继承方式有几种？ （ ）
+
+A. 两种 B. 三种
+
+C. 四种 D. 六种
+
+4. extern关键字的作用是什么？ （ ）
+
+A. 声明外部链接 B. 声明外部头文件引用
+
+C. 声明使用扩展C++语句 D. 声明外部成员函数、成员数据。
+
+5. C库函数strstr的功能是？ （ ）
+
+A. 查找子串 B. 计算字符串长度
+
+C. 字符串比较 D. 连结字符串
+
+6. stl::deque是一种什么数据类型？ （ ）
+
+A. 动态数组 B. 链表
+
+C. 堆栈 D. 树
+
+7. STL库里含有下面的哪一种泛型算法？ （ ）
+
+A. KMP查找 B. 折半查找
+
+C. 冒泡排序 D. 快速排序
+
+8. 现在最快且最通用的排序算法是什么？ （ ）
+
+A. 快速排序 B. 冒泡排序
+
+C. 选择排序 D. 外部排序
+
+9. Win32下的线程的哪一种优先级最高？ （ ）
+
+A. THREAD_PRIORITY_HIGHEST B. THREAD_PRIORITY_IDLE
+
+C. THREAD_PRIORITY_TIME_CRITICAL D. THREAD_PRIORITY_ABOVE_NORMAL
+
+10. 下面四个选项中，哪一个不是WinMain函数的参数？ （ ）
+
+A. HINSTANCE B. INT
+
+C. LPSTR D. WPARAM
+
+11. VC++的编译器中，运算符new底层的实现是什么？ （ ）
+
+A. VirtualAlloc() B. HeapAlloc()
+
+C. GlobalAlloc() D. AllocateUserPhysicalPages()
+
+12. 下面哪一本C++参考书最厚？ （ ）
+
+A. 《Think in C++》 B. 《深入浅出MFC》
+
+C. 《C++ Primer》 D. 《Effective C++》
+
+二、不定项选择题：（共6题，每题3分，共18分，多选、错选、漏选均不给分）
+
+1. vector::iterator重载了下面哪些运算符？ （ ）
+
+A. ++ B. >>
+
+C. *（前置） D. ==
+
+2. CreateFile( )的功能有哪几个？ （ ）
+
+A. 打开文件 B. 创建新文件
+
+C. 文件改名 D. 删除文件
+
+3. 下面哪些是句柄（HANDLE）？ （ ）
+
+A. HINSTANCE B. HWND
+
+C. HDC D. HFONT
+
+4. 下面哪些不是OpenGL标准几何元素的绘制模式？ （ ）
+
+A. GL_FOG B. GL_LINE_STRIP
+
+C. GL_POINTS D. GL_TRIANGLE_FAN
+
+5. 下面哪些运算符不能被重载？ （ ）
+
+A. 做用域运算符“::” B. 对象成员运算符“.”
+
+C. 指针成员运算符“->” D. 三目运算符“ :”
+
+6. 下面哪些人曾参与了世界上第一个C++编译器的开发？ （ ）
+
+A. Bill Gates B. Stanley Lippman
+
+C. Anderson Hejlsberg D. Bjarne Stroustrup
+
+三、填空题：（共8题，每题3分，共24分）
+
+1. 一个大小为320 X 192，颜色为灰度索引色的设备相关位图有______字节。如果此位图颜色为24位真彩色，则它的大小有______字节。
+
+2. Windows API的中文意义是________________。
+
+3. 计算反正弦的库函数是______；计算浮点数绝对值的库函数是______；计算浮点数n次方的库函数是______；将浮点数转化为字符串的库函数是______。
+
+4. 如果i等于5，那么( ++i ) – -的返回值是_____。
+
+5. API LoadBitmap()的功能是从______中读取位图数据到内存。
+
+6. new和_____对应，malloc和_____对应，他们之间_____交叉混用。calloc的功能是___________，realloc的功能是____________。
+
+7. SendMessage和PostMessage都会向窗体发送一个消息，但SendMessage_________而PostMessage____________。
+
+8. 输出指定圆心、半径、边数的圆上的点：
+
+const int nCount = 12;
+
+const double dOrgX = 5.0,
+
+dOrgY = 3.0;
+
+const double dRadius = 2.0;
+
+for( int i = 0; i
+
+{
+
+double dAngle = M_PI * 2.0 / (double)nCount * i;
+
+cout
+
+}
+
+三、判断题：（共12题，每题2分，共24分）
+
+1. 一个类必须要有一个不带参数的构造函数。 □
+
+2. 你不能写一个虚的构造函数。 □
+
+3. 类里面所有的函数都是纯虚函数时才是纯虚类。 □
+
+4. const成员函数对于任何本类的数据成员都不能进行写操作。 □
+
+5. 函数中带默认值的参数必须位于不带默认值的参数之后。 □
+
+6. char *p = "Test"; p[0] = 'R'; □
+
+7. cout
+
+8. stl::list不支持随机访问叠代器。 □
+
+9. stl::vector的效率比stl::list高。 □
+
+10. VC和VC++是一回事，而VC++是一种比C++更难一些的语言。 □
+
+11. 理论上，new和malloc造成的内存泄露都会由操作系统回收。 □
+
+12. 在C++中struct和class的差别很大，所以从语法上不能混用。 □
+
+四、简述题(共3题，每题5分，共15分)
+
+1. 请简述PeekMessage和GetMessage的区别。
+
+2. 请列出你所知道的在Windows SDK平台上，实现计时功能的方法。
+
+3. 请简述你所知道的const的各种用法。
+
+五、编程题：（共3题，第1小题7分，第2小题14分，第3小题24分）
+
+1. 深度遍历二叉树。
+
+struct Node
+
+{
+
+Node *Parent;
+
+Node *Left, *Right;
+
+};
+
+void Through(Node *Root)
+
+{
+
+}
+
+2. 二分法查找。
+
+int DicFind( int *Array, int Count, int Value )
+
+{
+
+}
+
+3. 写出字符串类String的默认构造函数、析构函数和重载赋值运算符。
+
+已知类String的原型为：
+
+class String
+
+{
+
+public:
+
+String( const char *pStr = NULL ); // 默认构造函数
+
+~String( void ); // 析构函数
+
+String &operate = ( const String &Source ); // 重载赋值运算符
+
+private:
+
+char *m_pData; // 指向字符串的指针
+
+};
+一般分类 :: 评论 (230) :: 静态链接网址 :: 引用 (0)
+今天下午的两道面试题
+silver6 | 07 四月, 2006 18:42
+1。 一人岁数的3次方是四位数，四次方是六位数，并知道此人岁数的3次方和4次方用遍了0～9十个数字。编写一程序求此人的岁数。
+
+2。对1，2，3， 4， 5 这五个数任意取出两个数，列出他们的所有组合。
+public static int getAge() {
+int age;
+int third;
+int fourth;
+
+for (int i = 11; true; i++) {
+if (i
+third = (int) Math.pow(i, 3);
+fourth = (int) Math.pow(i, 4);
+if (getLength(third, fourth) == 10) {
+age = i;
+break;
+}
+
+}
+}
+return age;
+}
+
+public static int getLength(int args1, int args2) {
+String str1 = String.valueOf(args1);
+String str2 = String.valueOf(args2);
+String str = str1 + str2;
+if (str.length() != 10) {
+return -1;
+}
+int[] intarray = new int[10];
+for (int i = 0; i
+intarray[i] = Integer.parseInt(str.substring(i,i+1));
+}
+Arrays.sort(intarray);
+if(intarray[0]!=0 && intarray[9]!=9)
+return -1;
+
+return 10;
+}
+第二题还更简单了
+
+for(int i=1; i
+for(int j=1; j
+if(i==j){
+System.out.println(j+""+j);
+}else{
+System.out.println(i+""+j);
+System.out.println(j+""+i);
+}
+}
+}
+public class A {
+// http://community.csdn.net/Expert/topic/4667/4667929.xml temp=.57922
+public static void main(String[] args) {
+String t;
+String[] s = new String[5];
+int j = s.length;
+for(int i=0; i
+s[i] = new Integer(i+1).toString();
+}
+
+for(int i=0; i
+t = s[i];
+for(int a=0; a
+t += s[i];
+System.out.println(t);
+}
+System.out.println();
+}
+}
+}
+第二题还更简单了
+
+for(int i=1; i
+for(int j=1; j
+if(i==j){
+System.out.println(j+""+j);
+}else{
+System.out.println(i+""+j);
+System.out.println(j+""+i);
+}
+}
+}
+============================================================
+楼上的没看清题目，它是让你对1，2，3， 4， 5 这五个数任意取出两个数，列出他们的所有组合，所以重复的数字不应该算在里面。
+第二题应该改为：
+for(int i=1; i
+for(int j=1; j
+if(i==j){
+break;
+}else{
+System.out.println(i+""+j);
+System.out.println(j+""+i);
+}
+}
+}
+public class B {
+public static void main(String[] args) {
+for (int i = 1; i
+int t = i;
+for(int a = 0; a
+int c = a+1;
+if(c == t) {
+continue;
+}else {
+System.out.println(t*10+c);
+}
+}
+System.out.println();
+}
+}
+}
+第二题
+public class Test
+{
+public static void main(String[] args)
+{
+int[][] a=new int[5][];
+for(int i=0;i
+{
+a[i]=new int[i+1];
+}
+for(int i=1;i
+{
+
+for(int j=i+1;j
+{
+System.out.print(i);
+System.out.print(j+" ");
+}
+System.out.print(" ");
+}
+
+for(int i=a.length;i>0;i–)
+{
+
+for(int j=i-1;j>0;j–)
+{
+System.out.print(i);
+System.out.print(j+” “);
+}
+System.out.print(” “);
+}
+}
+}
+public class Test {
+
+public static int getDigits(String str) {
+int[] intarr = new int[10];
+for (int i = 0; i
+intarr[i] = 0;
+for (int i = 0; i
+int j = Integer.parseInt(str.substring(i, i + 1));
+intarr[j] = 1;
+}
+int num = 0;
+for (int i = 0; i
+num = num + intarr[i];
+return num;
+}
+
+private static int getAge() {
+int age;
+int third;
+int fourth;
+for (age = 1; age
+third = (int) Math.pow(age, 3);
+fourth = (int) Math.pow(age, 4);
+if (third = 10000)
+continue;
+if (fourth = 1000000)
+continue;
+String str = String.valueOf(third) + String.valueOf(fourth);
+if (getDigits(str) == 10)
+return age;
+}
+return 0;
+}
+}
+第二道题
+class Combine
+{
+public static void main(String[] args)
+{
+for(int i=1; i
+{
+for(int j=i+1; j
+{
+System.out.println(i+""+j);
+System.out.println(j+""+i);
+}
+}
+}
+public class Age
+{
+public static void main(String [] args)
+{
+String str1 = null;
+String str2 = null;
+String str3 = null;
+String str4 = "0123456789";
+for(int i=10;i
+{
+str1 = Integer.toString(i*i*i);
+str2 = Integer.toString(i*i*i*i);
+str3 = str1+str2;
+if((str1.length() == 4) && (str2.length() ==6))
+{
+boolean flag = true;
+for(int j=0;j
+if(str3.indexOf(str4.charAt(j))==-1)
+flag = false;
+if(flag){
+System.out.println(">>>”+i);
+System.out.println(str3);
+}
+}
+}
+
+}
+}
+
+微软又一道笔试题
+silver6 | 04 四月, 2006 09:48
+怎样只用4行代码编写出一个从字符串到长整形的转换函数？
+我的方法，不过好象比4行多 *_#!~
+long atol(char *str)
+{
+char c = *str;
+if( !isdigit(c) ) str++;
+for(long value = 0; *str != ”; value = value * 10 + (*str -’0′),str++);
+return c == ‘-’ -value : value ;
+}
+void stol(const char * des, long& num)
+{
+for (int base = 1, i = 0; des[i] != ”; base = 10, ++i)
+{
+num *= base;
+num += (int)(des[i] – ’0′);
+}
+}
+num 要初始化为0
+
+void stol(const char * des, long& num)
+{
+for (int i=num=0; des[i] != ”; i++)
+{
+num *= 10;
+num += (int)(des[i] – ’0′);
+}
+}
+void stol(char *str, long &num)
+{
+while(*str != ”)
+{
+num = num * 10 + (*str – ’0′);
+str++;
+}
+}
+void stol(const char * des, long& num)
+{
+char p = des[0];
+for (int b = 1, pos = 1, base = 1; des[pos] != ”; b = 10, ++pos, base *= 10)
+{
+(num *= b) += (int)(des[pos] – ’0′);
+}
+p == ‘-’ (num *= -1) : (num = (int)(des[0] – ’0′) * base + num);
+}
+改了一下
+我只用了一行。
+#include
+using namespace std;
+
+long str2long(char* p,long xxx=0L)
+{
+return *p==” xxx:str2long(p,xxx*10+(*p+++0-’0′));
+}
+
+int main()
+{
+char *str=”123456789″,*p=str;
+cout
+getchar();
+return 0;
+}
+用STL，四行
+#include
+#include
+#include
+
+using namespace std;
+
+long ToLong(string& s)
+{
+long l;
+istringstream iss(s);
+iss>>l;
+return l;
+}
+int main(int argc, _TCHAR* argv[])
+{
+string s = “-12356″;
+cout
+return 0;
+}
+谢谢刚才上面的帖子提醒负数的问题，我更正了，还是只用一行：
+#include
+using namespace std;
+
+long str2long(char* p,long xxx=0L,bool IsPositive=true)
+{
+return *p==” (IsPositive xxx:xxx*(-1)):(*p==’-' str2long(++p,0L,false):str2long(p,xxx*10+*p+++0-’0′,IsPositive));
+}
+
+int main()
+{
+char *str=”-123456789″,*p=str;
+cout
+getchar();
+return 0;
+}
+
+华为研发（软件）面试
+用C语言写一个递归算法求N！；
+给一个C的函数，关于字符串和数组，找出错误；
+防火墙是怎么实现的？
+
+华为笔试题
+2．请你详细地解释一下IP协议的定义，在哪个层上面？主要有什么作用？TCP与UDP呢？
+3．请问交换机和路由器各自的实现原理是什么？分别在哪个层次上面实现的？
+4．请问C++的类和C里面的struct有什么区别？
+5．请讲一讲析构函数和虚函数的用法和作用。
+6．全局变量和局部变量有什么区别？是怎么实现的？操作系统和编译器是怎么知道的？
+7．8086是多少位的系统？在数据总线上是怎么实现的？
+
+找错
+Void test1()
+{
+char string[10];
+char* str1="0123456789";
+strcpy(string, str1);
+}
+
+Void test2()
+{
+char string[10], str1[10];
+for(I=0; I
+{
+str1[i] ='a';
+}
+strcpy(string, str1);
+}
+
+Void test3(char* str1)
+{
+char string[10];
+if(strlen(str1)
+{
+strcpy(string, str1);
+}
+}
+
+2. 找错
+#define MAX_SRM 256
+
+DSN get_SRM_no()
+{
+static int SRM_no;
+int I;
+for(I=0;I{
+SRM_no %= MAX_SRM;
+if(MY_SRM.state==IDLE)
+{
+break;
+}
+}
+if(I>=MAX_SRM)
+return (NULL_SRM);
+else
+return SRM_no;
+}
+
+3. 写出程序运行结果
+
+int sum(int a)
+{
+auto int c=0;
+static int b=3;
+c+=1;
+b+=2;
+return(a+b+C);
+}
+
+void main()
+{
+int I;
+int a=2;
+for(I=0;I
+{
+printf("%d,", sum(a));
+}
+}
+
+4.
+
+int func(int a)
+{
+int b;
+switch(a)
+{
+case 1: 30;
+case 2: 20;
+case 3: 16;
+default: 0
+}
+return b;
+}
+则func(1)=
+
+5:
+int a[3];
+a[0]=0; a[1]=1; a[2]=2;
+int *p, *q;
+p=a;
+q=&a[2];
+则a[q-p]=
+
+6.
+定义 int **a[3][4], 则变量占有的内存空间为：_____
+
+7.
+编写一个函数，要求输入年月日时分秒，输出该年月日时分秒的下一秒。如输入2004年12月31日23时59分59秒，则输出2005年1月1日0时0分0秒。
+
+bigbigwind8 回复于 2006-03-11 19:52:45
+
+华为的面试试题比较专业，都是一些专业知道。
+
+　　Q1：请你分别划划OSI的七层网络结构图，和TCP/IP的五层结构图？ 　　
+
+　　Q2：请你详细的解释一下IP协议的定义，在哪个层上面，主要有什么作用？ TCP与UDP呢？　　
+
+　　Q3：请问交换机和路由器分别的实现原理是什么？分别在哪个层次上面实现的？　　
+
+　　Q4:请问C++的类和C里面的struct有什么区别？ 　　
+
+　　Q5:请讲一讲析构函数和虚函数的用法和作用？ 　　
+Q6:全局变量和局部变量有什么区别？实怎么实现的？操作系统和编译器是怎么知道的？ 　　
+　Q7:一些寄存器的题目，主要是寻址和内存管理等一些知识。 　　
+　Q8:8086是多少尉的系统？在数据总线上是怎么实现的？
+
+2005年华为招聘--C语言笔试试题
+判断题（对的写T，错的写F并说明原因，每小题4分，共20分）
+1、有数组定义int a[2][2]={{1},{2,3}};则a[0][1]的值为0。（ ）
+2、int (*ptr) (),则ptr是一维数组的名字。（ ）
+3、指针在任何情况下都可进行>,=,
+4、switch(c) 语句中c可以是int ,long,char ,float ,unsigned int 类型。（ ）
+5、#define print(x) printf(＂the no, ＂#x＂,is ＂)
+
+二、填空题（共30分）
+1、在windows下，写出运行结果，每空2分，共10分。
+char str[ ]= ＂Hello＂;
+char *p=str;
+int n=10;
+sizeof(str)=( )
+sizeof(p)=( )
+sizeof(n)=( )
+
+void func(char str[100])
+{ }
+sizeof(str)=( )
+
+2、void setmemory(char **p, int num)
+{ *p=(char *) malloc(num);}
+void test(void)
+{ char *str=NULL;
+getmemory(&str,100);
+strcpy(str,＂hello＂);
+printf(str);
+}
+运行test函数有什么结果？（ ）10分
+
+3、设int arr[]={6,7,8,9,10};
+int *ptr=arr;
+*(ptr++)+=123;
+printf(＂%d,%d＂,*ptr,*(++ptr));
+( ) 10分
+
+二、编程题（第一小题20，第二小题30分）
+1、 不使用库函数，编写函数int strcmp(char *source, char *dest)
+相等返回0，不等返回-1；
+
+2、 写一函数int fun(char *p)判断一字符串是否为回文，是返回1，不是返回0，出错返回-1
+
+华为面试笔试
+1）笔试 可以选择java和c++，我做的java，个人感觉考的很基础。
+其中一个编程题：用数组实现栈，并且当栈空间满时，栈空间增加一倍。
+2）面试：我面的是it类
+一面：技术面，40分钟，问的很细，uml,单点登录,j2ee
+二面：综合面，20分钟 一个项目完整的经历
+三面：hr，职业规划，优势与劣势，期望工资与工作地点。5.8k。
+四面：老总面，最郁闷的，看了简历的封面，说专业不适合去华为工作。无语，也不想去，因为待遇说实话也不怎么样，并且就凭专业的名称淘汰
+
+华为笔试题含答案
+
+.写出判断ABCD四个表达式的是否正确, 若正确, 写出经过表达式中 a的值(3分)
+int a = 4;
+(A)a += (a++); (B) a += (++a) ;(C) (a++) += a;(D) (++a) += (a++);
+a =
+答：C错误，左侧不是一个有效变量，不能赋值，可改为(++a) += a;
+改后答案依次为9,10,10,11
+
+2.某32位系统下, C++程序，请计算sizeof 的值(5分).
+char str[] = “www.ibegroup.com”
+char *p = str ;
+int n = 10;
+请计算
+sizeof (str ) = ？（1）
+sizeof ( p ) = ？（2）
+sizeof ( n ) = ？（3）
+void Foo ( char str[100]){
+请计算
+sizeof( str ) = ？（4）
+}
+void *p = malloc( 100 );
+请计算
+sizeof ( p ) = ？（5）
+答：（1）17 （2）4 （3） 4 （4）4 （5）4
+
+3. 回答下面的问题. (4分)
+(1).头文件中的 ifndef/define/endif 干什么用？预处理
+答：防止头文件被重复引用
+(2). #include 和 #include “filename.h” 有什么区别？
+答：前者用来包含开发环境提供的库头文件，后者用来包含自己编写的头文件。
+(3).在C++ 程序中调用被 C 编译器编译后的函数，为什么要加 extern “C”声明？
+答：函数和变量被C++编译后在符号库中的名字与C语言的不同，被extern “C”修饰的变量和函数是按照C语言方式编译和连接的。由于编译后的名字不同，C++程序不能直接调用C 函数。C++提供了一个C 连接交换指定符号extern“C”来解决这个问题。
+(4). switch()中不允许的数据类型是
+答：实型
+
+4. 回答下面的问题(6分)
+(1).
+
+Void GetMemory(char **p, int num){
+*p = (char *)malloc(num);
+}
+void Test(void){
+char *str = NULL;
+GetMemory(&str, 100);
+strcpy(str, “hello”);
+printf(str);
+}
+请问运行Test 函数会有什么样的结果？
+答：输出“hello”
+(2).
+
+void Test(void){
+char *str = (char *) malloc(100);
+strcpy(str, “hello”);
+free(str);
+if(str != NULL){
+strcpy(str, “world”);
+printf(str);
+}
+}
+请问运行Test 函数会有什么样的结果？
+答：输出“world”，因为free(str)后并未改变str所指的内存内容。
+(3).
+
+char *GetMemory(void){
+char p[] = “hello world”;
+return p;
+}
+void Test(void){
+char *str = NULL;
+str = GetMemory();
+printf(str);
+}
+请问运行Test 函数会有什么样的结果？
+答：无效的指针，输出不确定
+
+5. 编写strcat函数(6分)
+已知strcat函数的原型是char *strcat (char *strDest, const char *strSrc);
+其中strDest 是目的字符串，strSrc 是源字符串。
+（1）不调用C++/C 的字符串库函数，请编写函数 strcat
+答：
+VC源码：
+
+char * __cdecl strcat (char * dst, const char * src)
+{
+char * cp = dst;
+while( *cp )
+cp++; /* find end of dst */
+while( *cp++ = *src++ ) ; /* Copy src to end of dst */
+return( dst ); /* return dst */
+}
+（2）strcat能把strSrc 的内容连接到strDest，为什么还要char * 类型的返回值？
+答：方便赋值给其他变量
+
+6.MFC中CString是类型安全类么？
+答：不是，其它数据类型转换到CString可以使用CString的成员函数Format来转换
+
+7.C++中为什么用模板类。
+答：(1)可用来创建动态增长和减小的数据结构
+（2）它是类型无关的，因此具有很高的可复用性。
+（3）它在编译时而不是运行时检查数据类型，保证了类型安全
+（4）它是平台无关的，可移植性
+（5）可用于基本数据类型
+
+8.CSingleLock是干什么的。
+答：同步多个线程对一个数据类的同时访问
+
+9.NEWTEXTMETRIC 是什么。
+答：物理字体结构，用来设置字体的高宽大小
+
+10.程序什么时候应该使用线程，什么时候单线程效率高。
+答：1．耗时的操作使用线程，提高应用程序响应
+2．并行操作时使用线程，如C/S架构的服务器端并发线程响应用户的请求。
+3．多CPU系统中，使用线程提高CPU利用率
+4．改善程序结构。一个既长又复杂的进程可以考虑分为多个线程，成为几个独立或半独立的运行部分，这样的程序会利于理解和修改。
+其他情况都使用单线程。
+
+11.Windows是内核级线程么。
+答：见下一题
+
+12.Linux有内核级线程么。
+答：线程通常被定义为一个进程中代码的不同执行路线。从实现方式上划分，线程有两种类型：“用户级线程”和“内核级线程”。用户线程指不需要内核支持而在用户程序中实现的线程，其不依赖于操作系统核心，应用进程利用线程库提供创建、同步、调度和管理线程的函数来控制用户线程。这种线程甚至在象 DOS 这样的操作系统中也可实现，但线程的调度需要用户程序完成，这有些类似 Windows 3.x 的协作式多任务。另外一种则需要内核的参与，由内核完成线程的调度。其依赖于操作系统核心，由内核的内部需求进行创建和撤销，这两种模型各有其好处和缺点。用户线程不需要额外的内核开支，并且用户态线程的实现方式可以被定制或修改以适应特殊应用的要求，但是当一个线程因 I/O 而处于等待状态时，整个进程就会被调度程序切换为等待状态，其他线程得不到运行的机会；而内核线程则没有各个限制，有利于发挥多处理器的并发优势，但却占用了更多的系统开支。
+Windows NT和OS/2支持内核线程。Linux 支持内核级的多线程
+
+13.C++中什么数据分配在栈或堆中，New分配数据是在近堆还是远堆中？
+答：栈: 存放局部变量，函数调用参数,函数返回值，函数返回地址。由系统管理
+堆: 程序运行时动态申请，new 和 malloc申请的内存就在堆上
+近堆还是远堆不是很清楚。
+
+14.使用线程是如何防止出现大的波峰。
+答：意思是如何防止同时产生大量的线程，方法是使用线程池，线程池具有可以同时提高调度效率和限制资源使用的好处，线程池中的线程达到最大数时，其他线程就会排队等候。
+
+15函数模板与类模板有什么区别？
+答：函数模板的实例化是由编译程序在处理函数调用时自动完成的，而类模板的实例化必须由程序员在程序中显式地指定。
+
+16一般数据库若出现日志满了，会出现什么情况，是否还能使用？
+答：只能执行查询等读操作，不能执行更改，备份等写操作，原因是任何写操作都要记录日志。也就是说基本上处于不能使用的状态。
+
+17 SQL Server是否支持行级锁，有什么好处？
+答：支持，设立封锁机制主要是为了对并发操作进行控制，对干扰进行封锁，保证数据的一致性和准确性，行级封锁确保在用户取得被更新的行到该行进行更新这段时间内不被其它用户所修改。因而行级锁即可保证数据的一致性又能提高数据操作的迸发性。
+
+18如果数据库满了会出现什么情况，是否还能使用？
+答：见16
+
+19 关于内存对齐的问题以及sizof()的输出
+答：编译器自动对齐的原因：为了提高程序的性能，数据结构（尤其是栈）应该尽可能地在自然边界上对齐。原因在于，为了访问未对齐的内存，处理器需要作两次内存访问；然而，对齐的内存访问仅需要一次访问。
+
+20 int i=10, j=10, k=3; k*=i+j; k最后的值是？
+答：60，此题考察优先级，实际写成： k*=(i+j);，赋值运算符优先级最低
+
+21.对数据库的一张表进行操作,同时要对另一张表进行操作,如何实现
+答：将操作多个表的操作放入到事务中进行处理
+
+22.TCP/IP 建立连接的过程 (3-way shake)
+答：在TCP/IP协议中，TCP协议提供可靠的连接服务，采用三次握手建立一个连接。
+第一次握手：建立连接时，客户端发送syn包(syn=j)到服务器，并进入SYN_SEND状态，等待服务器确认；
+第二次握手：服务器收到syn包，必须确认客户的SYN（ack=j+1），同时自己也发送一个SYN包（syn=k），即SYN+ACK包，此时服务器进入SYN_RECV状态；
+第三次握手：客户端收到服务器的SYN＋ACK包，向服务器发送确认包ACK(ack=k+1)，此包发送完毕，客户端和服务器进入ESTABLISHED状态，完成三次握手。
+
+23.ICMP是什么协议,处于哪一层
+答：Internet控制报文协议，处于网络层（IP层）
+
+24.触发器怎么工作的
+答：触发器主要是通过事件进行触发而被执行的，当对某一表进行诸如UPDATE、 INSERT、 DELETE 这些操作时，数据库就会自动执行触发器所定义的SQL 语句，从而确保对数据的处理必须符合由这些SQL 语句所定义的规则。
+
+25.winsock建立连接的主要实现步骤
+答：服务器端：socker()建立套接字，绑定（bind）并监听（listen），用accept（）等待客户端连接。
+客户端：socker()建立套接字，连接（connect）服务器，连接上后使用send()和recv（），在套接字上写读数据，直至数据交换完毕，closesocket()关闭套接字。
+服务器端：accept（）发现有客户端连接，建立一个新的套接字，自身重新开始等待连接。该新产生的套接字使用send()和recv（）写读数据，直至数据交换完毕，closesocket()关闭套接字。
+
+26.动态连接库的两种方式
+答：调用一个DLL中的函数有两种方法：
+1．载入时动态链接（load-time dynamic linking），模块非常明确调用某个导出函数，使得他们就像本地函数一样。这需要链接时链接那些函数所在DLL的导入库，导入库向系统提供了载入DLL时所需的信息及DLL函数定位。
+2．运行时动态链接（run-time dynamic linking），运行时可以通过LoadLibrary或LoadLibraryEx函数载入DLL。DLL载入后，模块可以通过调用 GetProcAddress获取DLL函数的出口地址，然后就可以通过返回的函数指针调用DLL函数了。如此即可避免导入库文件了。
+
+27.IP组播有那些好处 答： Internet上产生的许多新的应用，特别是高带宽的多媒体应用，带来了带宽的急剧消耗和网络拥挤问题。组播是一种允许一个或多个发送者（组播源）发送单一的数据包到多个接收者（一次的，同时的）的网络技术。组播可以大大的节省网络带宽，因为无论有多少个目标地址，在整个网络的任何一条链路上只传送单一的数据包。所以说组播技术的核心就是针对如何节约网络资源的前提下保证服务质量。
+
+华为D卷最后四大题
+1、A1,A2….An和B交换资源，求写出PV操作的序列
+2、非递归实现废物不拉屎数列.
+3、折半查找干啥用的？
+实现之.
+4、实现有序链表上的插入
+
+华为最后三个大题
+1.A,B,C,D四个进程，A向buf里面写数据，B,C,D向buf里面读数据，
+当A写完，且B，C，D都读一次后，A才能再写。用P，V操作实现。
+2.将单向链表reverse，如ABCD变成DCBA，只能搜索链表一次。
+3.将二叉树的两个孩子换位置，即左变右，右变左。不能用递规（变态！）
