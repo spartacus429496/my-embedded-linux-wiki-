@@ -144,4 +144,13 @@ fileencoding—-vim打开文件时自己主动辨认其编码，fileencoding就�
 termencoding—-默认空值，也就是输出到终端不进行编码转换。
 由此可见，编辑不同编码文件须要注意的地方不不过这3个变量，还有系统当前locale和、文件本身编码以及自己主动编码识别、客户执行vim的终端所使用的编码类型3个关键点，这3个关键点影响着3个变量的设定。
 
-	
+Showing trailing spaces in vim
+
+	"set nu
+	match Error /\s\+$/
+	syntax enable
+	set background=dark
+	colorscheme solarized
+	set hlsearch
+	highlight ExtraWhitespace ctermbg=red guibg=red
+	match ExtraWhitespace /\s\+$/
