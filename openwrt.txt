@@ -1,0 +1,49 @@
+
+1.       Install tools and libs
+sudo apt-get install gcc g++ binutils patch bzip2 flex make gettext pkg-config unzip zlib1g-dev libc6-dev subversion libncurses5-dev gawk sharutils curl libxml-parser-perl python-yaml
+ 
+2.       Install repo
+$ git clone git://codeaurora.org/tools/repo
+$ cp repo/repo ~/bin
+ 
+3.       Download source code from CAF
+$ mkdir workspace
+$ cd workspace
+$ repo init -u git://codeaurora.org/quic/qsdk/releases/manifest/qstak -b release -m caf_AU_LINUX_QSDK_RELEASE_DATE_IOE4531_3.0.R1_TARGET_ALL.3.0.490.031.xml --repo-url=git://codeaurora.org/tools/repo --repo-branch=caf-stable
+$ repo sync
+ 
+4.       Build the Image
+$ cd qsdk
+$ cp qca/configs/qca955x.ln/ar71xx_ioe_dbpan.config .config
+cp qca/configs/qca955x.ln/ar71xx_ioe.config .config
+$ make package/symlinks
+$ make defconfig
+$ make j=8
+ 
+
+QSDK V191:
+repo init -u git://codeaurora.org/quic/qsdk/releases/manifest/qstak.git -b release -m caf_AU_LINUX_QSDK_RELEASE_COCONUT_IOE4531_2.0_TARGET_ALL.2.10.1.191.xml --repo-url=git://codeaurora.org/tools/repo --repo-branch=caf-stable
+ 
+config file for date_ioe4531_3.0.r1:
+huaqingz@huaqingz-HP-Workstation: qsdk$ cp qca/configs/qca955x.ln/ar71xx_ioe_dbpan.config .
+
+
+>>>>>>>How to compile csrmesh on date release QSDK
+ 
+Resource of CSRmesh 2.0.1e:
+Location: 10.231.217.47
+/home/guest/CSRmesh
+-        csrmesh.tar.gz  --feeds
+-        CSRMesh-v2.0.1e   --code / doc
+ 
+Instruction:
+1.     Untar csrmesh.tar.gz  under qsdk/qca/feeds/
+2.     Add following line to qsdk/feeds.conf
+src-link csrmesh ../qca/feeds/csrmesh
+3.     Run commands under qsdk directory:
+./scripts/feeds update –a
+make package/symlinks
+4.     Copy files/directories according to README of csrmesh
+5.     Select package under “make menuconfig”
+6.     Run command : make
+ 
